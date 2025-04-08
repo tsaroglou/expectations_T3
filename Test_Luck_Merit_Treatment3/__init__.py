@@ -313,7 +313,7 @@ class Player(BasePlayer):
 
     timeout_count = models.IntegerField(initial=0)
 
-
+    finished = models.BooleanField(initial=False)
     major = models.StringField(
         choices=[
             'Not a student', 'Computer Science', 'Economics', 'Business', 'Psychology',
@@ -1607,6 +1607,8 @@ class FinalPayment(Page):
         participation_fee = cu(1)  # Assuming this is defined in your Constants
         player.pay_ravens_showed = cu(player.pay_ravens)
         player.bonus_guess_showed = cu(player.bonus_earned)
+        player.finished = True
+
 
 
         return {
