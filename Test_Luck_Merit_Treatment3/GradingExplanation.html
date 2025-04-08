@@ -81,7 +81,7 @@
             <p>In this test, <span class="highlight">instead of counting correct answers</span>, we will be counting <span class="highlight">points</span>. </p> <p> Each question of the test can either give you 0 or 1 point.</p>
             <p>Each time you answer a question <span class="highlight">incorrectly</span> or do not respond to it, you receive <span class="highlight">0 points</span>.</p>
             <p>Each time you answer a question <span class="highlight">correctly</span> you receive the point with a <span class="highlight">70% probability</span>. But, despite giving the correct answer, you might still get <span class="highlight">0 points</span> for the question with a <span class="highlight">30% probability</span>.</p>
-            <p>Therefore <span class="highlight"> you might receive a point even if you are incorrect </span> in a question (with a 15% probability) but <span class="highlight"> you might receive no points for a question even if you are correct </span> (with a 30% probability).</p>
+            <p>Therefore <span class="highlight"> you never receive a point when you are incorrect </span> in a question but <span class="highlight"> you might receive no points for a question even if you are correct </span> (with a 30% probability).</p>
             <p>For simplicity, from now on we are going to be calling the score you receive as a result of the above mechanism the <span class="highlight">"point score"</span> and your total correct answers simply as <span class="highlight">"real total correct answers"</span>.</p>
         </div>
 
@@ -96,7 +96,7 @@
                     <label><input type="radio" name="question4" value="0 points."> 0 points.</label><br>
                     <label><input type="radio" name="question4" value="2 points."> 2 points.</label><br>
                     <label><input type="radio" name="question4" value="1 point with a 70% probability."> 1 point with a 70% probability.</label><br>
-                    <label><input type="radio" name="question4" value="0 points with a 30% probability."> 0 points with a 30% probability.</label>
+                    <label><input type="radio" name="question4" value="0 points with a 70% probability."> 0 points with a 70% probability.</label>
                 </div>
                 <p id="error-message4" class="error-message">Incorrect answer, please try again.</p>
                 <p id="correct-message4" class="correct-message">Correct answer!</p>
@@ -109,7 +109,7 @@
                     <label><input type="radio" name="question5" value="0 points."> 0 points.</label><br>
                     <label><input type="radio" name="question5" value="2 points."> 2 points.</label><br>
                     <label><input type="radio" name="question5" value="1 point with a 70% probability."> 1 point with a 70% probability.</label><br>
-                    <label><input type="radio" name="question5" value="0 points with a 15% probability."> 0 points with a 15% probability.</label>
+                    <label><input type="radio" name="question5" value="0 points with a 15% probability."> 0 points with a 30% probability.</label>
                 </div>
                 <p id="error-message5" class="error-message">Incorrect answer, please try again.</p>
                 <p id="correct-message5" class="correct-message">Correct answer!</p>
