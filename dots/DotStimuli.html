@@ -1,0 +1,94 @@
+{% extends "global/Page.html" %}
+{% block content %}
+<style>
+    body { font-family: Arial, sans-serif; }
+    #dot-container { width: 750px; height: 750px; margin: 50px auto; border: 1px solid black; display: flex; justify-content: center; align-items: center; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 8px; text-align: center; border: 1px solid #ddd; }
+    th { background-color: #f2f2f2; }
+    #side-decision-making, #decision-making { text-align: center; margin-top: 20px; display: none; }
+    button { padding: 10px 20px; font-size: 1em; cursor: pointer; margin-top: 10px; }
+    .table-container { width: 20%; position: absolute; top: 50%; transform: translateY(-50%); }
+    #left-table { left: 10px; }
+    #right-table { right: 10px; }
+</style>
+
+<div id="dot-container">
+    <canvas id="dotCanvas" width="750" height="750"></canvas>
+</div>
+
+<div class="table-container" id="left-table">
+    <!-- Table setup left -->
+    <table>
+        <tr><th></th><th>You</th><th>Give Directly</th></tr>
+        <tr><td>A</td><td id="left-A-you">7</td><td id="left-A-give">5</td></tr>
+        <tr><td>B</td><td id="left-B-you">5</td><td id="left-B-give">1.5</td></tr>
+    </table>
+</div>
+<div class="table-container" id="right-table">
+    <!-- Table setup right -->
+    <table>
+        <tr><th></th><th>You</th><th>Give Directly</th></tr>
+        <tr><td>A</td><td id="right-A-you">7</td><td id="right-A-give">1.5</td></tr>
+        <tr><td>B</td><td id="right-B-you">5</td><td id="right-B-give">5</td></tr>
+    </table>
+</div>
+
+<form method="post" id="decisionForm">
+    <div id="side-decision-making">
+        <label>Which side had more dots?</label><br>
+        {{ form.side_identified }}
+        <button type="button" onclick="showABChoices()">Next</button>
+    </div>
+    <div id="decision-making">
+        <label>Choose A or B:</label><br>
+        {{ form.choice_decision }}
+        <button type="submit">Next Trial</button>
+    </div>
+</form><script>
+const canvas = document.getElementById('dotCanvas');
+const ctx = canvas.getContext('2d');
+const totalDots = 100;
+const dotRadius = 5;
+let dots = [];
+
+function startTrial() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawFixationCross();
+    setTimeout(drawDots, 2000);
+}
+
+function drawDots() {
+    drawLine();
+    ctx.fillStyle = 'black';
+    for (let i = 0; i < totalDots; i++) {
+        placeDot();
+    }
+    setTimeout(() => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        document.getElementById('side-decision-making').style.display = 'block';
+    }, 250);
+}
+
+function placeDot() {
+    let x = Math.random() * (canvas.width - 2 * dotRadius) + dotRadius;
+    let y = Math.random() * (canvas.height - 2 * dotRadius) + dotRadius;
+    if (checkDotPlacement(x, y)) {
+        ctx.beginPath();
+        ctx.arc(x, y, dotRadius, 0, 2 * Math.PI);
+        ctx.fill();
+    }
+}
+
+function checkDotPlacement(x, y) {
+    return dots.every(dot => Math.sqrt((dot.x - x) ** 2 + (dot.y - y) ** 2) >= 2 * dotRadius);
+}
+
+function showABChoices() {
+    document.getElementById('side-decision-making').style.display = 'none';
+    document.getElementById('decision-making').style.display = 'block';
+}
+
+window.onload = startTrial;
+</script>
+{% endblock %}

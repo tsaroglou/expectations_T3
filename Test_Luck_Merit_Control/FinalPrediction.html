@@ -1,0 +1,53 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block content %}
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f0f0f0;
+        color: #333;
+        line-height: 1.6;
+        padding: 20px;
+    }
+    form {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        max-width: 600px;
+        margin: auto;
+    }
+    p {
+        font-size: 16px;
+        margin-bottom: 20px;
+        text-align: justify;
+    }
+    .highlight {
+        font-weight: bold;
+        color: #007BFF;
+    }
+    button {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+    button:hover {
+        background-color: #0056b3;
+    }
+</style>
+
+<form method="post">
+    <p>Now, you can make your performance prediction. <span class="highlight">One participant will be selected for payment for this round.</span>  </span> <br> </p>
+
+    <p><b>How many of the 15 questions do you think you will answer correctly?</b></p>
+    {{ form.prediction_initial }}
+    <br>
+
+    <button type="submit">{% trans "Next" %}</button>
+</form>
+{% endblock %}

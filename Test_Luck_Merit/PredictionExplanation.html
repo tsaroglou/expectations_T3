@@ -1,0 +1,250 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block styles %}
+    <style>
+        .content-section {
+            margin-top: 2rem;
+        }
+        .content-section h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #007BFF;
+        }
+        .content-section p {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+            text-align: justify;
+        }
+        .content-section .highlight {
+            font-weight: bold;
+            color: #007BFF;
+        }
+        .example {
+            background-color: #F8F9FA;
+            padding: 1rem;
+            border-radius: 0.25rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+        }
+        .example p {
+            margin-bottom: 0.5rem;
+        }
+        .container {
+            background-color: #F8F9FA;
+            border-radius: 0.25rem;
+            padding: 2rem;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        hr {
+            border: 0;
+            border-top: 1px solid #007BFF;
+        }
+        .incorrect {
+            color: red;
+        }
+        .correct {
+            color: green;
+        }
+        .error-message, .correct-message {
+            font-weight: bold;
+            display: none;
+        }
+        .error-message {
+            color: red;
+        }
+        .correct-message {
+            color: green;
+        }
+        table {
+            width: 100%;
+            margin: 1rem 0;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 0.5rem;
+            text-align: center;
+        }
+    </style>
+{% endblock styles %}
+
+{% block content %}
+    <div class="container mt-5 p-4">
+        <div class="content-section">
+            <p>Now that you possess an understanding of what the test looks like, we would like to know <span class="highlight">how many of the 15 questions you think you will answer correctly.</span></b></p>
+            <p>At the end of the experiment, <span class="highlight"> we are going to conduct a lottery </span>to pick a participant who will win a bonus payment. <span class="highlight">If you are selected, this payment will be added to the payment that you will receive from the main part of this experiment. </span> The main part’s payment mechanism will be explained to you in later screens.</p>
+            <p>The size of this bonus payment depends on your prediction of your own performance.</p>
+            <p>The mechanism that will determine the possible bonus payment is the following: your performance expectation affects the maximum amount that this bonus can be for you.</p>
+
+            <div class="example">
+                <h3 class="h5">For example:</h3>
+                <p>If you respond that you expect to answer <span class="highlight">13 questions correctly</span>, your maximum possible bonus payment will be <span class="highlight">2.6 Euros</span>.</p>
+                <p>If you respond that you expect to answer <span class="highlight">8 questions correctly</span>, your maximum possible bonus payment will be <span class="highlight">1.6 Euros</span>.</p>
+            </div>
+
+            <p>Therefore, the maximum you can make from this prediction is <span class="highlight"> 3 Euros</span>.</p>
+
+            <p>However, to reach this maximum bonus payment, you will need to answer at least the number of correct questions you indicate on this screen. If you do not answer an equal number or more questions correctly than what you indicate on this screen, your bonus payment will be a random amount between <span class="highlight">0 and 1 Euro</span>. </p> <p>Therefore, <span class="highlight" > it is in your best interest to make the most accurate prediction you can.</span></p>
+
+            <div class="example">
+                <h3 class="h5">For example:</h3>
+                <p>You indicate you can answer <span class="highlight">8 questions correctly</span> out of the 15, and later your score in the test is <span class="highlight">9</span>. Your bonus payment will be <span class="highlight">1.6 Euros</span>.</p>
+                <p>You indicate you can answer <span class="highlight">13 questions correctly</span> out of the 15, and later your score in the test is <span class="highlight">12</span>. Your bonus payment will be a random amount between <span class="highlight">0 and 1 Euro</span>.</p>
+            </div>
+
+            <p>If the above explanation is not clear to you, you can view different combinations of predictions and total correct answers along with their possible bonuses below:</p>
+
+            <div class="example">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Prediction</th>
+                            <th>Total Correct Answers</th>
+                            <th>Prediction Reached?</th>
+                            <th>Bonus</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>15</td>
+                            <td>15</td>
+                            <td>Yes</td>
+                            <td>3 Euros</td>
+                        </tr>
+                         <tr>
+                            <td>13</td>
+                            <td>12</td>
+                            <td>No</td>
+                            <td>Random amount between 0 and 1 Euro</td>
+                        </tr>
+                         <tr>
+                            <td>12</td>
+                            <td>11</td>
+                            <td>No</td>
+                            <td>Random amount between 0 and 1 Euro</td>
+                        </tr>
+                         <tr>
+                            <td>10</td>
+                            <td>11</td>
+                            <td>Yes</td>
+                            <td>2 Euro</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>12</td>
+                            <td>Yes</td>
+                            <td>1 Euro</td>
+                        </tr>
+
+
+                    </tbody>
+                </table>
+            </div>
+
+            <p>To test your understanding before we continue, please choose the correct answer:</p>
+
+            <div class="example">
+                <p>You predicted 8 correct answers and you answered 9 correct ones. How much will your bonus be?</p>
+                <div>
+                    <label><input type="radio" name="question1" value="1.8 Euro"> 1.8 Euro</label><br>
+                    <label><input type="radio" name="question1" value="1.6 Euro"> 1.6 Euro</label><br>
+                    <label><input type="radio" name="question1" value="3 Euro"> 3 Euro</label><br>
+                    <label><input type="radio" name="question1" value="A random number between 0 and 1 Euro"> A random number between 0 and 1 Euro</label>
+                </div>
+                <p id="error-message1" class="error-message">Incorrect answer, please try again.</p>
+                <p id="correct-message1" class="correct-message">Correct answer!</p>
+            </div>
+
+            <div class="example">
+                <p>You predicted 15 correct answers and you answered 14 correct ones. How much will your bonus be?</p>
+                <div>
+                    <label><input type="radio" name="question2" value="1.8 Euro"> 1.8 Euro</label><br>
+                    <label><input type="radio" name="question2" value="2.8 Euro"> 2.8 Euro</label><br>
+                    <label><input type="radio" name="question2" value="3 Euro"> 1.5 Euro</label><br>
+                    <label><input type="radio" name="question2" value="A random number between 0 and 1 Euro"> A random number between 0 and 1 Euro</label>
+                </div>
+                <p id="error-message2" class="error-message">Incorrect answer, please try again.</p>
+                <p id="correct-message2" class="correct-message">Correct answer!</p>
+            </div>
+
+            <div class="example">
+                <p>You predicted 12 correct answers and you answered 12 correct ones. How much will your bonus be?</p>
+                <div>
+                    <label><input type="radio" name="question3" value="2.4 Euro"> 2.4 Euro</label><br>
+                    <label><input type="radio" name="question3" value="0 Euro"> 0 Euro</label><br>
+                    <label><input type="radio" name="question3" value="3 Euro"> 3 Euro</label><br>
+                    <label><input type="radio" name="question3" value="A random number between 0 and 1 Euro"> A random number between 0 and 1 Euro</label>
+                </div>
+                <p id="error-message3" class="error-message">Incorrect answer, please try again.</p>
+                <p id="correct-message3" class="correct-message">Correct answer!</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <button type="button" onclick="validateAnswers()">Next</button>
+    </div>
+
+
+
+    <div id="all-correct-message" class="correct-message" style="display: none; text-align: center;">
+    All Correct! Moving to the next page in <span id="countdown">3</span> seconds...
+</div>
+
+<script>
+    function validateAnswers() {
+        const correctAnswers = {
+            question1: '1.6 Euro',
+            question2: 'A random number between 0 and 1 Euro',
+            question3: '2.4 Euro'
+        };
+
+        let allCorrect = true;
+
+        for (let question in correctAnswers) {
+            const selected = document.querySelector(`input[name="${question}"]:checked`);
+            const errorMessage = document.getElementById(`error-message${question.slice(-1)}`);
+            const correctMessage = document.getElementById(`correct-message${question.slice(-1)}`);
+
+            if (selected) {
+                if (selected.value !== correctAnswers[question]) {
+                    selected.parentElement.classList.add('incorrect');
+                    selected.parentElement.classList.remove('correct');
+                    errorMessage.style.display = 'block';
+                    correctMessage.style.display = 'none';
+                    allCorrect = false;
+                } else {
+                    selected.parentElement.classList.add('correct');
+                    selected.parentElement.classList.remove('incorrect');
+                    errorMessage.style.display = 'none';
+                    correctMessage.style.display = 'block';
+                }
+            } else {
+                errorMessage.style.display = 'block';
+                correctMessage.style.display = 'none';
+                allCorrect = false;
+            }
+        }
+
+        if (allCorrect) {
+            const allCorrectMessage = document.getElementById('all-correct-message');
+            const countdown = document.getElementById('countdown');
+            allCorrectMessage.style.display = 'block';
+
+            let timeLeft = 3;
+            const timer = setInterval(() => {
+                timeLeft--;
+                countdown.textContent = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    document.querySelector('form').submit();
+                }
+            }, 1000);
+        }
+    }
+</script>
+
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block styles %}
+<style>
+    body, html {
+        background-color: #ffffff; /* White background for the overall page */
+        color: #333; /* Darker text for better readability */
+    }
+    .container {
+        max-width: 800px;
+        margin: auto;
+        padding: 20px;
+    }
+    h1 {
+        color: #007bff; /* Bootstrap primary color */
+        text-align: center;
+        margin-bottom: 30px; /* More space below the heading */
+    }
+    .highlight {
+        font-weight: bold; /* Make important text bold */
+        color: #007bff; /* Highlight color */
+    }
+    .content-section p {
+        margin-top: 1rem; /* Add space between paragraphs */
+        font-size: 16px; /* Slightly larger font for readability */
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Welcome</h1>
+
+    <div class="content-section">
+        <p>Thank you for participating in this experiment.</p>
+        <p><span class="highlight">Please do not communicate</span> with other participants and do not use cell phones or other electronic devices at any point during the experiment.</p>
+        <p>If you have any questions, please <span class="highlight"> raise your hand and an experimenter will come to you</span>. to answer your question privately.</p>
+    </div>
+
+    <div class="content-section">
+        <p>For your participation in this experiment, you will earn a <span class="highlight">€5 show-up fee</span>. You can also earn <span class="highlight">additional money depending on your decisions</span> in the experiment and other participants’ decisions.</p>
+        <p>You will receive your payment at the end of the experiment. No other participant will be informed of your payment, and you will not be informed of any other participant’s payment.</p>
+    </div>
+</div>
+
+{% next_button %}
+{% endblock %}

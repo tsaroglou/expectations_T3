@@ -1,0 +1,52 @@
+{% extends "global/Page.html" %}
+
+{% block title %}Show Images{% endblock %}
+
+{% block head %}
+    <style>
+        .iframe-container {
+            position: relative;
+        }
+
+        .iframe-container iframe {
+            pointer-events: none; /* Disable user interaction */
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            background: transparent;
+        }
+
+        /* Hide the Google Drive controls right away */
+        .iframe-container iframe {
+            pointer-events: none; /* Prevent any clicks on the iframe */
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <h2>Here are the images from other participants:</h2>
+
+    {% for role, participants in images_for_participant.items %}
+        <h3>Images from Participants with Role {{ role }}</h3>
+
+        {% for participant in participants %}
+            <p>{{ participant.name_in_group }}</p>
+            <div class="iframe-container">
+                <iframe
+                    src="https://drive.google.com/file/d/{{ participant.google_drive_file_id }}/preview"
+                    width="240" height="180" allow="autoplay">
+                </iframe>
+                <div class="overlay"></div>
+            </div>
+        {% endfor %}
+    {% endfor %}
+
+    {% next_button %}
+
+{% endblock %}

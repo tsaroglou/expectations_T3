@@ -1,0 +1,35 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block content %}
+<style>
+    .color-red { color: red; }
+    .color-blue { color: blue; }
+    .color-green { color: green; }
+</style>
+
+<div class="container mt-4">
+    {% if in_top_50 %}
+        <div class="alert alert-warning" role="alert">
+            <p>Congratulations, you scored in the top 50%!</p>
+            {% if 'in_top_50' %}
+                {% if box_with_money == 'Red' or box_with_money == 'red' %}
+                    <p>The box that contains the money is the <strong><span class="color-red">red</span></strong> box.</p>
+                {% elif box_with_money == 'Blue' or box_with_money == 'blue' %}
+                    <p>The box that contains the money is the <strong><span class="color-blue">blue</span></strong> box.</p>
+                {% elif box_with_money == 'Green' or box_with_money == 'green' %}
+                    <p>The box that contains the money is the <strong><span class="color-green">green</span></strong> box.</p>
+                {% else %}
+                    <p>The box that contains the money is the <strong>{{ box_with_money }}</strong> box.</p>
+                {% endif %}
+            {% endif %}
+        </div>
+    {% else %}
+        <div class="alert alert-warning" role="alert">
+            <p>Unfortunately, you did not score in the top 50%, so you will not find out which box contains the money.</p>
+        </div>
+    {% endif %}
+</div>
+
+{% next_button %}
+{% endblock %}

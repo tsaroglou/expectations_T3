@@ -1,0 +1,35 @@
+{% extends "otree/admin/SessionMonitor.html" %}
+
+{% block content %}
+  <h3>Monitor Participants</h3>
+  <table>
+      <tr>
+          <th>Participant Code</th>
+          <th>Status</th>
+          <th>Actions</th>
+      </tr>
+      {% for participant in session.get_participants %}
+      <tr>
+          <td>{{ participant.code }}</td>
+          <td>
+              {% if participant.get_players.latest.remove %}
+              <span style="color: red;">Removed</span>
+              {% else %}
+              Active
+              {% endif %}
+          </td>
+          <td>
+              {% if not participant.get_players.latest.remove %}
+              <form method="post">
+                  {% csrf_token %}
+                  <input type="hidden" name="participant_id" value="{{ participant.id }}">
+                  <button type="submit">Kick Out</button>
+              </form>
+              {% else %}
+              Already Kicked Out
+              {% endif %}
+          </td>
+      </tr>
+      {% endfor %}
+  </table>
+{% endblock %}

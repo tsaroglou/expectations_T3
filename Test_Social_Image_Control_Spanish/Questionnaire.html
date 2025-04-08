@@ -1,0 +1,99 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block content %}
+<style>
+    .container {
+        max-width: 800px;
+        margin: auto;
+        padding: 20px;
+        background-color: #f8f8f8;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 10px;
+        display: block;
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #0d7ffa;
+    }
+
+    .form-group {
+        margin-bottom: 40px;
+        display: block;
+    }
+
+
+
+    /* This rule ensures that radio buttons are displayed vertically */
+    .form-group div {
+        margin-bottom: 10px; /* Adjust spacing between each radio button */
+    }
+
+    .form-group label {
+        display: block; /* Make sure labels are also in block format to ensure vertical alignment */
+        margin-bottom: 5px; /* Space below each label */
+    }
+
+    .btn-primary {
+        color: #fff;
+        background-color: #007bff;
+        border-color: #007bff;
+        padding: 10px 15px;
+        border-radius: 5px;
+        font-size: 1rem;
+        margin-top: 20px;
+        transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+        display: block;
+        width: 100%;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #004085;
+    }
+</style>
+
+<form method="post">
+    <div class="container">
+        <div class="form-group">
+            {{ formfield "is_student" }}
+        </div>
+        <div class="form-group">
+            {{ formfield "people_in_room_known" }}
+        </div>
+
+        <div class="form-group">
+            {{ formfield "study_level" }}
+        </div>
+
+        <div class="form-group">
+            {{ formfield "study_year" }}
+        </div>
+
+          <div class="form-group">
+            {{ formfield "major" }}
+        </div>
+
+        <div class="form-group">
+            {{ formfield "is_employed" }}
+        </div>
+
+        <div class="form-group">
+            {{ formfield "country" }}
+        </div>
+
+        <div class="form-group">
+            {{ formfield "age" }}
+        </div>
+
+        <div class="form-group">
+            {{ formfield "gender" }}
+        </div>
+
+        <button type="submit" class="btn btn-primary">Presentar respuestas</button>
+    </div>
+</form>
+{% endblock %}

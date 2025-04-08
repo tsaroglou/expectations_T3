@@ -1,0 +1,255 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block content %}
+<style>
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+.histogram-wrapper {
+    position: center;
+    width: flex;
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 15px;
+    overflow-x: flex; /* Allow horizontal scrolling if necessary */
+}
+
+.histogram-title {
+    font-size: 30px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #0056b3;
+}
+
+.histogram-container {
+    display: flex;
+    align-items: flex-end;
+    width: fit-content; /* Fit container to content width */
+    min-width: 100%; /* Ensure container is at least 100% wide */
+    height: 450px;
+    background-color: #f0f0f0;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    position: relative;
+
+}
+
+.horizontal-line {
+    position: flex;
+    bottom: 50px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #ccc;
+}
+
+.bar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    margin: 0 5px; /* Add margin between bars */
+    min-width: 40px; /* Set minimum width for each bar */
+}
+
+.icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+}
+
+.icon:hover {
+    transform: scale(1.2);
+}
+
+.bar-graph {
+    width: 100%;
+    text-align: center;
+    font-size: 10px;
+    color: white;
+    position: relative;
+    background-color: #007bff;
+    border-radius: 10px 10px 0 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.bar-graph span {
+    position: absolute;
+    top: -23px;
+    width: 100%;
+    left: 0;
+    text-align: center;
+    color: #2776e8;
+    font-weight: bold;
+    font-size: 16px; /* Increase font size here */
+}
+
+.bar-graph .money-earned {
+    position: absolute;
+    bottom: 5px;
+    width: 100%;
+    left: 0;
+    text-align: center;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.tooltip {
+    position: absolute;
+    display: none;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 5px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    pointer-events: none;
+    z-index: 1000;
+    font-size: 12px;
+}
+
+.histogram-legend {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    width: 115%;
+    flex-wrap: wrap;
+    padding: 10px;
+    font: 14pt;
+    margin-top: 20px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    margin: 5px 20px;
+    font: 14pt;
+}
+
+.legend-color {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    display: inline-block;
+}
+
+.legend-color.red { background-color: #FF0000; }
+.legend-color.orange { background-color: #FFA500; }
+.legend-color.green { background-color: #4fe14f; }
+.legend-color.yellow { background-color: #FFFF00; }
+.legend-color.blue { background-color: #0000FF; }
+.highlight {
+    border: 3px solid #ffd700;
+    box-shadow: 0 0 5px 5px #ffd700;
+    border-radius: 35%;
+}
+.pulse-effect {
+    animation: pulse 2s infinite;
+    z-index: 10;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+.explanation-box {
+    background-color: #e0f7fa;
+    border: 1px solid #b2ebf2;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #00796b;
+}
+
+/* Indicator for horizontal scrolling */
+.scroll-indicator {
+    text-align: center;
+    font-size: 18px;
+    color: #007bff;
+    margin-top: 10px;
+}
+</style>
+
+<div class="explanation-box">
+    <p>Below you can see the <strong> total correct answers </strong> and <strong> earnings </strong> of you (highlighted in a yellow circle) and of the rest of the participants in this session. </p> <p>The icon colors indicate the participants' percentage ranking in the distribution, with 0% being the lowest point and 100% the highest.<br> <br> You scored above <strong>{{ percentage_ranking_100 }}%</strong> of participants in this session.</p>
+</div>
+
+<div class="histogram-wrapper">
+    <div class="histogram-title">Distribution of Scores</div>
+    <div class="histogram-container" id="iconsHistogram">
+        <div class="horizontal-line"></div>
+        {% for score, icon, height, ranking, money, id_in_group in scores_and_colors %}
+        <div class="bar">
+            <div class="bar-graph" style="height: {{ height }}px;">
+                <span class="score-value">{{ score }}</span>
+                <div class="money-earned">{{ money }}</div>
+            </div>
+            <img src="{{ icon }}" class="icon {% if specific_participant_id_in_group == id_in_group %}highlight pulse-effect{% endif %}" data-original-score="{{ score }}" data-original-money="{{ money }}" data-ranking="{{ ranking }}" data-id-in-group="{{ id_in_group }}">
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="histogram-legend">
+    <div class="legend-item">
+        <span class="legend-color blue"></span> Bottom: 0-20%
+    </div>
+       <div class="legend-item">
+        <span class="legend-color orange"></span> Lower Middle: 21-40%
+    </div>
+    <div class="legend-item">
+        <span class="legend-color green"></span> Middle: 41-60%
+    </div>
+        <div class="legend-item">
+        <span class="legend-color yellow"></span> Upper Middle: 61-80%
+    </div>
+    <div class="legend-item">
+        <span class="legend-color red"></span> Top: 81-100%
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const icons = document.querySelectorAll('.icon');
+    const tooltip = document.createElement('div');
+    tooltip.className = 'tooltip';
+    document.body.appendChild(tooltip);
+
+    icons.forEach(icon => {
+        icon.addEventListener('mouseover', function(event) {
+            const score = this.previousElementSibling.querySelector('span').innerText;
+            const ranking = this.getAttribute('data-ranking');
+            const idInGroup = this.getAttribute('data-id-in-group');
+            const participantName = `Participant ${idInGroup}`;
+            tooltip.innerHTML = `Name: ${participantName}<br>Score: ${score}<br>Ranking: ${ranking}`;
+            tooltip.style.display = 'block';
+            tooltip.style.left = `${event.pageX + 10}px`;
+            tooltip.style.top = `${event.pageY + 10}px`;
+        });
+
+        icon.addEventListener('mousemove', function(event) {
+            tooltip.style.left = `${event.pageX + 10}px`;
+            tooltip.style.top = `${event.pageY + 10}px`;
+        });
+
+        icon.addEventListener('mouseout', function() {
+            tooltip.style.display = 'none';
+        });
+    });
+});
+</script>
+
+{% next_button %}
+{% endblock %}

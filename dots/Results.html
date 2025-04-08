@@ -1,0 +1,6 @@
+{% extends "global/Page.html" %}
+{% block content %}
+    <h1>Results</h1>
+    <p>Congratulations, you have earned {{ participant.vars['final_participant_charity'] }} Euros and Give
+    Directly will receive an additional {{ participant.vars['payment_for_charity'] }} Euros!</p>
+{% endblock %}

@@ -1,0 +1,421 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block content %}
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f5f5f5;
+        color: #333;
+    }
+
+    .explanation-box {
+    background-color: #e0f7fa;
+    border: 1px solid #b2ebf2;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #00796b;
+    text-align: center;
+}
+
+    .graph-wrapper {
+        width: 100%;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+
+    .histogram-wrapper {
+        width: 100%;
+        height: auto;
+    }
+
+    .histogram-title {
+        font-size: 24px;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 20px;
+        color: #0056b3;
+    }
+
+    .histogram-container {
+        display: flex;
+        align-items: flex-end;
+        width: 100%;
+        height: 450px;
+        background-color: #f0f0f0;
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    .horizontal-line {
+        position: absolute;
+        bottom: 50px;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background-color: #ccc;
+    }
+
+    .bar {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+        margin: 0 2px;
+    }
+
+    .icon {
+        width: 30px;
+        height: 30px;  /* Set a fixed size to prevent the icons from growing too large */
+        border-radius: 50%;
+        transition: transform 0.3s ease;
+        margin-top: 5px; /* Space between the bar and the icon */
+    }
+
+    .icon:hover {
+        transform: scale(1.2);
+    }
+
+    .bar-graph {
+        width: 100%;
+        text-align: center;
+        font-size: 10px;
+        color: white;
+        position: relative;
+        background-color: #007bff;
+        border-radius: 10px 10px 0 0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .bar-graph span {
+        position: absolute;
+        width: 100%;
+        left: 0;
+        text-align: center;
+        color: black;
+        font-weight: bold;
+    }
+
+    .score-value {
+        top: -30px;
+        font-size: medium;
+    }
+
+    .money-earned {
+        bottom: 5px;
+        font-stretch: bold;
+        font-size: medium;
+    }
+
+    .sliders-container {
+        margin-bottom: 30px;
+        text-align: center;
+    }
+
+    .slider {
+        width: 80%;
+        margin: 10px auto;
+    }
+</style>
+
+<!-- Original Content Section -->
+<div class="content-section">
+    <p> In this part you are competing against everyone in this session, <span class="highlight"> the winner will receive a bonus of 3 Euros. </span> </p>
+
+
+      <p>You will be asked to sketch a distribution. Your goal is to build a distribution that resembles the distribution of scores if the probability mechanism was not in place. In other words, you should build <span class="highlight">a distribution that looks like the distribution of scores and payments if each correct answer always gave 1 point and each incorrect answer always gave 0 points</span>. </p>
+    <p>For example, below, if the point score distribution you see is the one on the left, and the real total correct answer distribution is the one on the right:
+
+
+    <div style="transform: scale(0.65); transform-origin: top left; margin-right: 20px;">
+
+
+<div class="graph-container" style="display: flex; justify-content: space-between;">
+
+    <!-- First Graph (unchanged) -->
+    <div class="graph-wrapper">
+        <div class="histogram-wrapper">
+            <div class="histogram-title">Point Score Distribution (example)</div>
+    <div class="histogram-container">
+        <div class="horizontal-line"></div>
+        {% for value in point_distribution_example %}
+        <div class="bar" style="flex: 1 1 calc((100% / 20) - 4px);">
+            <div class="bar-graph" style="height: {{ value.height }}px; position: relative;">
+                <!-- Display earnings at the top in blue -->
+                <span class="earnings-value" style="color: #0a53be; position: absolute; top: -20px; width: 100%; text-align: center;">{{ value.money }}</span>
+
+                <!-- Display raw score at the bottom in white -->
+                <div class="score-value" style="color: white; position: absolute; top: 2px; font-size: 8pt; bottom: 5px; width: 100%; text-align: center;">{{ value.score }}</div>
+            </div>
+            <div class="icon-wrapper">
+                <img src="{{ value.icon }}" class="icon">
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+        </div>
+    </div>
+
+
+
+    <!-- Second Graph (unchanged) -->
+
+    <div class="histogram-wrapper  graph-wrapper">
+
+    <div class="histogram-title"> Real Total Correct Answer Distribution (example)</div>
+                <div style="transform: transform-origin: top left; left: 30px; margin-right: 0px;">
+
+        <div class="histogram-container">
+        <div class="horizontal-line"></div>
+        {% for value in raw_distribution_example %}
+        <div class="bar" style="flex: 1 1 calc((100% / 20) - 4px);">
+            <div class="bar-graph" style="height: {{ value.height }}px; position: relative;">
+                <!-- Display earnings at the top in blue -->
+                <span class="earnings-value" style="color: #0a53be; position: absolute; top: -20px; width: 100%; text-align: center;">{{ value.money }}</span>
+
+                <!-- Display raw score at the bottom in white -->
+                <div class="score-value" style="color: white; position: absolute; top: 2px; font-size: 8pt; bottom: 5px; width: 100%; text-align: center;">{{ value.score }}</div>
+            </div>
+            <div class="icon-wrapper">
+                <img src="{{ value.icon }}" class="icon">
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+        </div>
+
+</div>
+    </div>
+
+
+</div>
+
+<div class="next-section" style="margin-top: -170px;">
+
+    <p>Then between the following two sketches of distributions, <b> the winner is Sketch 2 </b>. Sketch 2 is the winner because it more closely resembles the real total correct answer distribution.</p>
+
+  <div style="transform: scale(0.65); transform-origin: top left; margin-right: 20px;">
+
+<div class="graph-container" style="display: flex; justify-content: space-between;">
+
+    <!-- First Graph (unchanged) -->
+    <div class="graph-wrapper">
+        <div class="histogram-wrapper">
+            <div class="histogram-title">Sketch 1 (example)</div>
+    <div class="histogram-container">
+        <div class="horizontal-line"></div>
+        {% for value in sketch1_distribution %}
+        <div class="bar" style="flex: 1 1 calc((100% / 20) - 4px);">
+            <div class="bar-graph" style="height: {{ value.height }}px; position: relative;">
+                <!-- Display earnings at the top in blue -->
+                <span class="earnings-value" style="color: #0a53be; position: absolute; top: -20px; width: 100%; text-align: center;">{{ value.money }}</span>
+
+                <!-- Display raw score at the bottom in white -->
+                <div class="score-value" style="color: white; position: absolute; top: 2px; font-size: 8pt; bottom: 5px; width: 100%; text-align: center;">{{ value.score }}</div>
+            </div>
+            <div class="icon-wrapper">
+                <img src="{{ value.icon }}" class="icon">
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+        </div>
+    </div>
+
+
+
+    <!-- Second Graph (unchanged) -->
+
+    <div class="histogram-wrapper  graph-wrapper " style="border: 10px solid greenyellow;">
+
+    <div class="histogram-title"> Sketch 2 (example)</div>
+                <div style="transform: transform-origin: top left; left: 30px; margin-right: 0px;">
+
+        <div class="histogram-container">
+        <div class="horizontal-line"></div>
+        {% for value in sketch2_distribution %}
+        <div class="bar" style="flex: 1 1 calc((100% / 20) - 4px);">
+            <div class="bar-graph" style="height: {{ value.height }}px; position: relative;">
+                <!-- Display earnings at the top in blue -->
+                <span class="earnings-value" style="color: #0a53be; position: absolute; top: -20px; width: 100%; text-align: center;">{{ value.money }}</span>
+
+                <!-- Display raw score at the bottom in white -->
+                <div class="score-value" style="color: white; position: absolute; top: 2px; font-size: 8pt; bottom: 5px; width: 100%; text-align: center;">{{ value.score }}</div>
+            </div>
+            <div class="icon-wrapper">
+                <img src="{{ value.icon }}" class="icon">
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+        </div>
+
+</div>
+    </div>
+
+
+</div>
+<div class="next-section" style="margin-top: -170px;">
+
+</div>
+
+<p>To refresh your memory, bellow you can see once again the distribution of point scores of the other group. <span class="highlight">Note that this is the score distribution before any taxes were applied.</span> As you know, these scores were calculated based on a probability mechanism that gave 1 point with a 45% probability when the response was incorrect, and 1 point with a 75% probability when the response was correct.</p>
+
+
+     <div class="histogram-wrapper" >
+    <div class="histogram-title">Point Score Distribution (other group)</div>
+    <div class="histogram-container" id="originalHistogram">
+        <div class="horizontal-line"></div>
+        {% for value in scores_and_colors %}
+        <div class="bar" style="flex: 1 1 calc((100% / {{ scores_and_colors|length }}) - 4px);">
+            <div class="bar-graph" style="height: {{ value.2 }}px;">
+                <!-- Display earnings at the top in blue -->
+                <span class="earnings-value" style="color: #0a53be; position: absolute; top: -20px; width: 100%; text-align: center;">{{ value.3 }}</span>
+                <!-- Display score2 at the bottom in white -->
+                <div class="score-value" style="color: white; position: absolute; top: 10px; font-size: 8pt; bottom: 5px; width: 100%; text-align: center;">{{ value.0 }}</div>
+            </div>
+            <div class="icon-wrapper">
+                <img src="{{ value.1 }}" class="icon">
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="explanation-box">
+    <p>Use the 3 sliders to adjust the real total correct answers and earnings of each column in order to sketch the distribution you believe is correct.</p>
+    <p>You need to move <b>each slider</b> in order to be able to continue, even if you move it to just return it back to its original position.</p>
+    <p>We have prefilled 2 correct answers to all columns, you can adjust each column as you see fit.</p>
+</div>
+
+<!-- Interactive section -->
+<div class="sliders-container">
+    <p>Adjust Slope</p>
+    <input type="range" id="slopeSlider" class="slider" min="0" max="10" step="1" value="0">
+    <p>Adjust Curvature</p>
+    <input type="range" id="curveSlider" class="slider" min="0" max="20" step="1" value="0">
+    <p>Adjust Overall Height</p>
+    <input type="range" id="heightSlider" class="slider" min="0" max="15" step="1" value="2">
+</div>
+
+<div class="histogram-wrapper">
+    <div class="histogram-title">Your True Distribution Estimation</div>
+    <div class="histogram-container" id="interactiveHistogram">
+        <div class="horizontal-line"></div>
+        {% for value in predefined_distribution %}
+        <div class="bar" style="flex: 1 1 calc((100% / {{ predefined_distribution|length }}) - 4px);">
+            <div class="bar-graph" style="height: {{ value.money_height }}px;" data-index="{{ forloop.counter0 }}">
+                <span class="score-value"  style="color: #0a53be; position: absolute; top: -20px; width: 100%; text-align: center;">>{{ value.score }}</span>
+
+                <div class="money-earned" style="color: white; position: absolute; top: 10px; font-size: 8pt; bottom: 5px; width: 100%; text-align: center;">>€{{ value.money }}</div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<form id="adjustmentForm" method="post">
+    <input type="hidden" id="adjustmentValues" name="adjustment_values" value="">
+    <button type="submit" id="submitButton" class="btn btn-primary" disabled>Submit</button>
+</form>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const bars = document.querySelectorAll('#interactiveHistogram .bar-graph');
+    const heightSlider = document.getElementById('heightSlider');
+    const slopeSlider = document.getElementById('slopeSlider');
+    const curveSlider = document.getElementById('curveSlider');
+    const adjustmentValues = document.getElementById('adjustmentValues');  // Hidden input to store money-earned values
+    const submitButton = document.getElementById('submitButton');  // Standard submit button
+
+    const maxScore = 15;
+    const maxHeightPx = document.querySelector('#interactiveHistogram').clientHeight;
+
+    // Flags to track whether each slider has been moved
+    let heightMoved = false;
+    let slopeMoved = false;
+    let curveMoved = false;
+
+    function updateBars() {
+        const baseScore = parseInt(heightSlider.value);
+        const slope = slopeSlider.value / 10;
+        const curvature = curveSlider.value / 10;
+        const numBars = bars.length;
+
+        const moneyValues = [];
+
+        bars.forEach((bar, index) => {
+            const positionFactor = index / (numBars - 1);
+            const curveFactor = Math.pow(positionFactor, 1 + curvature * 2);
+
+            let newScore = baseScore + slope * positionFactor * maxScore * curveFactor;
+            newScore = Math.max(0, Math.min(newScore, maxScore));
+            newScore = Math.round(newScore);
+
+            const newHeightPx = (newScore / maxScore) * maxHeightPx;
+            bar.style.height = `${newHeightPx}px`;
+
+            const scoreValue = bar.querySelector('.score-value');
+            const moneyEarned = bar.querySelector('.money-earned');
+            const moneyValue = (newScore / maxScore * 2.5).toFixed(2);
+
+            scoreValue.innerText = newScore;
+            moneyEarned.innerText = `€${moneyValue}`;
+
+            // Add the money value to the array
+            moneyValues.push(moneyValue);
+        });
+
+        // Store the money-earned values in the hidden input field
+        adjustmentValues.value = moneyValues.join(',');
+    }
+
+    // Function to enable the submit button if all sliders have been moved
+    function enableSubmitIfNeeded() {
+        if (heightMoved && slopeMoved && curveMoved) {
+            submitButton.disabled = false;  // Enable the submit button
+        }
+    }
+
+    updateBars();
+
+    // Mark sliders as "moved" when interacted with
+    heightSlider.addEventListener('input', function() {
+        heightMoved = true;
+        updateBars();
+        enableSubmitIfNeeded();
+    });
+
+    slopeSlider.addEventListener('input', function() {
+        slopeMoved = true;
+        updateBars();
+        enableSubmitIfNeeded();
+    });
+
+    curveSlider.addEventListener('input', function() {
+        curveMoved = true;
+        updateBars();
+        enableSubmitIfNeeded();
+    });
+
+    // Prevent form submission if all sliders haven't been moved (as an extra safeguard)
+    document.getElementById('adjustmentForm').addEventListener('submit', function(event) {
+        if (!heightMoved || !slopeMoved || !curveMoved) {
+            event.preventDefault();
+            alert("Please move all sliders before submitting.");
+        }
+    });
+});
+</script>
+
+
+
+
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block content %}
+{% if display_cross %}
+<div style="text-align: center; font-size: 24px;">+</div>
+{% else %}
+<div style="text-align: center;">
+    <img src="{{ image_path }}" alt="Flashed Image" style="max-width: 100%; height: auto;">
+</div>
+{% endif %}
+{% endblock %}

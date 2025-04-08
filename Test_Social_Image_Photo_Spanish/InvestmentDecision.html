@@ -1,0 +1,55 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block content %}
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f0f0f0;
+        color: #333;
+        line-height: 1.6;
+        padding: 20px;
+    }
+    form {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    p {
+        font-size: 16px;
+        margin-bottom: 20px;
+    }
+    button {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+    button:hover {
+        background-color: #0056b3;
+    }
+    input[type="number"], input[type="text"] {
+        padding: 8px;
+        margin-top: 5px;
+        margin-bottom: 5px;  /* Reduced margin-bottom here for better visual spacing */
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+    .note {
+        font-size: 14px;   /* Smaller font size for the note */
+        color: #555;      /* Lighter text color for subtlety */
+        margin-top: 4px;  /* Small space above the note for separation */
+    }
+</style>
+
+<form method="post">
+    <p>Se te han dado €2 y debes elegir la porción de esta cantidad (entre €0 y €2, incluidos) que deseas invertir.<br><br>La cantidad que no se invierte es tuya. Cualquier cantidad que se invierta se multiplicará por 2.5 con un 50% de probabilidad y se convertirá en 0 con un 50% de probabilidad.<br><br>Solo un participante en esta sala será elegido aleatoriamente y pagado por esta decisión.</p>
+    <p>¿Cuánto te gustaría invertir? {{ form.investment }}</p>
+     <div class="note">Los importes se redondean a dos decimales.</div> <br>
+    <button type="submit">Siguiente</button>
+</form>
+{% endblock %}

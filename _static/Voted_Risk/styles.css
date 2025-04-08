@@ -1,0 +1,144 @@
+/* Base styles */
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f9fafc;
+  margin: 0;
+  padding: 0;
+  color: #333;
+}
+
+.container {
+  max-width: 800px;
+  margin: 50px auto;
+  background-color: #ffffff;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2 {
+  color: #222;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+p {
+  font-size: 16px;
+  color: #555;
+  line-height: 1.75;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+/* Tables & Matrices */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+table, th, td {
+  border: 1px solid #e0e0e0;
+}
+
+th, td {
+  padding: 12px;
+  text-align: center;
+}
+
+th {
+  background-color: #f5f5f5;
+  font-weight: bold;
+}
+
+.payoff-matrix {
+  border-collapse: collapse;
+  margin: 20px auto;  /* Centered table */
+  width: 90%;
+}
+
+.payoff-matrix th, .payoff-matrix td {
+  border: 1px solid #ccc;
+  padding: 10px 14px;
+  text-align: center;
+}
+
+.payoff-matrix th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+}
+
+/* Matrix Container */
+.matrix-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  gap: 30px;
+  margin-bottom: 30px;
+}
+
+/* Matrix styling */
+.matrix {
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.matrix h2 {
+  text-align: center;
+  color: #007bff;
+  margin-bottom: 10px;
+}
+
+.matrix table {
+  margin: 0 auto;
+}
+
+/* Highlight effect for selected matrix */
+.matrix.highlight {
+  border: 2px solid #007bff;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+/* Info boxes for vote and payoff details */
+.info-box {
+  background-color: #eef2f7;
+  padding: 15px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  border: 1px solid #dfe4ea;
+}
+
+/* Buttons */
+.btn {
+  display: inline-block;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: #fff;
+  text-decoration: none;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+  background-color: #0056b3;
+}
+
+/* Success button variant */
+.btn-success {
+  background-color: #28a745;
+}
+
+.btn-success:hover {
+  background-color: #218838;
+}
+
+/* Center text */
+.text-center {
+  text-align: center;
+}

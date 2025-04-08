@@ -1,0 +1,34 @@
+{% block content %}
+<div class="container mt-4">
+    <h2>Your Role: <span class="text-primary">{{ participant_role }}</span></h2>
+
+    {% if participant_role == 'B' and matched_names %}
+        <div class="alert alert-info" role="alert">
+            <p>Each participant has randomly been assigned to one of two possible roles: A or B. You have been
+assigned to role B. All participants in role A will now have up to 10 minutes to complete 30-question IQ-test, which is
+frequently used to measure intelligence.  <br> <br> Like all participants in role B, you will not complete the test, but
+you can read the test while participants in role A complete it. Your final payment may depend on how
+well some of the A participants who will be linked to you do in the test relative to the other participants.
+Further information will be provided after the test.</p>
+        </div>
+        <h3>You are matched with four participants in Role A:</h3>
+        <ul class="list-group">
+            {% for name in matched_names %}
+                <li class="list-group-item">{{ name }}</li>
+            {% endfor %}
+        </ul>
+    {% elif participant_role == 'A' and matched_names %}
+        <div class="alert alert-info" role="alert">
+            <p>Each participant has randomly been assigned to one of two possible roles: A or B. You have been
+assigned to role A. Like all the other participants in role A, you will now have up to 10 minutes to complete a 30-question
+IQ-test, which is frequently used to measure intelligence. <br> <br> You should try to correctly answer as
+many questions as possible.  Your final payment may depend on how well you do in the test relative
+to the other participants. Further information will be provided after the test.</p>
+        </div>
+        <p>You are matched with a participant that has been assigned to Role B. No participant in Role B can complete the test; however, they will be able to see it.</p>
+
+    {% endif %}
+</div>
+<br>
+{% next_button %}
+{% endblock %}

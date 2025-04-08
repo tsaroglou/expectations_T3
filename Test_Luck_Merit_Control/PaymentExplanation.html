@@ -1,0 +1,102 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block styles %}
+    <style>
+        .content-section {
+            margin-top: 2rem;
+        }
+        .content-section h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #007BFF;
+        }
+        .content-section p {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+        .content-section .highlight {
+            font-weight: bold;
+            color: #007BFF;
+        }
+        .example {
+            background-color: #F8F9FA;
+            padding: 1rem;
+            border-radius: 0.25rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+        }
+        .example p {
+            margin-bottom: 0.5rem;
+        }
+        .container {
+            background-color: #F8F9FA;
+            border-radius: 0.25rem;
+            padding: 2rem;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        hr {
+            border: 0;
+            border-top: 1px solid #007BFF;
+        }
+    </style>
+{% endblock styles %}
+
+{% block content %}
+    <div class="container mt-5 p-4">
+        <h1 class="text-center mb-4">Test Payment Mechanism</h1>
+
+        <hr class="my-4">
+
+        <div class="content-section">
+            <p>You are about to take the test. </p>
+            <p>Your payment from this part will be determined <span class="highlight"> proportionally </span> by the percentage of the total points you will score in the test, therefore, the maximum amount you can win is <span class="highlight">2.5 Euros</span>. </p><p> So, your payment is calculated as follows:</p>
+            <p><strong>Test Payment = [Total Correct Answers ]% × 2.5 Euros</strong></p>
+        </div>
+
+        <p>If the above explanation is not clear to you, below you can view different combinations of total correct answers and test earnings:</p>
+
+        <div class="example">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Total Correct Answers</th>
+                        <th>Percentage of Correct Answers</th>
+                        <th>Payment from Test</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>0</td>
+                        <td>0%</td>
+                        <td>0 Euros</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>33.33%</td>
+                        <td>0.83 Euros</td>
+                    </tr>
+                    <tr>
+                        <td>10</td>
+                        <td>66.66%</td>
+                        <td>1.66 Euros</td>
+                    </tr>
+                    <tr>
+                        <td>15</td>
+                        <td>100%</td>
+                        <td>2.5 Euros</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="text-center mt-4">
+            Now that you are informed regarding the test payment mechanism, you can continue to the test.
+        </div>
+
+    </div>
+
+    <br>
+    {% next_button %}
+
+{% endblock %}

@@ -1,0 +1,80 @@
+{% block content %}
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f4f4f4;
+        color: #333;
+        line-height: 1.6;
+        padding: 20px;
+    }
+    form {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        max-width: 500px;
+        margin: auto;
+    }
+    p {
+        font-size: 16px;
+        margin-bottom: 20px;
+    }
+    input[type="text"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+        box-sizing: border-box; /* Makes sure padding doesn't affect total width */
+    }
+    button {
+        background-color: #28a745;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+    button:hover {
+        background-color: #218838;
+    }
+    p.error {
+        color: #dc3545;
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const typedCodeInput = document.getElementById('typedCode');
+
+    // Prevent pasting into the opt-out code input field
+    typedCodeInput.addEventListener('paste', function(e) {
+        e.preventDefault();
+        alert('Pasting is not allowed.');
+    });
+
+    // Optional: Add client-side verification for immediate feedback
+    const form = document.querySelector('form');
+    form.addEventListener('submit', function(e) {
+        const correctCode = "Ab3dEfGh4IjKl5MnOp6Q"; // The correct opt-out code
+        if (typedCodeInput.value !== correctCode) {
+            e.preventDefault(); // Prevent form submission
+            alert('Incorrect opt-out code. Please try again.');
+            typedCodeInput.value = ''; // Optionally clear the input
+        }
+    });
+});
+</script>
+
+{% if error_message %}
+<p class="error">{{ error_message }}</p>
+{% endif %}
+
+<form method="post">
+    <p>Opt-Out Code: <strong>Ab3dEfGh4IjKl5MnOp6Q</strong></p>
+    <p>Please enter the opt-out code to proceed:</p>
+    <input type="text" name="typed_code" id="typedCode" autocomplete="off">
+    <button type="submit">Verify</button>
+</form>
+{% endblock %}

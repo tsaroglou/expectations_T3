@@ -1,0 +1,136 @@
+{% extends "global/Page.html" %}
+{% load otree static i18n %}
+
+{% block styles %}
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f2f2f2;
+    }
+    .container {
+        background-color: #fff;
+        border-radius: 2px;
+        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+        margin: 40px auto;
+        padding: 20px;
+        width: 85%;
+        max-width: 900px;
+    }
+    h2 {
+        color: #007bff;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    p {
+        font-size: 1.1rem;
+        margin-top: 15px;
+        text-align: justify;
+    }
+    .table-responsive {
+        background-color: #fafafa;
+        padding: 15px;
+        margin-top: 30px;
+    }
+    table {
+        width: 100%;
+        margin-top: 15px;
+        border-collapse: collapse;
+    }
+    th {
+        background-color: #007bff;
+        color: #fff;
+        padding: 10px;
+        border: 1px solid #ddd;
+    }
+    td {
+        padding: 10px;
+        border: 1px solid #ddd;
+        text-align: center;
+    }
+    .radio-horizontal {
+        display: flex;
+        justify-content: center;
+    }
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+        width: 100%;
+        padding: 10px;
+        margin-top: 20px;
+    }
+    .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #0056b3;
+    }
+    .radio-buttons {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        align-items: center;
+    }
+    .radio-buttons label {
+        display: block;
+    }
+    input[type='radio'] {
+        accent-color: #007bff;
+        margin-right: 5px;
+    }
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: #e6f7ff; /* White for odd rows */
+    }
+    .table-striped tbody tr:nth-of-type(even) {
+        background-color: #ffffff; /* Light blue for even rows */
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <p>En la siguiente tabla hay 4 filas correspondientes a Decisión 1, Decisión 2, Decisión 3 y Decisión 4. En cada decisión, debes elegir entre dos opciones: Opción Izquierda (L) y Opción Derecha (R). En cada decisión, la opción elegida especificará una ganancia para ti y una ganancia para otro participante en la sala. Todos los participantes en la sala tomarán las mismas cuatro decisiones.</p>
+    <p>Una vez que todos los participantes en la sala hayan tomado sus decisiones, se escogerá aleatoriamente a uno de los participantes. Para el participante que sea escogido, una de sus cuatro decisiones será seleccionada aleatoriamente y se realizarán los pagos según la opción que haya elegido en esa decisión.</p>
+    <p>Además, se seleccionará aleatoriamente a otro participante en la sala que recibirá la cantidad de € que corresponde a “el otro participante”.</p>
+    <p>Por favor, selecciona una opción (Opción L o Opción R) para cada decisión:</p>
+
+    <form method="post" class="table-responsive">
+        <table class="table table-striped">
+            <tbody>
+                <tr>
+                    <td scope="col"> Decisión </td>
+                    <td scope="col"> Opción L &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Opción R </td>
+                </tr>
+
+                <tr>
+                    <td>Decisión 1</td>
+                    <td class="radio-buttons">
+                        <label><input type="radio" name="decision_1" value="L"> 2€ para ti <br> 2€ para el otro participante </label>
+                        <label><input type="radio" name="decision_1" value="R"> 1€ para ti <br> 1€ para el otro participante</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Decisión 2</td>
+                    <td class="radio-buttons">
+                        <label><input type="radio" name="decision_2" value="L"> 2€ para ti <br> 2€ para el otro participante </label>
+                        <label><input type="radio" name="decision_2" value="R"> 3€ para ti <br> 1€ para el otro participante</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Decisión 3</td>
+                    <td class="radio-buttons">
+                        <label><input type="radio" name="decision_3" value="L"> 2€ para ti <br> 2€ para el otro participante</label>
+                        <label><input type="radio" name="decision_3" value="R"> 2€ para ti<br> 4€ para el otro participante</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Decisión 4</td>
+                    <td class="radio-buttons">
+                        <label><input type="radio" name="decision_4" value="L"> 2€ para ti <br> 2€ para el otro participante</label>
+                        <label><input type="radio" name="decision_4" value="R"> 3€ para ti <br> 5€ para el otro participante</label>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <button type="submit" class="btn btn-primary">Siguiente</button>
+    </form>
+</div>
+{% endblock %}
+

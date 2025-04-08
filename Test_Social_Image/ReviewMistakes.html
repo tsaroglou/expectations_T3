@@ -1,0 +1,100 @@
+{% extends "global/Page.html" %}
+{% block content %}
+<div class="container" style="margin-bottom: 40px;"> <!-- Increased bottom margin for spacing -->
+    <style>
+        .feedback-title {
+            color: #17a2b8; /* Softer blue */
+            font-size: 1.5rem;
+            margin-bottom: 0px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .question {
+            font-weight: 600;
+            color: #007bff; /* Primary color */
+            margin-top: 20px;
+        }
+
+        .explanation {
+            margin-top: 10px;
+            font-style: normal;
+            color: #343a40; /* Dark color for readability */
+            background-color: #e9ecef; /* Light gray background */
+            border-left: 0px solid #ffc107; /* Highlight color */
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        }
+
+        .icon {
+            display: inline-block;
+            width: 30px;
+            text-align: center;
+            margin-right: 10px;
+        }
+
+        .correct-message {
+            color: #28a745; /* Success color */
+            font-weight: bold;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .review-section {
+            padding-top: 20px;
+        }
+    </style>
+
+    {% if hasmistake %}
+        <div class="feedback-title">Review of Mistakes</div>
+        <div class="review-section">
+            {% if uq1 %}
+                <div class="question">Question 1: Do participants in role B find out which participants in role A scored in the top 50% in the test?</div>
+                <div class="explanation">Explanation: No, participants in role B do not find out which participants in role A scored in the top 50% in the test.</div>
+            {% endif %}
+            {% if uq2 %}
+                <div class="question">Question 2: Do participants know the identity of other participants?</div>
+                <div class="explanation">Explanation: No, participants' identities are not disclosed to ensure anonymity and fairness in the experiment.</div>
+            {% endif %}
+
+            {% if uq3 %}
+                <div class="question">Question 3: Do participants in Role B find out which box holds the money?</div>
+                <div class="explanation">Explanation: No, participants in Role B do not find out which box holds the money to maintain the game's element of uncertainty.</div>
+            {% endif %}
+
+            {% if uq4 %}
+                <div class="question">Question 4: Can participants in Role B choose a box even if they do not know which one contains the money?</div>
+                <div class="explanation">Explanation: Yes, participants in Role B can choose any box as part of the game's strategy, regardless of whether they know where the money is.</div>
+            {% endif %}
+
+            {% if uq5 %}
+                <div class="question">Question 5: How much does a B participant earn when they let their A participants make a choice, and they choose a box?</div>
+                <div class="explanation">Explanation: The earnings depend on several factors, including whether the chosen box contains the money and the decisions made by participants in Role A.</div>
+            {% endif %}
+
+            {% if uq6 %}
+                <div class="question">Question 6: How much does an A participant earn when their B participant lets them make a choice and they choose a box?</div>
+                <div class="explanation">Explanation: The earnings for participants in Role A can vary based on the outcome of the box selection and other game conditions.</div>
+            {% endif %}
+
+            {% if uq7 %}
+                <div class="question">Question 7: How much is a participant in role A earning when they stay out?</div>
+                <div class="explanation">Explanation: Participants in Role A who choose to stay out are guaranteed a fixed earning, regardless of the game's other outcomes.</div>
+            {% endif %}
+
+            {% if uq8 %}
+                <div class="question">Question 8: How much is a participant in role B earning when they stay out?</div>
+                <div class="explanation">Explanation: Participants in Role B who decide to stay out receive a fixed amount, which is not influenced by the actions of other participants or the results of the test.</div>
+            {% endif %}
+
+
+
+
+        </div>
+    {% else %}
+        <p class="correct-message"> You answered all questions correctly. Great job!</p>
+    {% endif %}
+</div>
+{% next_button %}
+{% endblock %}

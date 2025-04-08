@@ -1,0 +1,25 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block content %}
+<div class="container text-center" style="padding-top: 20px;">
+    <!-- Instructions or game description -->
+    <p>Click the button as fast as you can when it appears!</p>
+    <!-- Hidden button that appears after a delay -->
+    <button id="clickMeButton" style="display:none; padding: 10px 20px; font-size: 20px; margin-top: 20px;">Click Me!</button>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Function to show the button after a random delay
+    setTimeout(function() {
+        document.getElementById('clickMeButton').style.display = 'block';
+        document.getElementById('clickMeButton').onclick = function() {
+            // Redirect to the next page in your oTree app upon click
+            window.location.href = '{% url "Introduction" %}';
+        };
+    }, Math.random() * 2000 + 1000); // Delay between 1-3 seconds
+});
+</script>
+{% endblock %}
+

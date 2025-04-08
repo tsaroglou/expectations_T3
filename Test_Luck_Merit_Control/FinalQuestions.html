@@ -1,0 +1,231 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block styles %}
+    <style>
+        .content-section {
+            margin-top: 2rem;
+        }
+        .content-section h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #007BFF;
+        }
+        .content-section p {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .explanation-box {
+            background-color: #e0f7fa;
+            border: 1px solid #b2ebf2;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #00796b;
+            text-align: center;
+        }
+
+        .container {
+            background-color: #F8F9FA;
+            border-radius: 0.25rem;
+            padding: 2rem;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        hr {
+            border: 0;
+            border-top: 1px solid #007BFF;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-group label {
+            font-weight: bold;
+        }
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+        }
+        .form-control-range {
+            width: 100%;
+        }
+
+         .announcement-box {
+        background-color: #a9c6e3;
+        color: #1c5172;
+        border: 1px solid #6a91c3;
+        padding: 1rem;
+        border-radius: 0.25rem;
+        margin-bottom: 1.5rem;
+    }
+    </style>
+{% endblock styles %}
+
+{% block content %}
+    <div class="container mt-5 p-4">
+        Please respond to the following questions.
+
+        <hr class="my-4">
+
+        <form method="post">
+            <div class="content-section">
+                <div class="form-group">
+                    <label for="age">What is your age?</label>
+                    <input type="number" id="age" name="age" min="18" max="99" required class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label for="gender">What is your gender?</label>
+                    <select id="gender" name="gender" required class="form-control">
+                        <option value="" disabled selected>Select your gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="student">Are you a student?</label>
+                    <select id="student" name="student" required class="form-control">
+                        <option value="" disabled selected>Select your student status</option>
+                        <option value="Yes undergraduate.">Yes undergraduate.</option>
+                        <option value="Yes graduate.">Yes graduate.</option>
+                        <option value="No.">No.</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+    <label for="major">What is your field of study?</label>
+                     {{ form.major }}
+
+    </select>
+</div>
+
+                   <div class="form-group">
+                       <b>Which country are you from?</b>
+                 {{ form.country }}
+                </div>
+
+
+
+                <div class="form-group">
+                    <label for="employed">Are you employed?</label>
+                    <select id="employed" name="employed" required class="form-control">
+                        <option value="" disabled selected>Select your employment status</option>
+                        <option value="Yes.">Yes.</option>
+                        <option value="No.">No.</option>
+                        <option value="Part-time.">Part-time.</option>
+                    </select>
+                </div>
+
+                 <div class="explanation-box">
+        <p> You need to move each slider in order to continue, even if you move it to just return it back to the center. </p>
+</div>
+
+                <div class="form-group">
+                    <label for="hard_work">In life, hard work usually leads to economic success.</label>
+                    <div class="slider-labels">
+                        <span>Strongly Disagree</span>
+                        <span>Strongly Agree</span>
+                    </div>
+                    <input type="range" id="hard_work" name="hard_work" min="-10" max="10" value="0" class="form-control-range" data-moved="false">
+                </div>
+
+                <div class="form-group">
+                    <label for="skill_role">In life, talent and skill usually lead to economic success.</label>
+                    <div class="slider-labels">
+                        <span>Strongly Disagree</span>
+                        <span>Strongly Agree</span>
+                    </div>
+                    <input type="range" id="skill_role" name="skill_role" min="-10" max="10" value="0" class="form-control-range" data-moved="false">
+                </div>
+
+                <div class="form-group">
+                    <label for="luck_role">In life, luck plays a significant role in people's economic success.</label>
+                    <div class="slider-labels">
+                        <span>Strongly Disagree</span>
+                        <span>Strongly Agree</span>
+                    </div>
+                    <input type="range" id="luck_role" name="luck_role" min="-10" max="10" value="0" class="form-control-range" data-moved="false">
+                </div>
+
+                <div class="form-group">
+                    <label for="inequality">Inequality in society should be reduced by higher taxes and income and/or wealth redistribution.</label>
+                    <div class="slider-labels">
+                        <span>Strongly Disagree</span>
+                        <span>Strongly Agree</span>
+                    </div>
+                    <input type="range" id="inequality" name="inequality" min="-10" max="10" value="0" class="form-control-range" data-moved="false">
+                </div>
+
+
+                <div class="form-group">
+                    <label for="help_luck">In life, we should tax successful people to help unsuccessful ones if people's success only depends on luck.</label>
+                    <div class="slider-labels">
+                        <span>Strongly Disagree</span>
+                        <span>Strongly Agree</span>
+                    </div>
+                    <input type="range" id="help_luck" name="help_luck" min="-10" max="10" value="0" class="form-control-range" data-moved="false">
+                </div>
+
+                 <div class="form-group">
+                    <label for="help_noskill">In life, we should tax successful people to help unsuccessful ones even if people's success only depends on skill.</label>
+                    <div class="slider-labels">
+                        <span>Strongly Disagree</span>
+                        <span>Strongly Agree</span>
+                    </div>
+                    <input type="range" id="help_noskill" name="help_noskill" min="-10" max="10" value="0" class="form-control-range" data-moved="false">
+                </div>
+
+                  <div class="form-group">
+                    <label for="help_noeffort">In life, we should tax successful people to help unsuccessful even if people's success only depends on effort.</label>
+                    <div class="slider-labels">
+                        <span>Strongly Disagree</span>
+                        <span>Strongly Agree</span>
+                    </div>
+                    <input type="range" id="help_noeffort" name="help_noeffort" min="-10" max="10" value="0" class="form-control-range" data-moved="false">
+                </div>
+
+                <div class="form-group">
+                    <label for="political_ideology">Where would you position yourself on the political ideology spectrum?</label>
+                    <div class="slider-labels">
+                        <span>Far Left</span>
+                        <span>Far Right</span>
+                    </div>
+                    <input type="range" id="political_ideology" name="political_ideology" min="-10" max="10" value="0" class="form-control-range" data-moved="false">
+                </div>
+
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-primary" id="submit-button" disabled>Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function enableSubmitButton() {
+            const sliders = document.querySelectorAll('input[type="range"]');
+            let allMoved = true;
+
+            sliders.forEach(slider => {
+                if (slider.getAttribute('data-moved') === 'false') {
+                    allMoved = false;
+                }
+            });
+
+            document.getElementById('submit-button').disabled = !allMoved;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const sliders = document.querySelectorAll('input[type="range"]');
+            sliders.forEach(slider => {
+                slider.addEventListener('input', function() {
+                    slider.setAttribute('data-moved', 'true');
+                    enableSubmitButton();
+                });
+            });
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends "global/Page.html" %}
+{% block content %}
+    <h1>Main Experiment</h1>
+    <p>In each round of the experiment, you will be asked to choose an allocation of
+    money between you and the charity "Give Directly"</p>
+    <form method="post">
+        {{ formfields }}
+        <button type="submit">Submit</button>
+    </form>
+{% endblock %}

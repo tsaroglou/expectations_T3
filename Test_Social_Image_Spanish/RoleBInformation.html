@@ -1,0 +1,68 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block content %}
+<style>
+
+    .container {
+        max-width: 800px;
+        margin: auto;
+        padding: 20px;
+        background-color: #f8f8f8;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .info-istheone {
+        font-weight: bold;
+    }
+
+    .payoff-box {
+        background-color: #e9ecef;
+        padding: 15px;
+        border-radius: 5px;
+        margin-top: 20px;
+        margin-bottom: 5px;
+    }
+
+    .payoff-box p {
+        margin-bottom: 5px; /* Remove bottom margin from the paragraph inside the box */
+    }
+
+</style>
+
+<div class="container mt-4">
+    <h2>Información para el Participante en el Rol B</h2>
+
+    <p>Aquí está la información sobre las decisiones de tus participantes en el Rol A y tus propios pagos:</p>
+    {% for info in role_a_info %}
+        <p>{{ info.name }} {{ info.decision }} y tu obtuviste un pago de {{ info.made_for_b }} Euros. <span class="info-istheone">{{ info.istheone }}</span></p>
+    {% endfor %}
+
+    {% if chosen_a_info %}
+        <p>El participante elegido para tu pago fue {{ chosen_a_info.name }} quien {{ chosen_a_info.decision }} y obtuvo un pago de {{ chosen_a_info.made_for_b }}.</p>
+    {% endif %}
+
+    {% if stayed_out != 'Abstenerse.' %}
+    <div class="payoff-box">
+        <p>Tu pago de esta parte es: {{ role_b_payoff }} </p>
+    </div>
+    {% elif stayed_out == 'Abstenerse.' %}    <div class="payoff-box">
+
+        <p>Tu pago de esta parte es: {{ role_b_payoff }} porque elegiste abstenerte. </p>
+    </div>
+     {% endif %}
+
+</div>
+
+
+</div>
+<br>
+{% next_button %}
+{% endblock %}
+

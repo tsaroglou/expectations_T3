@@ -1,0 +1,69 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block styles %}
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f0;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        .container {
+            background-color: #fff;
+            border-radius: 0.25rem;
+            padding: 2rem;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: auto;
+        }
+        .content-section {
+            margin-top: 2rem;
+        }
+        .content-section h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #007BFF;
+        }
+        .content-section p {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+        .content-section .highlight {
+            font-weight: bold;
+            color: #007BFF;
+        }
+        hr {
+            border: 0;
+            border-top: 1px solid #007BFF;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .mt-4 {
+            margin-top: 1.5rem;
+        }
+        .mt-5 {
+            margin-top: 3rem;
+        }
+        .p-4 {
+            padding: 1.5rem;
+        }
+    </style>
+{% endblock styles %}
+
+{% block content %}
+    <div class="container mt-5 p-4">
+        <hr class="my-4">
+
+        <div class="content-section">
+            <h2>Random group allocation</h2>
+            <p> For the rest of the experiment, the participants in this session will be randomly split into <span class="highlight">two groups.</span> When indicated, your decisions will affect the payments of the other group. </p><p> For example, in the next page you will be asked to vote on a tax rate. The tax rate that you will vote on <span class="highlight">will not</span> affect your payment or the payment of anyone else in your group. You decisions <span class="highlight">will only affect the payments received by the members of the other group</span>.  </p> <p> <span class="highlight"> Neither the members of your nor the other group will find out about your decisions. </span> You do not need any additional information regarding your groupmates or the individuals in the other group because <span class="highlight">any further interaction will not be required.</span></p>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        {% next_button %}
+    </div>
+{% endblock %}

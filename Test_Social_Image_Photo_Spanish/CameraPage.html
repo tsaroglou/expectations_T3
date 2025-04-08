@@ -1,0 +1,196 @@
+{% extends "global/Page.html" %}
+
+{% block content %}
+    <style>
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 80vh;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        video, canvas {
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            font-size: 16px;
+            margin: 10px 5px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        #next {
+            background-color: #008CBA;
+        }
+
+        #next:hover {
+            background-color: #007bb5;
+        }
+
+        .capture-section {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .feedback-title {
+            color: #3171bd;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .highlight-blue {
+            color: #3171bd;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .instruction-section p {
+            margin-top: 1em;
+            font-size: 16px;
+        }
+    </style>
+
+    <div class="container">
+        <div class="feedback-title">Photograph</div>
+        <div class="instruction-section">
+            <p>Como parte del experimento, todos los participantes deben tomarse una foto. Según su función en el experimento, la foto de un participante puede mostrarse a los miembros de su grupo (se proporcionará más información más adelante). Ten en cuenta que los experimentadores no verán tu foto y se eliminará después del experimento.</p>
+            <p><span class="highlight-blue">Por favor, toma una fotografía clara, mirando a la cámara.</span></p>
+        </div>
+
+        <div class="capture-section">
+            <!-- Video feed for taking picture -->
+            <video id="video" width="640" height="480" autoplay></video>
+            <canvas id="canvas" width="640" height="480" class="hidden"></canvas>
+        </div>
+
+        <!-- Buttons for actions -->
+        <button id="capture" disabled>Tomar Foto</button>
+        <button id="take_another" class="hidden">Tomar Otra Foto</button> <!-- New button for "Take another photo" -->
+        <button id="upload" class="hidden" disabled>Subir Foto</button>
+        <button id="next" class="hidden">Next</button>
+
+        <!-- Hidden input to store image data -->
+        <input type="hidden" id="image_data" name="image_data" value="">
+    </div>
+
+    <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const context = canvas.getContext('2d');
+        const captureButton = document.getElementById('capture');
+        const takeAnotherButton = document.getElementById('take_another');
+        const uploadButton = document.getElementById('upload');
+        const nextButton = document.getElementById('next');
+        const imageInput = document.getElementById('image_data');
+        let imageCaptured = false;
+        let imageData = null;
+
+        // Start the camera feed
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                video.srcObject = stream;
+                console.log("Camera started successfully.");
+            })
+            .catch(err => {
+                console.error("Error accessing the camera: ", err);
+            });
+
+        // Enable the "Capture" button 2 seconds after the page loads
+        window.onload = function() {
+            setTimeout(() => {
+                captureButton.disabled = false;
+            }, 2000); // 2-second delay
+        };
+
+        // Capture the image and stop the video
+        captureButton.addEventListener('click', (event) => {
+            event.preventDefault();
+
+            context.drawImage(video, 0, 0, 640, 480);
+            video.srcObject.getTracks().forEach(track => track.stop());  // Stop video feed
+            video.classList.add('hidden');  // Hide video
+            canvas.classList.remove('hidden');  // Show captured image
+            imageCaptured = true;
+
+            // Convert canvas image to base64 and store it
+            imageData = canvas.toDataURL('image/jpeg');
+            imageInput.value = imageData;
+
+            // Disable "Capture" button and enable "Upload" and "Take Another Photo" buttons after 2 seconds
+            captureButton.disabled = true;
+            setTimeout(() => {
+                uploadButton.disabled = false;
+                uploadButton.classList.remove('hidden');
+                takeAnotherButton.classList.remove('hidden');  // Show "Take another photo" button
+            }, 2000); // 2-second delay
+        });
+
+        // Refresh the page when "Take another photo" button is clicked
+        takeAnotherButton.addEventListener('click', (event) => {
+            event.preventDefault();
+            location.reload();  // Refresh the page to reset camera feed and allow another photo to be taken
+        });
+
+        // Upload the captured image
+        uploadButton.addEventListener('click', () => {
+            if (imageCaptured) {
+                console.log("Uploading image...");
+                fetch('/upload_image_direct/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ image: imageData, participant_code: '{{ participant_code }}' })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        console.log('Image uploaded successfully!');
+                        alert('Image uploaded successfully!');
+                        nextButton.classList.remove('hidden');  // Show "Next" button after upload
+                    } else {
+                        console.error('Error uploading image:', data.message);
+                        alert('Error uploading image: ' + data.message);
+                    }
+                });
+            } else {
+                alert("Please capture an image before uploading.");
+            }
+        });
+
+        // Handle "Next" button click
+        nextButton.addEventListener('click', () => {
+            document.forms[0].submit();  // Submit form to go to the next page
+        });
+    </script>
+{% endblock %}

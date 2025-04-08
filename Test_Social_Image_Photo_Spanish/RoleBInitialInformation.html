@@ -1,0 +1,135 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block head %}
+
+    <style>
+         .feedback-title {
+            color: #3171bd; /* Softer blue */
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: 500;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 12px; /* Slightly more rounded corners */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* A bit more shadow for a soft look */
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 24px; /* Slightly larger font size for the title */
+            color: #2c3e50; /* A darker, elegant color for the heading */
+            font-weight: bold;
+        }
+
+        .participant-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            background-color: #f1f1f1; /* Softer background for participant info sections */
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Softer box shadow */
+            transition: transform 0.2s ease-in-out; /* Smooth hover effect */
+        }
+
+        .participant-info:hover {
+            transform: scale(1.02); /* Slight zoom on hover */
+        }
+
+        .participant-image-container {
+            width: 240px;
+            height: 180px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px; /* More space between image and name */
+        }
+
+        .participant-image-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            pointer-events: none;
+        }
+
+        .participant-name {
+            font-size: 18px; /* Larger, bolder name text */
+            font-weight: 600;
+            color: #34495e; /* A softer dark color for the names */
+            text-align: center;
+        }
+
+        .separator {
+            height: 1px;
+            background-color: #ddd;
+            margin: 20px 0;
+        }
+
+        /* Loading overlay styles */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgb(28, 81, 114);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 24px;
+            z-index: 9999;
+        }
+    </style>
+
+    <script>
+        window.addEventListener('load', function () {
+            setTimeout(function () {
+                var loadingScreen = document.getElementById('loading-overlay');
+                if (loadingScreen) {
+                    loadingScreen.style.display = 'none';
+                }
+            }, 3000); /* Reduced overlay duration */
+        });
+    </script>
+{% endblock %}
+
+{% block content %}
+    <!-- Loading overlay that covers the entire screen for 1 second -->
+    <div id="loading-overlay" class="loading-overlay">
+        Loading page...
+    </div>
+
+    <div class="container mt-4">
+         <div class="feedback-title">Estos son sus participantes A:</div>
+
+        {% for info in role_a_initial_info %}
+            <div class="participant-info">
+                <!-- Participant's image centered -->
+                <div class="participant-image-container">
+                    <iframe
+                        src="https://drive.google.com/file/d/{{ info.google_drive_file_id }}/preview"
+                        allow="autoplay">
+                    </iframe>
+                </div>
+
+                <!-- Participant's name below the image -->
+                <div class="participant-name">{{ info.name }}</div>
+            </div>
+
+            <!-- Separator line between each participant's info -->
+            <div class="separator"></div>
+        {% endfor %}
+    </div>
+
+    <br>
+    {% next_button %}
+{% endblock %}

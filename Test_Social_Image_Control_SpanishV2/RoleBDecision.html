@@ -1,0 +1,148 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+{% block styles %}
+
+<style>
+    .list-unstyled {
+        padding-left: 0;
+        list-style-type: none;
+    }
+    .list-unstyled li::before {
+        content: "• ";
+        color: #007bff; /* Bootstrap primary color */
+        font-weight: bold; /* Bold bullet points */
+    }
+    .modal-lg {
+        max-width: 80%; /* Adjust the width of the modal as needed */
+    }
+    /* Styles from the instructions page embedded into the modal */
+    #instructionsModal .container {
+        max-width: 800px;
+        margin: auto;
+        padding: 20px;
+    }
+    #instructionsModal .role-notification {
+        background-color: rgba(0, 123, 255, 0.6); /* Blue with transparency */
+        color: white;
+        padding: 10px 0;
+        text-align: center;
+    }
+    #instructionsModal .instruction-section p, #instructionsModal .instruction-section li {
+        margin-top: 1em;
+        font-size: 16px;
+    }
+    #instructionsModal .instruction-image {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 50%; /* Adjust based on preference */
+        height: auto;
+    }
+    #instructionsModal .highlight, #instructionsModal .instruction-section strong {
+        font-weight: bold;
+        color: #007bff; /* Blue for highlighting key info */
+    }
+    #instructionsModal .number-highlight {
+        font-weight: bold;
+        color: #000; /* Black for numbers */
+    }
+    #instructionsModal .color-word {
+        font-weight: bold;
+    }
+    #instructionsModal .red { color: red; }
+    #instructionsModal .blue { color: blue; }
+    #instructionsModal .green { color: green; }
+    #instructionsModal strong {
+        font-size: 18px; /* Make titles larger */
+    }
+</style>
+{% endblock %}
+
+{% block scripts %}
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container" style="margin-bottom: 40px;">
+    <h2 class="mb-4">Decisión para los Participantes en el Rol B.</h2>
+    <form method="post" class="mb-4">
+        {{ form.decision_b }}
+           <br>
+        <br>
+        <button type="submit" class="btn btn-primary mt-3">Enviar</button>
+    </form>
+
+    <br>
+    <br>
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-info mb-3" data-toggle="modal" data-target="#instructionsModal">
+      Ver Instrucciones
+    </button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="instructionsModal" tabindex="-1" role="dialog" aria-labelledby="instructionsModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title" id="instructionsModalLabel">Instrucciones Parte 2</h1>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+              <!-- Instructions content as per the first block -->
+              <div class="container">
+
+                <p>Por favor, presta plena atención a estas instrucciones. Al final de las instrucciones, se te harán algunas preguntas de comprensión.</p>
+        <strong>Grupos:</strong>
+        <p>Cada participante en el rol B (de ahora en adelante, “participante B”) está vinculado a 4 participantes en el rol A (de ahora en adelante, “participantes A”), como se muestra a continuación:</p>
+
+        <img src="{% static 'Test_Luck_Merit/Images/Matching_ZoomOut.png' %}" alt="Vista General del Emparejamiento" class="img-fluid instruction-image mb-3">
+       Ten en cuenta que, aunque los grupos siempre contienen cinco participantes, el número total de grupos en cada sesión puede variar dependiendo de cuántas personas participan. Cada sesión incluye entre 1 y 4 grupos.
+        <p></p><strong>Situación inicial:</strong> </p>
+        <p>Hay tres cajas: la caja <span class="color-word blue">azul</span>, la caja <span class="color-word green">verde</span>, y la caja <span class="color-word red">roja</span>. Una de estas tres cajas contiene dinero: €<span class="number-highlight">12</span> para el participante A y €<span class="number-highlight">10</span> para el participante B. Las otras dos están vacías. Si se selecciona una de estas dos cajas, ambos participantes obtienen 0 euros. </p>
+        <p>Con una probabilidad del <span class="number-highlight">25%</span> la caja que contiene el dinero está bloqueada y no puede ser abierta. Esto significa que con una probabilidad del <span class="number-highlight">25%</span> la caja que contiene el dinero dejará a ambos participantes con €<span class="number-highlight">0</span>. <br> <br> Si no se elige ninguna caja (un participante “se abstiene”), el participante B gana €<span class="number-highlight">6</span> y el participante A gana €<span class="number-highlight">4</span>. <br> <br> Al principio, ningún participante sabe cuál de las tres cajas contiene el dinero. Saben que cada caja tiene la misma probabilidad de contener el dinero.</p>
+
+         <p><span class="number-highlight"> Nota:</span>  Qué caja contiene el dinero puede diferir entre los participantes A.</p>
+
+
+        <img src="{% static 'Test_Luck_Merit/Images/boxes3.png' %}" alt="Cajas" class="img-fluid instruction-image mb-3">
+
+      <p><span class="number-highlight"> Solo los participantes A que estén por encima del 50% en el resultado de la prueba entre los participantes A en el aúla descubrirán qué caja contiene el dinero, mientras que los demás no lo descubrirán. En caso de empates, estos se resolverán en función del tiempo de realización del test.</span></p>
+        <p><span class="color-word red"> Los participantes B nunca descubren qué caja contiene el dinero, pero saben quien de sus participantes A estén por encima del 50% en el resultado de la prueba entre los participantes A en el aula. </span></p>
+
+        <strong>Habrá tres etapas:</strong>
+        <p><strong>Etapa 1:</strong> Cada participante B debe decidir si desea abstenerse o permitir que los participantes A a los que está vinculado (de ahora en adelante, “sus participantes A”) tomen una decisión. <br> <br>Si un participante B decide permitir que sus participantes A tomen una decisión, uno de ellos será seleccionado al azar y su decisión determinará el pago para el participante B.</p>
+        <p><strong>Etapa 2:</strong> Cada participante A aprende si está por encima del 50% en el resultado de la prueba. Si está por encima del 50% en el resultado de la prueba, inmediatamente descubre qué caja contiene el dinero. <br> <br>Si no está por encima del 50% en el resultado de la prueba, no lo descubre. </p>
+            <p><strong>Etapa 3:</strong> Sin saber la decisión tomada por su participante B en la Etapa 1, cada participante A debe decidir si desea abstenerse o elegir una caja. </p>
+
+<p> Su participante B no solamente observará esta decisión y el pago resultante, sino que también si el participante A sabe qué caja contiene el dinero. </p>
+
+</p> Específicamente, para cada uno de sus participantes A, un participante B observará una de las siguientes posibles consecuencias: </p>
+
+
+       <p>En el caso de que A <b> descubre </b> qué caja contiene el dinero:</p>
+    <ul>
+        <li> A  está por encima del 50% en el resultado del test, elige una caja y B recibe €<span class="number-highlight">10</span></li>
+        <li> A  está por encima del 50% en el resultado del test, elige una caja y B recibe €<span class="number-highlight">0</span></li>
+        <li> A  está por encima del 50% en el resultado del test, se abstiene y B recibe €<span class="number-highlight">6</span></li>
+    </ul>
+        <p>En el caso de que A <b> no  descubre </b> qué caja contiene el dinero:</p>
+        </ul>
+        <li> A no está por encima del 50% en el resultado del test, elige una caja y B recibe €<span class="number-highlight">10</span></li>
+        <li> A no está por encima del 50% en el resultado del test, elige una caja y B recibe €<span class="number-highlight">0</span></li>
+        <li> A no está por encima del 50% en el resultado del test, se abstiene y B recibe €<span class="number-highlight">6</span></li>
+    </ul>
+    <p><span class="number-highlight"> Nota:</span> La decisión tomada por cada participante A solo se implementará si su participante B ha decidido permitirles hacer una elección en la Etapa 1. <br> <br>Si su participante B ha decidido abstenerse, la decisión tomada por los participantes A no tendrá consecuencias.</p>
+   <p><span class="number-highlight"> Nota:</span>  Todas las interacciones entre el participante B y los cuatro participantes A serán anónimas.</p>
+</div>
+              </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+{% endblock %}

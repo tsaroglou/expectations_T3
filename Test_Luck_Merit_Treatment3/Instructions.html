@@ -1,0 +1,60 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block styles %}
+    <style>
+        .content-section {
+            margin-top: 2rem;
+        }
+        .content-section h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #007BFF;
+        }
+        .content-section p {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+        .content-section .highlight {
+            font-weight: bold;
+            color: #007BFF;
+        }
+        .example {
+            background-color: #F8F9FA;
+            padding: 1rem;
+            border-radius: 0.25rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+        }
+        .example p {
+            margin-bottom: 0.5rem;
+        }
+        .container {
+            background-color: #F8F9FA;
+            border-radius: 0.25rem;
+            padding: 2rem;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        hr {
+            border: 0;
+            border-top: 1px solid #007BFF;
+        }
+    </style>
+{% endblock styles %}
+
+{% block content %}
+    <div class="container mt-5 p-4">
+        <h1 class="text-center mb-4">Instructions</h1>
+
+        <hr class="my-4">
+
+        <div class="content-section">
+            <h2>Instructions</h2>
+            <p>In the first part of this experiment you are asked to complete a <span class="highlight">15-question IQ test</span> which is frequently used to measure intelligence. You will be given <span class="highlight">4 minutes</span> to complete the test. You should try to correctly answer as many questions as possible. Your final payment will depend on how well you do in the test. Further information will be provided later.</p>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        {% next_button %}
+    </div>
+{% endblock %}

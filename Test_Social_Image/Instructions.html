@@ -1,0 +1,95 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block styles %}
+<style>
+    body, html {
+        background-color: #ffffff; /* White background for the overall page */
+    }
+    .container {
+        max-width: 800px;
+        margin: auto;
+        padding: 20px;
+    }
+    .role-notification {
+        position: sticky;
+        top: 0;
+        background-color: rgba(0, 123, 255, 0.6); /* Blue with transparency */
+        color: white;
+        padding: 10px 0;
+        text-align: center;
+        z-index: 1000;
+    }
+    .instruction-section p, .instruction-section li {
+        margin-top: 1em;
+        font-size: 16px;
+    }
+    .instruction-image {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 50%; /* Adjust based on preference */
+        height: auto;
+    }
+    .highlight, .instruction-section strong {
+        font-weight: bold;
+        color: #007bff; /* Blue for highlighting key info */
+    }
+    .number-highlight {
+        font-weight: bold;
+        color: #000; /* Black for numbers */
+    }
+    .color-word {
+        font-weight: bold;
+    }
+    .red { color: red; }
+    .blue { color: blue; }
+    .green { color: green; }
+    strong {
+        font-size: 18px; /* Make titles larger */
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="role-notification">
+        Your role: <span>{{ participant_role }}</span>
+    </div>
+
+    <div class="instruction-section">
+        <p>Please give these instructions your full attention. At the end of the instructions, you will be asked some review questions.</p>
+        <strong>Groups:</strong>
+        <p>Each participant in role B (henceforth, “B participant”) is linked to 4 participants in role A (henceforth, “A participants”), as illustrated below:</p>
+
+        <img src="{% static 'Test_Luck_Merit/Images/Matching_ZoomOut.png' %}" alt="Matching Overview" class="img-fluid instruction-image mb-3">
+        <p>Note that, although groups always contain five participants, the total number of groups in each session might vary depending on how many people participate. Each session includes between 2 and 4 groups.</p>
+        <strong>Initial situation:</strong>
+        <p>There are three boxes: the <span class="color-word blue">blue</span> box, the <span class="color-word green">green</span> box, and the <span class="color-word red">red</span> box. One of these three boxes contains money: €<span class="number-highlight">12</span> for participant A and €<span class="number-highlight">10</span> for participant B. The other two are empty.</p>
+        <p>With <span class="number-highlight">25%</span> probability the box that contains the money is locked and cannot be opened. This means that with <span class="number-highlight">25%</span> probability the box that contains the money will leave both participants with €<span class="number-highlight">0</span>. <br> <br> If no box is chosen (participants “stay out”), the B participant earns €<span class="number-highlight">6</span> and each A participant earns €<span class="number-highlight">4</span>. <br> <br> At the beginning, no participant knows which of the three boxes contains the money. They know that each box has the same probability of containing the money.</p>
+
+         <p><span class="number-highlight"> Note:</span>  Which box contains the money may differ across A participants.</p>
+
+
+        <img src="{% static 'Test_Luck_Merit/Images/boxes3.png' %}" alt="Boxes" class="img-fluid instruction-image mb-3">
+
+      <p><span class="number-highlight"> The A participants who scored in the top 50% in the test find out which box contains the money. </span> Those who did not score in the top 50% do not find out. In case of ties, ties will be broken based on test completion time.</p>
+        <p><span class="color-word red"> B participants never find out which box contains the money, and never find out which A participants scored in the top 50% in the test.</span></p>
+
+        <strong>There will be three steps:</strong>
+        <p><strong>Step 1:</strong> Every B participant must decide whether they want to stay out or let the A participants they are linked to (henceforth, “their A participants”) make a decision. <br> <br>If a B participant decides to let their A participants make a decision, one of them will be randomly selected and their decision will determine the payment for the B participant.</p>
+        <p><strong>Step 2:</strong> Each A participant learns whether they scored in the top 50% in the test or not. If they scored in the top 50%, they immediately find out which box contains the money. <br> <br>If they did not score in the top 50%, they do not find out. B participants never find out which box contains the money, and they never find out which A participants scored in the top 50% in the test.</p>
+            <p><strong>Step 3:</strong> Without knowing the choice made by their B participant in Step 1, each A participant must decide whether they want to stay out or choose a box. <br> <br>Their B participant will observe this decision and the resulting payoff.</p>
+
+    <p>Specifically, for each of their A participants, a B participant will observe one of the following options:</p>
+    <ul>
+        <li>A chooses a box and B gets €<span class="number-highlight">10</span></li>
+        <li>A chooses a box and B gets €<span class="number-highlight">0</span></li>
+        <li>A stays out and B gets €<span class="number-highlight">6</span></li>
+    </ul>
+    <p><span class="number-highlight"> Note:</span> The decision made by each A participant will be implemented only if their B participant has decided to let them make a choice in Step 1. <br> <br>If their B participant has decided to stay out, the decision made by the A participants will be inconsequential.</p>
+   <p><span class="number-highlight"> Note:</span>  All interactions between the B participant and the four A participants will be anonymous.</p>
+</div>
+</div>
+{% next_button %}
+{% endblock %}

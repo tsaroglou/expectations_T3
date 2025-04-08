@@ -1,0 +1,59 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block content %}
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f0f0f0;
+        color: #333;
+        line-height: 1.6;
+        padding: 20px;
+    }
+    form {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        max-width: 600px;
+        margin: auto;
+    }
+    p {
+        font-size: 16px;
+        margin-bottom: 20px;
+        text-align: justify;
+    }
+    .highlight {
+        font-weight: bold;
+        color: #007BFF;
+    }
+    button {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+    button:hover {
+        background-color: #0056b3;
+    }
+</style>
+
+<form method="post">
+    <p>Now, you can make your performance predictions. <span class="highlight">One participant will be selected for payment for this round.</span> If you are selected for payment, you will <span class="highlight">either get paid based on your real total correct answer prediction or on your point score prediction.</span> <br> <br> Each scenario has a <span class="highlight">50% chance</span> of being picked for payment if you win the lottery at the end of the experiment.</p>
+
+    <p>The maximum amount you can make from this part is <span class="highlight">3 Euros</span>.</p>
+
+    <p><b>How many of the 15 questions do you think you will answer correctly?</b></p>
+    {{ form.prediction_initial }}
+    <br>
+
+    <p>Based on the scoring structure, which gives 1 point with a <span class="highlight">70% probability</span> for each correct answer or 1 point with a <span class="highlight">15% probability</span> for each incorrect answer: <br><br> <b>How many of the 15 points do you think you will score?<b/></p>
+    {{ form.prediction_final }}
+    <br>
+
+    <button type="submit">{% trans "Next" %}</button>
+</form>
+{% endblock %}

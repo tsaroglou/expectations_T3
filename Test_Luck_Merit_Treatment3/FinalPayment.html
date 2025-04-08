@@ -1,0 +1,135 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block styles %}
+<style>
+    .content-section {
+        margin-top: 2rem;
+    }
+    .content-section h2 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        color: #007BFF;
+    }
+    .content-section p {
+        margin-bottom: 1rem;
+        line-height: 1.6;
+    }
+    .highlight {
+        font-weight: bold;
+        color: #007BFF;
+    }
+    .container {
+        background-color: #F8F9FA;
+        border-radius: 0.25rem;
+        padding: 2rem;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .announcement {
+        background-color: #FFFAE6;
+        border-left: 5px solid #FFD700;
+        padding: 1rem;
+        margin-bottom: 2rem;
+    }
+    hr {
+        border: 0;
+        border-top: 1px solid #007BFF;
+    }
+    .breakdown-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    .breakdown-table th, .breakdown-table td {
+        border: 1px solid #007BFF;
+        padding: 8px;
+        text-align: left;
+    }
+    .breakdown-table th {
+        background-color: #007BFF;
+        color: white;
+    }
+</style>
+{% endblock styles %}
+
+{% block content %}
+<div class="container mt-5 p-4">
+    <h1 class="text-center mb-4">Final Payment</h1>
+
+    <div class="content-section">
+        <p class="lead text-center">Your final payment for participating in this experiment is:</p>
+        <p class="display-4 text-center highlight">{{ final_payment }} Euros</p>
+    </div>
+
+    <hr class="my-4">
+
+    <div class="content-section">
+        <h2>Breakdown of Payout</h2>
+        <table class="breakdown-table">
+            <tr>
+                <th>Component</th>
+                <th>Amount (Euros)</th>
+            </tr>
+            <tr>
+                <td>Participation Fee</td>
+                <td>{{ participation_fee }}</td>
+            </tr>
+            <tr>
+                <td>After Tax Test Payment</td>
+                <td>{{ pay_ravens }}</td>
+            </tr>
+            <tr>
+                 {% if prediction_lottery_winner %}
+                        <td>Prediction Bonus (won)</td>
+                        <td>{{ prediction_lottery_winnings }}</td>
+                {% else %}
+                        <td>Prediction Bonus (lost)</td>
+                        <td>&euro;0.00</td></td>
+                {% endif %}
+            </tr>
+            <tr>
+                {% if investment_lottery_winner %}
+                    <td>Investment Bonus (won)</td>
+                    <td>{{ investment_lottery_winnings }}</td>
+                {% else %}
+                    <td>Investment Bonus (lost)</td>
+                    <td>&euro;0.00</td>
+                {% endif %}
+            </tr>
+            <tr>
+                {% if performance_guess_correct %}
+                    <td>True Performance Guess Bonus (won)</td>
+                     <td>{{ bonus_earned }}</td>
+                {% else %}
+                      <td>True Performance Guess Bonus (lost)</td>
+                     <td>&euro;0.00</td>
+                {% endif %}
+            </tr>
+            <tr>
+                {% if bonus_gini > 0 %}
+                      <td>Distribution Estimation Bonus (won)</td>
+                        <td>{{ bonus_gini }}</td>
+                {% else %}
+                     <td>Distribution Estimation Bonus (lost)</td>
+                    <td>&euro;0.00</td>
+                {% endif %}
+
+            </tr>
+            <tr>
+                <th>Total</th>
+                <th>{{ final_payment }}</th>
+            </tr>
+        </table>
+    </div>
+    <br>
+    <div class="announcement">
+        <p>Thank you for your participation!</p>
+    </div>
+
+
+    <!-- Prolific completion link session.prolific_completion_url -->
+   <! <p>
+        Click <a href="{{ "tsaroglou.github.io/theo-saroglou/" }}">here</a> to complete the study.
+    </p>
+
+</div>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block content %}
+<style>
+
+    .container {
+        max-width: 800px;
+        margin: auto;
+        padding: 20px;
+        background-color: #f8f8f8;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .info-istheone {
+        font-weight: bold;
+    }
+
+    .payoff-box {
+        background-color: #e9ecef;
+        padding: 15px;
+        border-radius: 5px;
+        margin-top: 20px;
+        margin-bottom: 5px;
+    }
+
+    .payoff-box p {
+        margin-bottom: 5px; /* Remove bottom margin from the paragraph inside the box */
+    }
+
+</style>
+
+<div class="container mt-4">
+    <h2>Information for Role B Participant</h2>
+
+    <p>Here is the information about the decisions and payoffs of your matched Role A participants:</p>
+    {% for info in role_a_info %}
+        <p>{{ info.name }} {{ info.decision }} and received a payoff of {{ info.payoff }}. <span class="info-istheone">{{ info.istheone }}</span></p>
+    {% endfor %}
+
+    {% if chosen_a_info %}
+        <p>The chosen participant for your payment was {{ chosen_a_info.name }} who {{ chosen_a_info.decision }} and received a payoff of {{ chosen_a_info.payoff }}.</p>
+    {% endif %}
+
+    <div class="payoff-box">
+        <p>Your payoff from this part is: {{ role_b_payoff }}</p>
+    </div>
+</div>
+{% next_button %}
+{% endblock %}

@@ -1,0 +1,85 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+{% load templatetags %}
+
+{% block content %}
+<style>
+    .container {
+        max-width: 800px;
+        margin: auto;
+        padding: 20px;
+        background-color: #f8f8f8;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px; /* Add space above the next button */
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #007bff; /* Bootstrap primary color for consistency */
+    }
+
+    p {
+        font-size: 1.1rem;
+        line-height: 1.5;
+        color: #333; /* Dark color for better readability */
+    }
+
+    .highlight {
+        background-color: #e9ecef;
+        padding: 10px;
+        border-radius: 5px;
+        margin-top: 10px;
+    }
+
+    .form-group {
+        margin-top: 20px;
+    }
+
+    input[type="text"] {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        box-sizing: border-box; /* Include padding and border in the element's width */
+        border-radius: 4px;
+        border: 1px solid #ccc;
+    }
+
+    button {
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        margin-top: 20px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+</style>
+
+<div class="container mt-4">
+    <h2>Información de Pago Final</h2>
+    <div class="highlight">
+        <p>Tu pago final será de: <strong>{{ final_payoff }} .</strong></p>
+    </div>
+<form method="post" action="">
+    <div class="form-group">
+        <p> Por favor ingresa tu nombre para el procesamiento del pago. Esta información no se asociará con tus decisiones en este experimento y sólo será manejada por el personal administrativo. </p>
+        {{ form.temporary_name }} <!-- This will render the input field -->
+        {% if form.temporary_name.errors %}
+            {% for error in form.temporary_name.errors %}
+                <div style="color: red;">{{ error }}</div>
+            {% endfor %}
+        {% endif %}
+    </div>
+    <button type="submit">Enviar y Finalizar Experimento</button>
+</form>
+</div>
+
+{% endblock %}

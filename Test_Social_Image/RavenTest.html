@@ -1,0 +1,266 @@
+{% extends "global/Page.html" %}
+{% load otree static widget_tweaks %}
+
+{% block styles %}
+<style>
+    /* Adjust the layout for two-column design with modifications for centering */
+
+    .content-column, .timer-column {
+        flex: 0 0 100%; /* Both columns take full width for centering purposes */
+        max-width: 100%; /* Ensures maximum width is utilized */
+        margin: auto; /* Center align the content */
+    }
+    .otree-timer {
+        position: sticky;
+        top: 10px;
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        padding: 10px;
+        border-radius: 5px;
+        text-align: center;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        z-index: 1000;
+        width: fit-content; /* Makes the timer width fit its content */
+        margin: auto; /* Center align the timer */
+    }
+    .question {
+        margin-bottom: 30px;
+        text-align: center; /* Center aligns text and content within .question */
+    }
+    .question img {
+        width: 100%; /* Responsive image width */
+        max-width: 400px; /* Maximum image width */
+        height: auto; /* Maintains aspect ratio */
+        margin-bottom: 15px; /* Space between image and dropdown */
+        display: block; /* Block display for centering */
+        margin-left: auto; /* Auto margin for centering */
+        margin-right: auto; /* Auto margin for centering */
+    }
+
+    .skip-test-btn {
+        margin-top: 20px; /* Adds space above the button */
+        margin-bottom: 20px; /* Adds space below the button */
+    }
+
+    select {
+        display: block; /* Ensures the select element is block level for margin auto to work */
+        margin: 0 auto 20px; /* Auto margin for horizontal centering and 20px margin below */
+    }
+    .otree-btn-next {
+        margin-top: 20px; /* Space above the next button */
+        display: block; /* Block display for centering */
+        margin-left: auto; /* Auto margin for centering */
+        margin-right: auto; /* Auto margin for centering */
+    }
+
+     form {
+        margin: 0 auto;
+        width: auto;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+    <img src="/media/{{ player.image_path }}" alt="Uploaded Image">
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <script>
+                    document.getElementById('skipTestButton').addEventListener('click', function() {
+                    window.location.href = 'URLWhereYouWantToGo'; // Replace URLWhereYouWantToGo with your desired URL
+                    });
+            </script>
+
+            <h1 class="text-center">Test</h1>
+
+            <p class="text-center">Please answer the following questions:</p>
+            <form method="post">
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageA1.JPG' %}" alt="Question 1">
+                    <p>Please use the dropdown menu to make a choice:</p>
+                    {{ form.q1 }}
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageA2.JPG' %}" alt="Question 2">
+                    <p>Please use the dropdown menu to make a choice:</p>
+                    {{ form.q2 }}
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageA3.JPG' %}" alt="Question 3">
+                    <p>Please use the dropdown menu to make a choice:</p>
+                    {{ form.q3 }}
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageA4.JPG' %}" alt="Question 4">
+                    <p>Please use the dropdown menu to make a choice:</p>
+                    {{ form.q4 }}
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageA5.JPG' %}" alt="Question 5">
+                    <p>Please use the dropdown menu to make a choice:</p>
+                    {{ form.q5 }}
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageA6.JPG' %}" alt="Question 6">
+                    <p>Please use the dropdown menu to make a choice:</p>
+                    {{ form.q6 }}
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageA7.JPG' %}" alt="Question 7">
+                    <p>Please use the dropdown menu to make a choice:</p>
+                    {{ form.q7 }}
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageA8.JPG' %}" alt="Question 8">
+                    <p>Please use the dropdown menu to make a choice:</p>
+                    {{ form.q8 }}
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageA9.JPG' %}" alt="Question 9">
+                    <p>Please use the dropdown menu to make a choice:</p>
+                    {{ form.q9 }}
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageA10.JPG' %}" alt="Question 10">
+                    <p>Please use the dropdown menu to make a choice:</p>
+                    {{ form.q10 }}
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageA11.JPG' %}" alt="Question 11">
+                    <p>Please use the dropdown menu to make a choice:</p>
+                    {{ form.q11 }}
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageA12.JPG' %}" alt="Question 12">
+                    <p>Please use the dropdown menu to make a choice:</p>
+                    {{ form.q12 }}
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageC1.JPG' %}" alt="Question 13">
+                    <p>Please use the dropdown menu to make a choice:</p>
+                    {{ form.q13 }}
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageC2.JPG' %}" alt="Question 14">
+                    <p>Please use the dropdown menu to make a choice:</p>
+                    {{ form.q14 }}
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageC3.JPG' %}" alt="Question 15">
+                    <p>Please use the dropdown menu to make a choice:</p>
+                    {{ form.q15 }}
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageC4.JPG' %}" alt="Question 16">
+                    <p>Please use the dropdown menu to make a choice:</p>
+                    {{ form.q16 }}
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageC5.JPG' %}" alt="Question 17">
+                    <p>Please use the dropdown menu to make a choice:</p>
+                    {{ form.q17 }}
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageC6.JPG' %}" alt="Question 18">
+                    <p>Please use the dropdown menu to make a choice:</p>
+                    {{ form.q18 }}
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageE1.JPG' %}" alt="Question 19">
+                    <p>Please use the dropdown menu to make a choice:</p>
+                    {{ form.q19 }}
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageE2.JPG' %}" alt="Question 20">
+                    <p>Please use the dropdown menu to make a choice:</p>
+                    {{ form.q20 }}
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageE3.JPG' %}" alt="Question 21">
+                    <p>Please use the dropdown menu to make a choice:</p>
+                    {{ form.q21 }}
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageE4.JPG' %}" alt="Question 22">
+                    <p>Please use the dropdown menu to make a choice:</p>
+                    {{ form.q22 }}
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageE5.JPG' %}" alt="Question 23">
+                    <p>Please use the dropdown menu to make a choice:</p>
+                    {{ form.q23 }}
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageE6.JPG' %}" alt="Question 24">
+                    <p>Please use the dropdown menu to make a choice:</p>
+                    {{ form.q24 }}
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageE7.JPG' %}" alt="Question 25">
+                    <p>Please use the dropdown menu to make a choice:</p>
+                    {{ form.q25 }}
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageE8.JPG' %}" alt="Question 26">
+                    <p>Please use the dropdown menu to make a choice:</p>
+                    {{ form.q26 }}
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageE9.JPG' %}" alt="Question 27">
+                    <p>Please use the dropdown menu to make a choice:</p>
+                    {{ form.q27 }}
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageE10.JPG' %}" alt="Question 28">
+                    <p>Please use the dropdown menu to make a choice:</p>
+                    {{ form.q28 }}
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageE11.JPG' %}" alt="Question 29">
+                    <p>Please use the dropdown menu to make a choice:</p>
+                    {{ form.q29 }}
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageE12.JPG' %}" alt="Question 30">
+                    <p>Please use the dropdown menu to make a choice:</p>
+                    {{ form.q30 }}
+                </div>
+
+                <button type="submit" class="otree-btn-next btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

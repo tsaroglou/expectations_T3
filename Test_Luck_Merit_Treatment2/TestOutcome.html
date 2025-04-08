@@ -1,0 +1,11 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block content %}
+    <h2>Test Outcome</h2>
+    <p>You scored <b>{{ player.score2 }} points </b> (out of 15).</p>
+
+     <p> You scored <b> higher than {{ percentage_ranking_100 }}% of participants </b>. </p>
+    <p>Your earnings based on your points are <b>{{pay_ravens}}.</b></p>
+    {% next_button %}
+{% endblock %}

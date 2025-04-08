@@ -1,0 +1,22 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block content %}
+<div class="container">
+    {% if 'feedback' %}
+        <h2>Review of Your Answers</h2>
+    {{field.understanding_q1}}
+        {% for item in  'feedback' %}
+            <div class="mb-3">
+                <p><strong>Question:</strong> {{ 'item.question' }}</p>
+                <p>Your answer: {{ 'item.selected' }}</p>
+                <p>Correct answer: {{ 'item.correct' }}</p>
+                <p>Explanation: {{ 'item.explanation' }}</p>
+            </div>
+        {% endfor %}
+    {% else %}
+        <h2>All of your answers were correct!</h2>
+    {% endif %}
+    <a href="{% next_button %}" class="btn btn-primary">Continue</a>
+</div>
+{% endblock %}

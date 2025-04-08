@@ -1,0 +1,38 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block content %}
+<div class="container">
+    <h2>Decision Time</h2>
+    <p>If you want to see your test score and ranking on the next page, click "See My Score". If you would rather not know and opt-out, type the code below and then click "Opt Out".</p>
+   <p>Code: <strong>{{ opt_out_code }}</strong></p>
+<form method="post">
+    <div>
+        <label for="typedCode">Opt-out Code:</label>
+        <input type="text" name="typed_code" id="typedCode" autocomplete="off">
+    </div>
+    <button type="submit" name="action" value="see_score">See Results</button>
+    <!-- Initially hidden "Opt Out" button -->
+    <button type="submit" name="action" value="opt_out" id="optOutButton" style="display:none;">Opt Out</button>
+</form>
+
+<script>
+// JavaScript to handle showing/hiding the "Opt Out" button
+document.getElementById('typedCode').addEventListener('input', function() {
+    const typedCode = this.value;
+    const correctCode = "Ab3dEfGh4IjKl5MnOp6Q"; // The correct opt-out code
+    const optOutButton = document.getElementById('optOutButton');
+
+    // Show the "Opt Out" button if the correct code is typed
+    if(typedCode === correctCode) {
+        optOutButton.style.display = 'inline'; // Show the button
+    } else {
+        optOutButton.style.display = 'none'; // Hide the button
+    }
+});
+</script>
+
+
+
+</div>
+{% endblock %}

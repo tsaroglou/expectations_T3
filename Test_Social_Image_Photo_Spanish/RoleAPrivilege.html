@@ -1,0 +1,35 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block content %}
+<style>
+    .color-red { color: red; }
+    .color-blue { color: blue; }
+    .color-green { color: green; }
+</style>
+
+<div class="container mt-4">
+    {% if in_top_50 %}
+        <div class="alert alert-warning" role="alert">
+            <p>¡Felicidades, te has clasificado en el top 50%!</p>
+            {% if 'in_top_50' %}
+                {% if box_with_money == 'Roja' or box_with_money == 'roja' %}
+                    <p>La caja que contiene el dinero es la caja <strong><span class="color-red"> roja </span></strong>.</p>
+                {% elif box_with_money == 'Azul' or box_with_money == 'azul' %}
+                    <p>La caja que contiene el dinero es la caja <strong><span class="color-blue"> azul </span></strong>.</p>
+                {% elif box_with_money == 'Verde' or box_with_money == 'verde' %}
+                    <p>La caja que contiene el dinero es la caja <strong><span class="color-green"> verde </span></strong>.</p>
+                {% else %}
+                    <p>La caja que contiene el dinero es la caja <strong>{{ box_with_money }}</strong>.</p>
+                {% endif %}
+            {% endif %}
+        </div>
+    {% else %}
+        <div class="alert alert-warning" role="alert">
+            <p>No te has clasificado en el top 50%, así que no descubrirás qué caja contiene el dinero.</p>
+        </div>
+    {% endif %}
+</div>
+
+{% next_button %}
+{% endblock %}

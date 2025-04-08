@@ -1,0 +1,89 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block styles %}
+    <style>
+        .content-section {
+            margin-top: 2rem;
+        }
+        .content-section h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #007BFF;
+        }
+        .content-section p {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+        .content-section .highlight {
+            font-weight: bold;
+            color: #007BFF;
+        }
+        .blockquote {
+            border-left: 5px solid #ccc;
+            padding-left: 1rem;
+            margin-top: 1.5rem;
+            font-style: italic;
+        }
+        .consent-block {
+            display: flex;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+        .consent-block label {
+            margin-right: 1rem;
+            font-weight: bold;
+        }
+        .container {
+            background-color: #F8F9FA;
+            border-radius: 0.25rem;
+            padding: 2rem;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        hr {
+            border: 0;
+            border-top: 1px solid #007BFF;
+        }
+    </style>
+{% endblock styles %}
+
+{% block content %}
+    <div class="container mt-5 p-4">
+        <h1 class="text-center mb-4">Welcome</h1>
+        <p class="lead text-center">Thank you for participating in this experiment. Please read the following information carefully.</p>
+
+        <hr class="my-4">
+
+        <div class="content-section">
+            <h2>Participation</h2>
+            <p>For your participation in this experiment, you will earn a <span class="highlight">1 Euro show-up fee</span>. You can also earn additional money depending on your decisions in the experiment. You will receive your payment at the end of the experiment. You will not know the identity of any participant, and they will not know yours. No other participant will be informed of your payment, and you will not be informed of any other participant’s payment.</p>
+        </div>
+
+        <div class="content-section">
+            <h2>Confidentiality</h2>
+            <p>All research data will remain <span class="highlight">completely anonymous and confidential</span>. Any results used in scientific or other publications will be anonymous and cannot be linked to your identity. It is not possible to identify the participants through their responses in the experiment even knowing the payment they have received. All data is handled in accordance with the <span class="highlight">GDPR and EU regulations</span>.</p>
+        </div>
+
+        <div class="content-section">
+            <h2>Voluntary Participation</h2>
+            <p>Your participation in this study is <span class="highlight">voluntary</span>. Participation in this study involves making simple choices where no prior knowledge is needed. You may choose to withdraw from this study or decline to answer any questions at any time. You can decide to withdraw from the experiment at any time.</p>
+        </div>
+
+        <div class="content-section">
+            <h2>Consent Form</h2>
+            <p>When you sign this page containing the explanation of the experiment that you are participating in, you declare that you have read and understood the instructions. Moreover, with your <span class="highlight">electronic consent</span>, you agree to participate in the procedures outlined in the instructions above.</p>
+
+            <blockquote class="blockquote">
+                <p>“I have read and understood the information above and agree to participate in the current experiment and grant the experimenters permission to use my data. I reserve the right to withdraw from this agreement without giving any explanation as well as to withdraw from participation in this experiment at any time.”</p>
+            </blockquote>
+
+            <div class="consent-block">
+                {% formfields %}
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        {% next_button %}
+    </div>
+{% endblock %}

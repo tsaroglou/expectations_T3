@@ -1,0 +1,37 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block content %}
+<div class="container">
+    <p>Si quieres ver tu puntuación en el test y tu clasificación en la próxima página, haz clic en "Ver Mi Puntuación". Si prefieres no saber y optar por no participar, escribe el código a continuación y luego haz clic en "Optar por No Participar".</p>
+   <p>Código: <strong>{{ opt_out_code }}</strong></p>
+<form method="post">
+    <div>
+        <label for="typedCode">Código de Exclusión:</label>
+        <input type="text" name="typed_code" id="typedCode" autocomplete="off">
+    </div>
+    <button type="submit" name="action" value="see_score">Ver Resultados</button>
+    <!-- Botón "Optar por No Participar" inicialmente oculto -->
+    <button type="submit" name="action" value="opt_out" id="optOutButton" style="display:none;">Optar por No Participar</button>
+</form>
+
+<script>
+// JavaScript para manejar el mostrar/ocultar el botón "Optar por No Participar"
+document.getElementById('typedCode').addEventListener('input', function() {
+    const typedCode = this.value;
+    const correctCode = "Ab3dEfGh4IjKl5MnOp6Q"; // El código de exclusión correcto
+    const optOutButton = document.getElementById('optOutButton');
+
+    // Mostrar el botón "Optar por No Participar" si se escribe el código correcto
+    if(typedCode === correctCode) {
+        optOutButton.style.display = 'inline'; // Mostrar el botón
+    } else {
+        optOutButton.style.display = 'none'; // Ocultar el botón
+    }
+});
+</script>
+
+
+
+</div>
+{% endblock %}

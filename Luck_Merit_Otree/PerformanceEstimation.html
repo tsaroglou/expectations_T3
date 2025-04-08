@@ -1,0 +1,42 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block content %}
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f0f0f0;
+        color: #333;
+        line-height: 1.6;
+        padding: 20px;
+    }
+    .container {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        max-width: 600px;
+        margin: auto;
+    }
+    h2 {
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+    p {
+        font-size: 16px;
+        margin-bottom: 20px;
+    }
+    .highlight {
+        font-weight: bold;
+        color: #007BFF;
+    }
+</style>
+
+<div class="container">
+    <h2>Performance Estimation</h2>
+    <p>Now, you can win an additional <span class="highlight">0.5 Euros</span> if you can accurately indicate how many questions you answered correctly. In this case, you can ignore the point system, we are referring to your <span class="highlight">real total correct answers</span>.</p> <p>You should just indicate how many of your answers were correct. <br> <br> How many of the 15 questions do you think you got correct?</p>
+    {{ form.true_performance_estimate }}
+    <br>
+    {% next_button %}
+</div>
+{% endblock %}

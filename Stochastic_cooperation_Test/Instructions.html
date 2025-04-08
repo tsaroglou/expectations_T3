@@ -1,0 +1,41 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block styles %}
+    <style>
+        .container {
+            background-color: #F8F9FA;
+            border-radius: 0.25rem;
+            padding: 2rem;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h1 {
+            color: #007BFF;
+        }
+        .payoff-display {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #28A745;
+            margin-top: 1rem;
+        }
+        .summary {
+            margin-top: 1.5rem;
+            font-size: 1.2rem;
+        }
+    </style>
+{% endblock styles %}
+
+{% block content %}
+    <div class="container mt-5 p-4">
+        <h1>Instructions</h1>
+        <p>You will be paired with another participant and play 10 rounds.</p>
+        <p>Each round, you must choose to <strong>Cooperate (A)</strong> or <strong>Defect (B)</strong>.</p>
+        <p>Your earnings will depend on both your decision and your partner's decision.</p>
+        <p>At the end, your earnings from rounds 9 and 10 will be added up for your final payment.</p>
+    </div>
+
+    <div class="text-center mt-4">
+        {% next_button %}
+    </div>
+{% endblock %}

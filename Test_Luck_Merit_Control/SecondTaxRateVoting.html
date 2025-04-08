@@ -1,0 +1,233 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block content %}
+<style>
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+.histogram-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    margin: 20px auto;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.histogram-title {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #0056b3;
+}
+
+.content-section .highlight {
+    font-weight: bold;
+    color: #DC3545;
+}
+
+.histogram-container {
+    display: flex;
+    align-items: flex-end;
+    width: 100%;
+    height: 450px;
+    background-color: #f0f0f0;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.horizontal-line {
+    position: absolute;
+    bottom: 50px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #ccc;
+}
+
+.bar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    margin: 0 2px;
+}
+
+.icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+    margin-top: 5px; /* Space between the bar and the icon */
+}
+
+.icon:hover {
+    transform: scale(1.2);
+}
+
+.bar-graph {
+    width: 100%;
+    text-align: center;
+    font-size: 10px;
+    color: white;
+    position: relative;
+    background-color: #007bff;
+    border-radius: 10px 10px 0 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.bar-graph span {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    text-align: center;
+    color: black;
+    font-weight: bold;
+}
+
+.bar-graph .score-value {
+    top: -30px;
+    font-size: medium;
+}
+
+.bar-graph .money-earned.top {
+    top: -20px;
+}
+
+.bar-graph .money-earned.inside {
+    bottom: 5px;
+    font-stretch: bold;
+    font-size: medium;
+}
+
+.column-slider {
+    width: 100%;
+    margin-top: 5px;
+}
+
+.explanation-box {
+    background-color: #e0f7fa;
+    border: 1px solid #b2ebf2;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #00796b;
+    text-align: center;
+}
+
+#sliderContainer {
+    width: 80%;
+    margin: 10px auto;
+    display: block;
+    text-align: center;
+}
+
+#inequalitySlider {
+    width: 100%;
+}
+</style>
+
+<div class="content-section">
+    <p>Bellow you can see once again the distribution of scores of the other group. <b> Note that this is the score distribution before any taxes were applied.</b> As you know, these scores were calculated based on a probability mechanism that gave 1 point with a 45% probability when the response was incorrect, and 1 point with a 75% probability when the response was correct.</p>
+    <p>Below the distribution graph, you can build your own distribution. Your goal is to build a distribution that resembles the distribution of scores if the probability mechanism was not in place. In other words, you should build <span class="highlight">a distribution that looks like the distribution of scores and payments if each correct answer always gave a point and each incorrect point always gave 0 points</span>. The participant in the sessions who builds a distribution that is the closest to the true distribution will win an additional <span class="highlight">1 Euro</span>. You can use the sliders below each bar to adjust the scores and payments of each column.</p>
+</div>
+
+<div class="histogram-wrapper">
+    <div class="histogram-title">Distribution of Scores</div>
+    <div class="histogram-container" id="originalHistogram">
+        <div class="horizontal-line"></div>
+        {% for value in scores_and_colors %}
+        <div class="bar" style="flex: 1 1 calc((100% / {{ scores_and_colors|length }}) - 4px);">
+            <div class="bar-graph" style="height: {{ value.2 }}px;">
+                <span class="score-value">{{ value.0 }}</span>
+                <div class="money-earned inside">{{ value.4 }}</div>
+            </div>
+            <div class="icon-wrapper">
+                <img src="{{ value.1 }}" class="icon">
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="explanation-box">
+    <p>Use the sliders below each bar to adjust its value.</p>
+    <p>You need to move each slider in order to continue, even if you move it to just return it back to the center.</p>
+</div>
+
+<div class="histogram-wrapper">
+    <div class="histogram-title">Your True Distribution Estimation</div>
+    <div class="histogram-container" id="interactiveHistogram">
+        <div class="horizontal-line"></div>
+        {% for value in predefined_distribution %}
+        <div class="bar" style="flex: 1 1 calc((100% / {{ predefined_distribution|length }}) - 4px);">
+            <div class="bar-graph" style="height: {{ value.money_height }}px;">
+                <span class="score-value">{{ value.score }}%</span>
+                <div class="money-earned inside">{{ value.money }}</div>
+            </div>
+            <input type="range" class="column-slider" data-index="{{ forloop.counter0 }}" min="0" max="100" step="1" value="{{ value.score }}" oninput="updateBar(this)">
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<form id="adjustmentForm" method="post">
+    {{ form }}
+    <input type="hidden" id="adjustmentValues" name="adjustment_values" value="">
+    {% next_button %}
+</form>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const columnSliders = document.querySelectorAll('.column-slider');
+    const adjustmentForm = document.getElementById('adjustmentForm');
+    const adjustmentValues = document.getElementById('adjustmentValues');
+
+    function updateBar(slider) {
+        const index = slider.getAttribute('data-index');
+        const value = slider.value;
+        const barGraph = slider.previousElementSibling;
+        barGraph.style.height = `${value * 4}px`;
+        const scoreValue = barGraph.querySelector('.score-value');
+        const moneyEarned = barGraph.querySelector('.money-earned');
+
+        scoreValue.innerText = `${value}%`;
+        moneyEarned.innerText = `€${(value / 100 * 2.5).toFixed(2)}`;
+
+        if (value < 6) {
+            moneyEarned.classList.remove('inside');
+            moneyEarned.classList.add('top');
+        } else {
+            moneyEarned.classList.add('inside');
+            moneyEarned.classList.remove('top');
+        }
+    }
+
+    columnSliders.forEach(slider => {
+        updateBar(slider); // Initialize bar heights on page load
+        slider.addEventListener('input', function() {
+            updateBar(slider);
+            const values = Array.from(columnSliders).map(s => s.value).join(',');
+            adjustmentValues.value = values;
+        });
+    });
+
+    adjustmentForm.addEventListener('submit', function() {
+        adjustmentValues.value = Array.from(columnSliders).map(s => s.value).join(',');
+    });
+});
+</script>
+{% endblock %}

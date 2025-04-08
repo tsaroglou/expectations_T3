@@ -1,0 +1,418 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block content %}
+<div class="row">
+    <!-- Column for the voting form -->
+    <div class="col-md-6">
+        <h2>Tax Rate Voting</h2>
+        <p>Please vote on the tax rate to be applied:</p>
+
+        <form method="post">
+
+    <div class="form-group">
+        <label for="tax_rate_vote_0_19">Tax Rate for 0-19%:</label>
+        {{ form.tax_rate_vote_0_19 }}
+    </div>
+
+    <div class="form-group">
+        <label for="tax_rate_vote_20_39">Tax Rate for 20-39%:</label>
+        {{ form.tax_rate_vote_20_39 }}
+    </div>
+
+    <div class="form-group">
+        <label for="tax_rate_vote_40_59">Tax Rate for 40-59%:</label>
+        {{ form.tax_rate_vote_40_59 }}
+    </div>
+
+    <div class="form-group">
+        <label for="tax_rate_vote_60_79">Tax Rate for 60-79%:</label>
+        {{ form.tax_rate_vote_60_79 }}
+    </div>
+
+    <div class="form-group">
+        <label for="tax_rate_vote_80_100">Tax Rate for 80-100%:</label>
+        {{ form.tax_rate_vote_80_100 }}
+    </div>
+
+    {% next_button %}
+        </form>
+</div>
+
+    <!-- Column for the histogram -->
+    <div class="col-md-6">
+        <style>
+
+.histogram-wrapper {
+    position: relative;
+    max-width: 800px; /* Original max-width */
+
+}
+
+.scale-wrapper {
+        transform: scale(0.5);
+        transform-origin: top left; /* Adjust as needed */
+    }
+
+    /* Ensure that the scaled wrapper doesn't affect the layout of surrounding elements */
+.scale-wrapper {
+        display: inline-block; /* or 'block', depending on your layout */
+        margin: 80px auto; /* Center the wrapper if needed */
+        /* Adjust margin, padding, or positioning as necessary */
+    }
+
+.icon.highlight {
+  border: 2px solid #ffea00; /* Red border */
+  border-radius: 50%; /* Circular border */
+}
+
+.highlight-participant {
+    border: 3px solid #ffd700; /* Example: a gold border to highlight */
+    border-radius: 50%;
+    z-index: 2; /* Ensure it appears above other icons */
+}
+
+
+
+.histogram-container {
+    display: flex;
+    width: 800px; /* Adjusted to match the new width of the wrapper */
+    height: 550px;
+    justify-content: space-between;
+    background-color: #f8f8f8;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+}
+
+.participant-icon {
+    border: 2px solid #ffd700; // A gold border, for example
+    border-radius: 50%; // Circular border
+    z-index: 2; // Ensure it's above other icons
+}
+
+
+/* Add styles for the explanation box */
+.explanation-box {
+    background-color: #f0f0f0; /* Light grey background */
+    border: 1px solid #d0d0d0; /* Light grey border */
+    width: 800px;
+    border-radius: 8px; /* Rounded corners */
+    padding: 15px; /* Padding inside the box */
+    margin-bottom: 20px; /* Space below the box */
+    font-size: 14px; /* Text size */
+    line-height: 1.6; /* Line height for better readability */
+}
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+.pulse-effect {
+    animation: pulse 2s infinite; // Apply the pulse animation
+    z-index: 10; // Ensure it appears above other icons
+}
+.histogram-title {
+    background-color: #0056b3; /* Or any color you prefer */
+    color: white; /* Text color */
+    text-align: center;
+    padding: 10px 0; /* Adjust the padding as needed */
+    width: 800px;
+    height: 50px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Optional: adds a shadow for depth */
+    border-top-left-radius: 10px; /* Match the histogram container's border-radius */
+    border-top-right-radius: 10px; /* Match the histogram container's border-radius */
+    font-size: 25px; /* Adjust the font size as needed */
+    font-weight: bold; /* Make the title bold */
+    position: absolute; /* Position it absolutely within the histogram-wrapper */
+    top: 0%; /* Align to the top */
+    left: 0; /* Align to the left edge */
+    z-index: 10; /* Ensure it's above other elements */
+}
+
+.column-div {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    left: -28px;
+    height: 250px;
+    position: relative;
+    margin: 0 20px; /* Give some space between columns */
+}
+
+.icon-stack {
+    position: absolute;
+    bottom: -103%; /* Increase the bottom value to give space above the x-axis */
+    left: 0%;
+    transform: translateX(-50%);
+    transition: all 0.3s ease; /* Smooth transition for hover effects */
+}
+
+.icon {
+    pointer-events: auto;
+    position: absolute;
+    bottom: 0px;
+    width: 40px;
+    height: auto;
+    transition: transform 0.3s ease; /* Smooth transition for hover effects */
+}
+
+
+
+.icon:hover {
+  transform: translateY(-5px); /* Lift icon slightly on hover */
+}
+
+
+/* Apply increasing bottom offsets to stack icons on top of each other */
+.icon:nth-child(1) { bottom: 0; }
+.icon:nth-child(2) { bottom: 20px; }
+.icon:nth-child(3) { bottom: 40px; }
+.icon:nth-child(4) { bottom: 80px; }
+.icon:nth-child(5) { bottom: 100px; }
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 150%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+
+ .histogram-legend {
+        display: flex;
+        justify-content: center;
+        align-content: center;
+        align-items: center;
+        width: 800px;
+        flex-wrap: wrap; /* Allows items to wrap if space is limited */
+        padding: 10px;
+        font: 18pt;
+    }
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+        margin: 5px 20px; /* Adjust spacing around legend items */
+        font: 18pt;
+    }
+
+    .legend-color {
+        width: 20px;
+        height: 20px;
+        margin-right: 5px; /* Space between color square and text */
+        display: inline-block;
+    }
+
+    .legend-color.red { background-color: #FF0000; }
+    .legend-color.orange { background-color: #FFA500; }
+    .legend-color.green { background-color: #008000; }
+    .legend-color.yellow { background-color: #FFFF00; }
+    .legend-color.blue { background-color: #0000FF; }
+
+.x-axis-labels {
+    display: flex;
+    justify-content: space-between;
+    position: absolute;
+    bottom: 0;
+    width: 800px;
+    left: 0px;
+    font-size: 8px;
+    right: 0px;
+    text-align: center;
+}
+
+.x-axis-labels > div {
+    margin: 0 0px; /* Give some space around x-axis labels */
+    padding: 5px;
+    width: 800px;
+    font-size: 8px;
+    background-color: #ffffff;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease; /* Smooth transition for background color */
+}
+
+.x-axis-labels > div:hover {
+    background-color: #e8e8e8; /* Slightly darken label on hover */
+}
+
+/* Responsive design: handle smaller screens */
+@media (max-width: 300px) {
+    .histogram-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .column-div {
+        margin: 10px 0; /* More vertical space on smaller screens */
+    }
+}
+</style>
+
+<div class="scale-wrapper">
+
+<div class="histogram-wrapper">
+    <div class="histogram-title">Distribution of Scores</div>
+    <div class="histogram-container" id="iconsHistogram"></div>
+    <div class="x-axis-labels">
+        {% for label in bins_labels %}
+        <div>{{ label }}</div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="histogram-legend">
+    <div class="legend-item">
+        <span class="legend-color blue"></span> Bottom: 0-20%
+    </div>
+    <div class="legend-item">
+        <span class="legend-color yellow"></span> Lower Middle: 21-40%
+    </div>
+    <div class="legend-item">
+        <span class="legend-color green"></span> Middle: 41-60%
+    </div>
+    <div class="legend-item">
+        <span class="legend-color orange"></span> Upper Middle: 61-80%
+    </div>
+    <div class="legend-item">
+        <span class="legend-color red"></span> Top: 81-100%
+    </div>
+</div>
+        <!-- You might need to adjust the size or layout of the histogram to fit well in this column -->
+    </div>
+</div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}  {# Include parent scripts first, if any #}
+
+<script type="text/javascript">
+    var playerColors = {{ player_colors|safe }};
+    console.log('Player Colors:', playerColors);
+    var histogramData = {{ all_histogram|safe }};
+    var colorIndex = 0;
+    var bin_index = {{bin_index|safe}}
+    var idInGroupList = {{ id_in_group_list|safe }};
+    var specificParticipantIdInGroup = {{ specific_participant_id_in_group }};
+    var specificParticipantGroupType = "{{ specific_participant_group_type }}";
+    var groupTypeList = {{ group_type_list|safe }}; // Assuming you've passed this from Python
+
+
+
+    var participantColor = "{{ participant_color }}"; // Assuming this variable is correctly passed to the template
+
+    // Create a tooltip element
+    var tooltip = document.createElement('div');
+    tooltip.style.position = 'absolute';
+    tooltip.style.display = 'none';
+    tooltip.style.backgroundColor = '#fff';
+    tooltip.style.border = '1px solid #ddd';
+    tooltip.style.padding = '5px';
+    tooltip.style.borderRadius = '5px';
+    tooltip.style.boxShadow = '0 2px 4px rgba(0,0,0,0.2)';
+    tooltip.style.pointerEvents = 'none'; // Make sure the tooltip doesn't interfere with mouse events
+    document.body.appendChild(tooltip);
+
+
+    histogramData.forEach((value, index) => {
+        var columnDiv = document.createElement('div');
+        columnDiv.classList.add('column-div');
+        var iconStackDiv = document.createElement('div');
+        iconStackDiv.classList.add('icon-stack');
+        var testScores = {{ test_scores|safe }};
+
+        for (let i = 0; i < value; i++) {
+            var icon = document.createElement('img');
+            var testScore = testScores[colorIndex];
+            var idInGroup = idInGroupList[colorIndex];  // Use id_in_group value here
+            var participantGroupType = groupTypeList[colorIndex]; // Get the group type for this icon/participant
+
+            var colorFile = playerColors[colorIndex] ? playerColors[colorIndex] : 'human.png';
+
+            if (colorFile === 'red_human.png') {
+                icon.src = `/static/Test_Luck_Merit/Images/red_human.png`;
+            } else if (colorFile === 'orange_human.png') {
+                icon.src = `/static/Test_Luck_Merit/Images/orange_human.png`;
+            } else if (colorFile === 'green_human.png') {
+                icon.src = `/static/Test_Luck_Merit/Images/green_human.png`;
+            } else if (colorFile === 'yellow_human.png') {
+                icon.src = `/static/Test_Luck_Merit/Images/yellow_human.png`;
+            } else if (colorFile === 'blue_human.png') {
+                icon.src = `/static/Test_Luck_Merit/Images/blue_human.png`;
+            } else {
+                icon.src = `/static/Test_Luck_Merit/Images/human.png`;
+            }
+
+
+            icon.classList.add('icon');
+            icon.style.bottom = `${i * 40}px`;
+
+
+            // Mouseover event to show tooltip
+            icon.addEventListener('mouseover', function(event) {
+                var scoreToShow = parseFloat(testScore).toFixed(2); // Limit to 2 decimal places
+                tooltip.textContent = `Score: ${scoreToShow}`; // Set tooltip content
+                tooltip.style.display = 'block';
+                tooltip.style.left = `${event.pageX + 10}px`; // Position tooltip
+                tooltip.style.top = `${event.pageY + 10}px`;
+            });
+
+
+
+            // Mouseout event to hide tooltip
+            icon.addEventListener('mouseout', function() {
+                tooltip.style.display = 'none';
+            });
+
+
+            if (idInGroup == specificParticipantIdInGroup) {
+    // Individual highlight styles
+    icon.style.boxShadow = '0 0 5px 5px #ffd700'; // Keep this unique
+    icon.classList.add('pulse-effect');
+    icon.style.border = '1px solid #ffd700';
+    icon.style.borderRadius = '35%';
+    icon.style.zIndex = '10';
+}
+
+ if (participantGroupType == specificParticipantGroupType) {
+                   icon.style.opacity = '0.25'; // Adjust opacity for faded effect
+
+            }
+
+
+            icon.setAttribute('data-id-in-group', idInGroup);
+            iconStackDiv.appendChild(icon);  // Append the icon directly to the iconStackDiv
+            colorIndex = (colorIndex + 1) % playerColors.length;
+        }
+
+        columnDiv.appendChild(iconStackDiv);
+        document.getElementById('iconsHistogram').appendChild(columnDiv);
+    });
+</script>
+
+{% endblock %}

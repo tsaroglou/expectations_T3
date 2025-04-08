@@ -1,0 +1,53 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block styles %}
+<style>
+    .container {
+        background-color: #F8F9FA;
+        border-radius: 0.25rem;
+        padding: 2rem;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin-top: 5rem;
+        text-align: center;
+    }
+    h1 {
+        color: #007BFF;
+        margin-bottom: 1.5rem;
+        font-size: 2rem;
+    }
+    p {
+        font-size: 1.2rem;
+        color: #333;
+        margin-bottom: 2rem;
+    }
+    .btn-enter {
+        background-color: #007BFF;
+        color: white;
+        padding: 0.75rem 1.5rem;
+        font-size: 1.25rem;
+        border: none;
+        border-radius: 0.25rem;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        transition: background-color 0.3s ease;
+        text-transform: uppercase;
+        text-align: center;
+        cursor: pointer;
+    }
+    .btn-enter:hover {
+        background-color: #0056b3;
+    }
+</style>
+{% endblock styles %}
+
+{% block content %}
+    <div class="container">
+        <h1>Ready to Join the Experiment?</h1>
+        <p>Please click the button below to enter the experiment.</p>
+
+        <!-- Click to enter button -->
+        <div>
+            <button class="btn-enter" type="submit">Enter the Experiment</button>
+        </div>
+    </div>
+{% endblock %}

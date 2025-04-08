@@ -1,0 +1,9 @@
+{% extends "global/Page.html" %}
+{% block content %}
+    <h1>Questionnaire</h1>
+    <p>You will now answer some questions to display your understanding.</p>
+    <form method="post">
+        {{ formfields }}
+        <button type="submit">Submit</button>
+    </form>
+{% endblock %}

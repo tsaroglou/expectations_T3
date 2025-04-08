@@ -1,0 +1,192 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block styles %}
+    <style>
+        .content-section {
+            margin-top: 2rem;
+        }
+        .content-section h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #007BFF;
+        }
+        .content-section p {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+            text-align: justify;
+        }
+        .content-section .highlight {
+            font-weight: bold;
+            color: #007BFF;
+        }
+        .example {
+            background-color: #F8F9FA;
+            padding: 1rem;
+            border-radius: 0.25rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+        }
+        .example p {
+            margin-bottom: 0.5rem;
+        }
+        .container {
+            background-color: #F8F9FA;
+            border-radius: 0.25rem;
+            padding: 2rem;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        hr {
+            border: 0;
+            border-top: 1px solid #007BFF;
+        }
+        .incorrect {
+            color: red;
+        }
+        .correct {
+            color: green;
+        }
+        .error-message, .correct-message {
+            font-weight: bold;
+            display: none;
+        }
+        .error-message {
+            color: red;
+        }
+        .correct-message {
+            color: green;
+        }
+        table {
+            width: 100%;
+            margin: 1rem 0;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 0.5rem;
+            text-align: center;
+        }
+    </style>
+{% endblock styles %}
+
+{% block content %}
+    <div class="container mt-5 p-4">
+        <h1 class="text-center mb-4">Point System</h1>
+
+        <hr class="my-4">
+
+        <div class="content-section">
+            <p>In this test, <span class="highlight">instead of counting correct answers</span>, we will be counting <span class="highlight">points</span>. </p> <p> Each question of the test can either give you 0 or 1 point.</p>
+            <p>Each time you answer a question <span class="highlight">incorrectly</span> or do not respond to it, you might still receive a point for the question with a <span class="highlight">35% probability</span>.</p>
+            <p>Each time you answer a question <span class="highlight">correctly</span> you receive the point with a <span class="highlight">70% probability</span>. But, despite giving the correct answer, you might still get <span class="highlight">0 points</span> for the question with a <span class="highlight">30% probability</span>.</p>
+            <p>Therefore <span class="highlight"> you might receive a point even if you are incorrect </span> in a question (with a 35% probability) but <span class="highlight"> you might receive no points for a question even if you are correct </span> (with a 30% probability).</p>
+            <p>For simplicity, from now on we are going to be calling the score you receive as a result of the above mechanism the <span class="highlight">"point score"</span> and your total correct answers simply as <span class="highlight">"real total correct answers"</span>.</p>
+        </div>
+
+        <div class="content-section">
+            <h2>Test Your Understanding</h2>
+            <p>To test your understanding before we continue, please choose the correct answer:</p>
+
+            <div class="example">
+                <p>If you answer a question correctly, how many points will you receive?</p>
+                <div>
+                    <label><input type="radio" name="question4" value="1 point."> 1 point.</label><br>
+                    <label><input type="radio" name="question4" value="0 points.">0 points.</label><br>
+                    <label><input type="radio" name="question4" value="2 points."> 2 points.</label><br>
+                    <label><input type="radio" name="question4" value="1 point with a 70% probability."> 1 point with a 70% probability.</label><br>
+                    <label><input type="radio" name="question4" value="0 points with a 65% probability."> 0 points with a 65% probability.</label>
+                </div>
+                <p id="error-message4" class="error-message">Incorrect answer, please try again.</p>
+                <p id="correct-message4" class="correct-message">Correct answer!</p>
+            </div>
+
+
+            <div class="example">
+                <p>If you answer a question wrong, how many points will you receive?</p>
+                <div>
+                    <label><input type="radio" name="question5" value="0 points."> 0 points.</label><br>
+                    <label><input type="radio" name="question5" value="2 points."> 2 points.</label><br>
+                    <label><input type="radio" name="question5" value="1 point with a 70% probability."> 1 point with a 70% probability.</label><br>
+                    <label><input type="radio" name="question5" value="0 points."> 0 points.</label>
+                </div>
+                <p id="error-message5" class="error-message">Incorrect answer, please try again.</p>
+                <p id="correct-message5" class="correct-message">Correct answer!</p>
+            </div>
+            <div class="example">
+                <p>If participant A answers 10 questions correctly and Participant B answers 11 questions correctly, who will score the most points?</p>
+                <div>
+                    <label><input type="radio" name="question6" value="Participant A."> Participant A.</label><br>
+                    <label><input type="radio" name="question6" value="Participant B."> Participant B.</label><br>
+                    <label><input type="radio" name="question6" value="They will score the same points."> They will score the same points.</label><br>
+                    <label><input type="radio" name="question6" value="It could be either Participant A or B."> It could be either Participant A or B.</label>
+                </div>
+                <p id="error-message6" class="error-message">Incorrect answer, please try again.</p>
+                <p id="correct-message6" class="correct-message">Correct answer!</p>
+                </div>
+        </div>
+    </div>
+
+    <div id="all-correct-message" class="correct-message" style="display: none; text-align: center;">
+        All Correct! Moving to the next page in <span id="countdown">3</span> seconds...
+    </div>
+
+    <div class="text-center mt-4">
+        <button type="button" onclick="validateAnswers()">Next</button>
+    </div>
+
+    <script>
+        function validateAnswers() {
+            const correctAnswers = {
+                question4: '1 point with a 70% probability.',
+                question5: '1 point with a 35% probability.',
+                question6: 'It could be either Participant A or B.'
+
+            };
+
+            let allCorrect = true;
+
+            for (let question in correctAnswers) {
+                const selected = document.querySelector(`input[name="${question}"]:checked`);
+                const errorMessage = document.getElementById(`error-message${question.slice(-1)}`);
+                const correctMessage = document.getElementById(`correct-message${question.slice(-1)}`);
+
+                if (selected) {
+                    if (selected.value !== correctAnswers[question]) {
+                        selected.parentElement.classList.add('incorrect');
+                        selected.parentElement.classList.remove('correct');
+                        errorMessage.style.display = 'block';
+                        correctMessage.style.display = 'none';
+                        allCorrect = false;
+                    } else {
+                        selected.parentElement.classList.add('correct');
+                        selected.parentElement.classList.remove('incorrect');
+                        errorMessage.style.display = 'none';
+                        correctMessage.style.display = 'block';
+                    }
+                } else {
+                    errorMessage.style.display = 'block';
+                    correctMessage.style.display = 'none';
+                    allCorrect = false;
+                }
+            }
+
+            if (allCorrect) {
+                const allCorrectMessage = document.getElementById('all-correct-message');
+                const countdown = document.getElementById('countdown');
+                allCorrectMessage.style.display = 'block';
+
+                let timeLeft = 3;
+                const timer = setInterval(() => {
+                    timeLeft--;
+                    countdown.textContent = timeLeft;
+                    if (timeLeft <= 0) {
+                        clearInterval(timer);
+                        document.querySelector('form').submit();
+                    }
+                }, 1000);
+            }
+        }
+    </script>
+{% endblock %}

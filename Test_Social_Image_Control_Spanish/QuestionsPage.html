@@ -1,0 +1,84 @@
+{% block content %}
+<head>
+    <style>
+        /* Add your CSS styles here */
+        .feedback {
+            margin-top: 5px;
+        }
+    </style>
+    <script>
+        function checkAnswer(questionNumber, correctAnswer) {
+            const selectedAnswer = document.querySelector(`input[name="${questionNumber}"]:checked`).value;
+            const feedbackElement = document.getElementById(`feedback-${questionNumber}`);
+
+            if (selectedAnswer === correctAnswer) {
+                feedbackElement.innerHTML = "<span style='color: green;'>Correct answer!</span>";
+            } else {
+                feedbackElement.innerHTML = "<span style='color: red;'>Incorrect, please try again.</span>";
+            }
+            feedbackElement.style.display = 'block';
+        }
+    </script>
+</head>
+<body>
+<form method="post">
+    <div class="question-container">
+        {{ form.q1.label_tag }}<br>
+        {{ form.q1 }}<br>
+        <div id="feedback-q1" class="feedback"></div>
+        <button type="button" onclick="checkAnswer('q1', 'No')">Check Answer</button>
+    </div>
+
+    <div class="question-container">
+        {{ form.q2.label_tag }}<br>
+        {{ form.q2 }}<br>
+        <div id="feedback-q2" class="feedback"></div>
+        <button type="button" onclick="checkAnswer('q2', 'No')">Check Answer</button>
+    </div>
+
+    <div class="question-container">
+        {{ form.q3.label_tag }}<br>
+        {{ form.q3 }}<br>
+        <div id="feedback-q3" class="feedback"></div>
+        <button type="button" onclick="checkAnswer('q3', 'No')">Check Answer</button>
+    </div>
+
+    <div class="question-container">
+        {{ form.q4.label_tag }}<br>
+        {{ form.q4 }}<br>
+        <div id="feedback-q4" class="feedback"></div>
+        <button type="button" onclick="checkAnswer('q4', 'Yes')">Check Answer</button>
+    </div>
+
+    <div class="question-container">
+        {{ form.q5.label_tag }}<br>
+        {{ form.q5 }}<br>
+        <div id="feedback-q5" class="feedback"></div>
+        <button type="button" onclick="checkAnswer('q5', 'It depends on several factors')">Check Answer</button>
+    </div>
+
+    <div class="question-container">
+        {{ form.q6.label_tag }}<br>
+        {{ form.q6 }}<br>
+        <div id="feedback-q6" class="feedback"></div>
+        <button type="button" onclick="checkAnswer('q6', 'It depends on several factors')">Check Answer</button>
+    </div>
+
+    <div class="question-container">
+        {{ form.q7.label_tag }}<br>
+        {{ form.q7 }}<br>
+        <div id="feedback-q7" class="feedback"></div>
+        <button type="button" onclick="checkAnswer('q7', '4 Euros')">Check Answer</button>
+    </div>
+
+    <div class="question-container">
+        {{ form.q8.label_tag }}<br>
+        {{ form.q8 }}<br>
+        <div id="feedback-q8" class="feedback"></div>
+        <button type="button" onclick="checkAnswer('q8', '6 Euro')">Check Answer</button>
+    </div>
+
+    <button type="submit">Next</button>
+</form>
+</body>
+{% endblock %}

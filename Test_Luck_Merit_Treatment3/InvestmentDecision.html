@@ -1,0 +1,48 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block content %}
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f0f0f0;
+        color: #333;
+        line-height: 1.6;
+        padding: 20px;
+    }
+    form {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        max-width: 600px;
+        margin: auto;
+    }
+    p {
+        font-size: 16px;
+        margin-bottom: 20px;
+    }
+    .highlight {
+        font-weight: bold;
+    color: #007BFF;
+    }
+    button {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+    button:hover {
+        background-color: #0056b3;
+    }
+</style>
+
+<form method="post">
+    <p>You are now given <span class="highlight">€1</span> and must choose the portion of this amount (between <span class="highlight">€0</span> and <span class="highlight">€1</span>, inclusive) that you wish to invest. <br> <br> The amount not invested is yours to keep. Whatever amount is invested will become <span class="highlight">2 times larger</span> with a <span class="highlight">50% chance</span> and will become <span class="highlight">0</span> with a <span class="highlight">50% chance</span>. <br> <br> Only one participant in this session will be randomly picked and paid for this decision.</p>
+    <p>How much would you like to invest? {{ form.investment }}</p>
+    <button type="submit">Next</button>
+</form>
+{% endblock %}

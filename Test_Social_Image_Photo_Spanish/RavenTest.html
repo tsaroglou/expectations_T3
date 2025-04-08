@@ -1,0 +1,324 @@
+{% extends "global/Page.html" %}
+{% load otree static widget_tweaks %}
+
+{% block styles %}
+<style>
+    /* Adjust the layout for two-column design with modifications for centering */
+
+    .content-column, .timer-column {
+        flex: 0 0 100%; /* Both columns take full width for centering purposes */
+        max-width: 100%; /* Ensures maximum width is utilized */
+        margin: auto; /* Center align the content */
+    }
+    .otree-timer {
+        position: sticky;
+        top: 10px;
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        padding: 10px;
+        border-radius: 5px;
+        text-align: center;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        z-index: 1000;
+        width: fit-content; /* Makes the timer width fit its content */
+        margin: auto; /* Center align the timer */
+    }
+    .question {
+        margin-bottom: 30px;
+        text-align: center; /* Center aligns text and content within .question */
+    }
+    .question img {
+        width: 100%; /* Responsive image width */
+        max-width: 400px; /* Maximum image width */
+        height: auto; /* Maintains aspect ratio */
+        margin-bottom: 15px; /* Space between image and dropdown */
+        display: block; /* Block display for centering */
+        margin-left: auto; /* Auto margin for centering */
+        margin-right: auto; /* Auto margin for centering */
+    }
+
+    .skip-test-btn {
+        margin-top: 20px; /* Adds space above the button */
+        margin-bottom: 20px; /* Adds space below the button */
+    }
+
+    select {
+        display: block; /* Ensures the select element is block level for margin auto to work */
+        margin: 0 auto 20px; /* Auto margin for horizontal centering and 20px margin below */
+    }
+    .otree-btn-next {
+        margin-top: 20px; /* Space above the next button */
+        display: block; /* Block display for centering */
+        margin-left: auto; /* Auto margin for centering */
+        margin-right: auto; /* Auto margin for centering */
+    }
+
+     form {
+        margin: 0 auto;
+        width: auto;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <script>
+                    document.getElementById('skipTestButton').addEventListener('click', function() {
+                    window.location.href = 'URLWhereYouWantToGo'; // Replace URLWhereYouWantToGo with your desired URL
+                    });
+            </script>
+
+            <h1 class="text-center">Test</h1>
+
+            <p class="text-center">Please answer the following questions:</p>
+            <form method="post">
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageA1.JPG' %}" alt="Question 1">
+                        {% if participant_role == 'A' %}
+                    <p>Por favor, usa el menú desplegable para hacer una elección:</p>
+                    {{ form.q1 }}
+                        {% endif %}
+
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageA2.JPG' %}" alt="Question 2">
+                        {% if participant_role == 'A' %}
+                    <p>Por favor, usa el menú desplegable para hacer una elección:</p>
+                    {{ form.q2 }}
+                        {% endif %}
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageA3.JPG' %}" alt="Question 3">
+                       {% if participant_role == 'A' %}
+                    <p>Por favor, usa el menú desplegable para hacer una elección:</p>
+                    {{ form.q3 }}
+                        {% endif %}
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageA4.JPG' %}" alt="Question 4">
+                       {% if participant_role == 'A' %}
+                    <p>Por favor, usa el menú desplegable para hacer una elección:</p>
+                    {{ form.q4 }}
+                        {% endif %}
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageA5.JPG' %}" alt="Question 5">
+                    {% if participant_role == 'A' %}
+                    <p>Por favor, usa el menú desplegable para hacer una elección:</p>
+                    {{ form.q5 }}
+                        {% endif %}
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageA6.JPG' %}" alt="Question 6">
+                        {% if participant_role == 'A' %}
+                    <p>Por favor, usa el menú desplegable para hacer una elección:</p>
+                    {{ form.q6 }}
+                        {% endif %}
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageA7.JPG' %}" alt="Question 7">
+                        {% if participant_role == 'A' %}
+                    <p>Por favor, usa el menú desplegable para hacer una elección:</p>
+                    {{ form.q7 }}
+                        {% endif %}
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageA8.JPG' %}" alt="Question 8">
+                        {% if participant_role == 'A' %}
+                    <p>Por favor, usa el menú desplegable para hacer una elección:</p>
+                    {{ form.q8 }}
+                        {% endif %}
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageA9.JPG' %}" alt="Question 9">
+                        {% if participant_role == 'A' %}
+                    <p>Por favor, usa el menú desplegable para hacer una elección:</p>
+                    {{ form.q9 }}
+                        {% endif %}
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageA10.JPG' %}" alt="Question 10">
+                        {% if participant_role == 'A' %}
+                    <p>Por favor, usa el menú desplegable para hacer una elección:</p>
+                    {{ form.q10 }}
+                        {% endif %}
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageA11.JPG' %}" alt="Question 11">
+                        {% if participant_role == 'A' %}
+                    <p>Por favor, usa el menú desplegable para hacer una elección:</p>
+                    {{ form.q11 }}
+                        {% endif %}
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageA12.JPG' %}" alt="Question 12">
+                       {% if participant_role == 'A' %}
+                    <p>Por favor, usa el menú desplegable para hacer una elección:</p>
+                    {{ form.q12 }}
+                        {% endif %}
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageC1.JPG' %}" alt="Question 12">
+                      {% if participant_role == 'A' %}
+                    <p>Por favor, usa el menú desplegable para hacer una elección:</p>
+                    {{ form.q13 }}
+                        {% endif %}
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageC2.JPG' %}" alt="Question 12">
+                     {% if participant_role == 'A' %}
+                    <p>Por favor, usa el menú desplegable para hacer una elección:</p>
+                    {{ form.q14 }}
+                        {% endif %}
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageC3.JPG' %}" alt="Question 12">
+                        {% if participant_role == 'A' %}
+                    <p>Por favor, usa el menú desplegable para hacer una elección:</p>
+                    {{ form.q15 }}
+                        {% endif %}
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageC4.JPG' %}" alt="Question 12">
+                        {% if participant_role == 'A' %}
+                    <p>Por favor, usa el menú desplegable para hacer una elección:</p>
+                    {{ form.q16 }}
+                        {% endif %}
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageC5.JPG' %}" alt="Question 12">
+                        {% if participant_role == 'A' %}
+                    <p>Por favor, usa el menú desplegable para hacer una elección:</p>
+                    {{ form.q17 }}
+                        {% endif %}
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageC6.JPG' %}" alt="Question 12">
+                    {% if participant_role == 'A' %}
+                    <p>Por favor, usa el menú desplegable para hacer una elección:</p>
+                    {{ form.q18 }}
+                        {% endif %}
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageE1.JPG' %}" alt="Question 12">
+                     {% if participant_role == 'A' %}
+                    <p>Por favor, usa el menú desplegable para hacer una elección:</p>
+                    {{ form.q19 }}
+                        {% endif %}
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageE2.JPG' %}" alt="Question 12">
+                     {% if participant_role == 'A' %}
+                    <p>Por favor, usa el menú desplegable para hacer una elección:</p>
+                    {{ form.q20 }}
+                        {% endif %}
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageE3.JPG' %}" alt="Question 12">
+                      {% if participant_role == 'A' %}
+                    <p>Por favor, usa el menú desplegable para hacer una elección:</p>
+                    {{ form.q21 }}
+                        {% endif %}
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageE4.JPG' %}" alt="Question 12">
+                     {% if participant_role == 'A' %}
+                    <p>Por favor, usa el menú desplegable para hacer una elección:</p>
+                    {{ form.q22 }}
+                        {% endif %}
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageE5.JPG' %}" alt="Question 12">
+                      {% if participant_role == 'A' %}
+                    <p>Por favor, usa el menú desplegable para hacer una elección:</p>
+                    {{ form.q23 }}
+                        {% endif %}
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageE6.JPG' %}" alt="Question 12">
+                      {% if participant_role == 'A' %}
+                    <p>Por favor, usa el menú desplegable para hacer una elección:</p>
+                    {{ form.q24 }}
+                        {% endif %}
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageE7.JPG' %}" alt="Question 12">
+                     {% if participant_role == 'A' %}
+                    <p>Por favor, usa el menú desplegable para hacer una elección:</p>
+                    {{ form.q25 }}
+                        {% endif %}
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageE8.JPG' %}" alt="Question 12">
+                      {% if participant_role == 'A' %}
+                    <p>Por favor, usa el menú desplegable para hacer una elección:</p>
+                    {{ form.q26 }}
+                        {% endif %}
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageE9.JPG' %}" alt="Question 12">
+                      {% if participant_role == 'A' %}
+                    <p>Por favor, usa el menú desplegable para hacer una elección:</p>
+                    {{ form.q27 }}
+                        {% endif %}
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageE10.JPG' %}" alt="Question 12">
+                      {% if participant_role == 'A' %}
+                    <p>Por favor, usa el menú desplegable para hacer una elección:</p>
+                    {{ form.q28 }}
+                        {% endif %}
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageE11.JPG' %}" alt="Question 12">
+                     {% if participant_role == 'A' %}
+                    <p>Por favor, usa el menú desplegable para hacer una elección:</p>
+                    {{ form.q29 }}
+                        {% endif %}
+                </div>
+
+                <div class="question">
+                    <img src="{% static 'Test_Luck_Merit/Images/ImageE12.JPG' %}" alt="Question 12">
+                      {% if participant_role == 'A' %}
+                    <p>Por favor, usa el menú desplegable para hacer una elección:</p>
+                    {{ form.q30 }}
+                        {% endif %}
+                </div>
+
+                <button type="submit" class="otree-btn-next btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

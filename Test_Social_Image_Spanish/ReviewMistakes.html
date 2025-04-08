@@ -1,0 +1,104 @@
+
+
+    {% extends "global/Page.html" %}
+{% block content %}
+<div class="container" style="margin-bottom: 40px;"> <!-- Increased bottom margin for spacing -->
+    <style>
+        .feedback-title {
+            color: #17a2b8; /* Softer blue */
+            font-size: 1.5rem;
+            margin-bottom: 0px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .question {
+            font-weight: 600;
+            color: #007bff; /* Primary color */
+            margin-top: 20px;
+        }
+
+        .explanation {
+            margin-top: 10px;
+            font-style: normal;
+            color: #343a40; /* Dark color for readability */
+            background-color: #e9ecef; /* Light gray background */
+            border-left: 0px solid #ffc107; /* Highlight color */
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        }
+
+        .icon {
+            display: inline-block;
+            width: 30px;
+            text-align: center;
+            margin-right: 10px;
+        }
+
+        .correct-message {
+            color: #28a745; /* Success color */
+            font-weight: bold;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .review-section {
+            padding-top: 20px;
+        }
+    </style>
+
+   {% if hasmistake %}
+        <div class="feedback-title">Revisión de Errores</div>
+        <div class="review-section">
+            {% if uq1 %}
+                <div class="question">Pregunta 1: ¿Los participantes en el rol B descubren qué participantes en el rol A se clasificaron en el top 50% en el test?</div>
+                <div class="explanation">Explicación: No, los participantes en el rol B no descubren qué participantes en el rol A se clasificaron en el 50% superior en la prueba.</div>
+            {% endif %}
+            {% if uq2 %}
+                <div class="question">Pregunta 2: ¿Qué saben los participantes en el rol B sobre cada uno de los participantes en el rol A?</div>
+                <div class="explanation">Explicación: No,  los participantes en el rol B solo saben si sus participantes en el rol A  abrieron una caja y el pago resultante, mientras que non saben sus identidades y sus puntuaciones en el test.</div>
+            {% endif %}
+
+            {% if uq3 %}
+                <div class="question">Pregunta 3: ¿Descubren los participantes en el Rol B qué caja contiene el dinero?</div>
+                <div class="explanation">Explicación: No, los participantes en el Rol B nunca descubren qué caja contiene el dinero.</div>
+            {% endif %}
+
+            {% if uq4 %}
+                <div class="question">Pregunta 4: ¿Pueden los participantes en el Rol A elegir una caja incluso si no saben qué caja contiene el dinero?</div>
+                <div class="explanation">Explicación: Sí, los participantes en el Rol A pueden elegir cualquier caja, independientemente de si saben dónde está el dinero.</div>
+            {% endif %}
+
+            {% if uq5 %}
+                <div class="question">Pregunta 5: ¿Cuánto gana un participante en el rol B cuando permite que sus participantes en el rol A tomen una decisión y  eligen una caja?</div>
+                <div class="explanation">Explicación: Las ganancias dependen de varios factores, incluyendo si la caja elegida contiene el dinero y las decisiones tomadas por los participantes en el Rol A.</div>
+            {% endif %}
+
+            {% if uq6 %}
+                <div class="question">Pregunta 6: ¿Cuánto gana un participante en el rol A cuando su participante en el rol B le permite tomar una decisión y el participante A elige una caja?</div>
+                <div class="explanation">Explicación: Las ganancias para los participantes en el Rol A cuando eligen una caja dependen de si la caja contiene el dinero y de si la caja está bloqueada.</div>
+            {% endif %}
+
+            {% if uq7 %}
+                <div class="question">Pregunta 7: ¿Cuánto gana un participante en el rol A cuando se abstiene?</div>
+                <div class="explanation">Explicación: Los participantes en el Rol A que optan por abstenerse tienen garantizadas unas ganancias fijas de 4 euros.</div>
+            {% endif %}
+
+            {% if uq8 %}
+                <div class="question">Pregunta 8: ¿Cuánto gana un participante en el rol B cuando se abstiene?</div>
+                <div class="explanation">Explicación: Los participantes en el Rol B que deciden abstenerse tienen garantizadas unas ganancias fijas de 6 euros.</div>
+            {% endif %}
+
+
+
+
+        </div>
+    {% else %}
+        <p class="correct-message"> Respondiste todas las preguntas correctamente. ¡Buen trabajo!</p>
+    {% endif %}
+</div>
+{% next_button %}
+{% endblock %}
+
+

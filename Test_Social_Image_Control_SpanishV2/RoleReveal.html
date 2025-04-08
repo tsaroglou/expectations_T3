@@ -1,0 +1,29 @@
+{% block content %}
+<div class="container mt-4">
+    <h2>Tu Rol: <span class="text-primary">{{ participant_role }}</span></h2>
+
+    {% if participant_role == 'B' and matched_names %}
+        <div class="alert alert-info" role="alert">
+            <p>Cada participante ha sido asignado aleatoriamente a uno de dos roles posibles: A o B. Has sido asignado al <strong>rol B</strong>. Todos los participantes en el rol A ahora completarán un test de CI de 30 preguntas, que es frecuentemente utilizado para medir la inteligencia. Tendrán hasta 10 minutos para completar el test.</p>   <p> Como todos los participantes en el rol B, no completarás la prueba, pero
+puedes ver el test mientras los participantes en el rol A lo completan. Tu pago final puede depender de cómo
+algunos de los participantes A que estén vinculados contigo se desempeñen en el test en relación con los demás participantes.
+Se proporcionará más información después del test.</p>
+        </div>
+        <p>Estás emparejado con cuatro participantes en el Rol A:</p>
+        <ul class="list-group">
+            {% for name in matched_names %}
+                <li class="list-group-item">{{ name }}</li>
+            {% endfor %}
+        </ul>
+    {% elif participant_role == 'A' and matched_names %}
+        <div class="alert alert-info" role="alert">
+            <p>Cada participante ha sido asignado aleatoriamente a uno de dos roles posibles: A o B. Has sido
+asignado al <strong>rol A</strong>. Como todos los otros participantes en el rol A, ahora completarás un test de CI de 30 preguntas, que es
+frecuentemente utilizado para medir la inteligencia. <br> <br> Deberías intentar responder tantas preguntas como sea posible. Tendrás hasta 10 minutos para completar el test. Tu pago final puede depender de tu desempeño en el test en comparación con el desempeño de los demás participantes. Se proporcionará más información después del test.</p>
+        </div>
+        <p>Estás emparejado con un participante que ha sido asignado al Rol B. Ningún participante en el Rol B puede completar la prueba; sin embargo, podrán verla.</p>
+    {% endif %}
+</div>
+
+{% next_button %}
+{% endblock %}

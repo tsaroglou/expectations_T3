@@ -1,0 +1,48 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block styles %}
+<style>
+    body, html {
+        background-color: #ffffff; /* White background for the overall page */
+        color: #333; /* Darker text for better readability */
+    }
+    .container {
+        max-width: 800px;
+        margin: auto;
+        padding: 20px;
+    }
+    h1 {
+        color: #007bff; /* Bootstrap primary color */
+        text-align: center;
+        margin-bottom: 30px; /* More space below the heading */
+    }
+    .highlight {
+        font-weight: bold; /* Make important text bold */
+        color: #007bff; /* Highlight color */
+    }
+    .content-section p {
+        margin-top: 1rem; /* Add space between paragraphs */
+        font-size: 16px; /* Slightly larger font for readability */
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Bienvenido</h1>
+
+    <div class="content-section">
+        <p>Gracias por participar en este experimento.</p>
+        <p><span class="highlight">Por favor, no te comuniques</span> con otros participantes y no uses celulares u otros dispositivos electrónicos en ningún momento durante el experimento.</p>
+        <p>Si tienes alguna pregunta, por favor <span class="highlight">levanta la mano y un experimentador acudirá a ti</span> para responder tu pregunta de manera privada.</p>
+    </div>
+
+    <div class="content-section">
+        <p>Por tu participación en este experimento, recibirás una <span class="highlight">cuota de participación de €5</span>. También puedes ganar <span class="highlight">dinero adicional dependiendo de tus decisiones</span> en el experimento y las decisiones de otros participantes.</p>
+        <p>Recibirás tu pago por transferencia bancaria. Ningún otro participante será informado de tu pago, y a ti no se te informará del pago de ningún otro participante.</p>
+    </div>
+</div>
+
+{% next_button %}
+{% endblock %}

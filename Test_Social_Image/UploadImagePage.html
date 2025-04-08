@@ -1,0 +1,8 @@
+{% extends "global/Page.html" %}
+{% block content %}
+    <h3>Upload your image</h3>
+    <form method="post" enctype="multipart/form-data">
+        <input type="file" name="image_upload" accept="image/*" required>
+        <button type="submit">Upload</button>
+    </form>
+{% endblock %}
