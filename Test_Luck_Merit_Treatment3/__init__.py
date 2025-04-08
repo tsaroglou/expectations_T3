@@ -639,7 +639,7 @@ class Instructions(Page):
 
 
 class SplitExplanation(Page):
-    timeout_seconds = 60000000  # Total time for the page (3 minutes)
+    timeout_seconds = 600000  # Total time for the page (3 minutes)
 
     def is_displayed(player):
         return player.consent and not player.remove
