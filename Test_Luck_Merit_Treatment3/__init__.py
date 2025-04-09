@@ -609,7 +609,7 @@ def get_entered_participants(player):
 
 # Pages
 class Introduction(Page):
-    timeout_seconds = 45  # Total time for the page (2 minutes)
+    timeout_seconds = 60
 
     form_model = 'player'
     form_fields = ['consent']
@@ -655,7 +655,7 @@ class SplitExplanation(Page):
 
 
 class SampleQuestions(Page):
-    timeout_seconds = 25
+    timeout_seconds = 45
 
     def is_displayed(player):
         return player.consent and not player.remove
@@ -671,7 +671,7 @@ class SampleQuestions(Page):
 
 
 class PredictionExplanation(Page):
-    timeout_seconds = 75
+    timeout_seconds = 90
 
 
     form_model = 'player'
@@ -715,7 +715,7 @@ class InitialPrediction(Page):
 
 
 class GradingExplanation(Page):
-    timeout_seconds = 50
+    timeout_seconds = 60
     form_model = 'player'
     form_fields = ['question4', 'question5', 'question6']
 
@@ -738,7 +738,7 @@ class GradingExplanation(Page):
 
 
 class FinalPrediction(Page):
-    timeout_seconds = 45
+    timeout_seconds = 50
 
     def is_displayed(player):
         return player.consent and not player.remove
@@ -777,7 +777,7 @@ class FlashImagePage(Page):
         }
 
 class PaymentExplanation(Page):
-    timeout_seconds = 30  # Total time for the page (3 minutes)
+    timeout_seconds = 40  # Total time for the page (3 minutes)
 
     def is_displayed(player):
         return player.consent and not player.remove
@@ -957,7 +957,7 @@ class SelectOneForPredictionLottery(WaitPage):
 
 
 class TestOutcome(Page):
-    timeout_seconds = 20
+    timeout_seconds = 10
     def is_displayed(player):
         return player.consent and not player.remove
     def vars_for_template(player: Player):
@@ -1282,7 +1282,7 @@ class TaxRateProcessing(WaitPage):
 
 
 class PerformanceEstimation(Page):
-    timeout_seconds = 30
+    timeout_seconds = 25
     def is_displayed(player):
         return player.consent and not player.remove
     form_model = 'player'
