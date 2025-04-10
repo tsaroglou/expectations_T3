@@ -633,10 +633,6 @@ class Instructions(Page):
             # Increment the timeout count stored in participant.vars
             player.timeout_count += 1
 
-            # If the participant times out 3 times, mark them for exclusion
-            if player.timeout_count >= 5:
-                player.remove = True  # Mark player for removal
-
 
 class SplitExplanation(Page):
     timeout_seconds = 30  # Total time for the page (3 minutes)
@@ -649,9 +645,7 @@ class SplitExplanation(Page):
             # Increment the timeout count stored in participant.vars
             player.timeout_count += 1
 
-            # If the participant times out 3 times, mark them for exclusion
-            if player.timeout_count >= 5:
-                player.remove = True  # Mark player for removal
+
 
 
 class SampleQuestions(Page):
@@ -665,9 +659,7 @@ class SampleQuestions(Page):
             # Increment the timeout count stored in participant.vars
             player.timeout_count += 1
 
-            # If the participant times out 3 times, mark them for exclusion
-            if player.timeout_count >= 5:
-                player.remove = True  # Mark player for removal
+
 
 
 class PredictionExplanation(Page):
@@ -709,9 +701,7 @@ class InitialPrediction(Page):
             # Increment the timeout count stored in participant.vars
             player.timeout_count += 1
 
-            # If the participant times out 3 times, mark them for exclusion
-            if player.timeout_count >= 5:
-                player.remove = True  # Mark player for removal
+
 
 
 class GradingExplanation(Page):
@@ -792,8 +782,7 @@ class PaymentExplanation(Page):
             player.timeout_count += 1
 
             # If the participant times out 3 times, mark them for exclusion
-            if player.timeout_count >= 5:
-                player.remove = True  # Mark player for removal
+
 
 class RavensTest(Page):
     def is_displayed(player):
@@ -973,8 +962,7 @@ class TestOutcome(Page):
             player.timeout_count += 1
 
             # If the participant times out 3 times, mark them for exclusion
-            if player.timeout_count >= 5:
-                player.remove = True  # Mark player for removal
+
 class PerformanceHistogram(Page):
     timeout_seconds = 30
 
@@ -1033,9 +1021,7 @@ class PerformanceHistogram(Page):
             # Increment the timeout count stored in participant.vars
             player.timeout_count += 1
 
-            # If the participant times out 3 times, mark them for exclusion
-            if player.timeout_count >= 5:
-                player.remove = True  # Mark player for removal
+
 
 class InteractiveGraph(Page):
     timeout_seconds = 50
@@ -1184,9 +1170,6 @@ class TaxRateVoting(Page):
             # Increment the timeout count stored in participant.vars
             player.timeout_count += 1
 
-            # If the participant times out 3 times, mark them for exclusion
-            if player.timeout_count >= 5:
-                player.remove = True  # Mark player for removal
 
 from collections import defaultdict
 
@@ -1514,9 +1497,7 @@ class SecondTaxRateVoting(Page):
             # Increment the timeout count stored in participant.vars
             player.timeout_count += 1
 
-            # If the participant times out 3 times, mark them for exclusion
-            if player.timeout_count >= 5:
-                player.remove = True  # Mark player for removal
+
 
 def calculate_gini(arr):
     """Calculate the Gini coefficient of a list of numbers using the given formula."""
@@ -1646,10 +1627,6 @@ class InvestmentDecision(Page):
         if timeout_happened:
             # Increment the timeout count stored in participant.vars
             player.timeout_count += 1
-
-            # If the participant times out 3 times, mark them for exclusion
-            if player.timeout_count >= 5:
-                player.remove = True  # Mark player for removal
 class SelectOneForInvestmentPayment(WaitPage):
 
     def is_displayed(player):
