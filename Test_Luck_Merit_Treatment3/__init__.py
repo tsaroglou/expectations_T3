@@ -584,7 +584,7 @@ class WaitingRoom(Page):
 
     def is_displayed(player):
         # The page is displayed if there are fewer than 20 participants
-        return len(get_entered_participants(player)) <2
+        return len(get_entered_participants(player)) <20
 
     def vars_for_template(player):
         # Provide the number of participants who have entered the experiment
@@ -596,7 +596,7 @@ class WaitingRoom(Page):
     def before_next_page(player, timeout_happened):
         # This logic moves players forward only if there are 20 participants
         entered_participants = get_entered_participants(player)
-        if len(entered_participants) >= 2:
+        if len(entered_participants) >= 20:
             player._is_ready_to_proceed = True  # Mark player as ready to proceed
 
 def get_entered_participants(player):
@@ -634,7 +634,7 @@ class Instructions(Page):
             player.timeout_count += 1
 
             # If the participant times out 3 times, mark them for exclusion
-            if player.timeout_count >= 3:
+            if player.timeout_count >= 4:
                 player.remove = True  # Mark player for removal
 
 
@@ -650,7 +650,7 @@ class SplitExplanation(Page):
             player.timeout_count += 1
 
             # If the participant times out 3 times, mark them for exclusion
-            if player.timeout_count >= 3:
+            if player.timeout_count >= 4:
                 player.remove = True  # Mark player for removal
 
 
@@ -666,7 +666,7 @@ class SampleQuestions(Page):
             player.timeout_count += 1
 
             # If the participant times out 3 times, mark them for exclusion
-            if player.timeout_count >= 3:
+            if player.timeout_count >= 4:
                 player.remove = True  # Mark player for removal
 
 
@@ -710,7 +710,7 @@ class InitialPrediction(Page):
             player.timeout_count += 1
 
             # If the participant times out 3 times, mark them for exclusion
-            if player.timeout_count >= 3:
+            if player.timeout_count >= 4:
                 player.remove = True  # Mark player for removal
 
 
@@ -792,7 +792,7 @@ class PaymentExplanation(Page):
             player.timeout_count += 1
 
             # If the participant times out 3 times, mark them for exclusion
-            if player.timeout_count >= 3:
+            if player.timeout_count >= 4:
                 player.remove = True  # Mark player for removal
 
 class RavensTest(Page):
@@ -973,7 +973,7 @@ class TestOutcome(Page):
             player.timeout_count += 1
 
             # If the participant times out 3 times, mark them for exclusion
-            if player.timeout_count >= 3:
+            if player.timeout_count >= 4:
                 player.remove = True  # Mark player for removal
 class PerformanceHistogram(Page):
     timeout_seconds = 20
@@ -1034,7 +1034,7 @@ class PerformanceHistogram(Page):
             player.timeout_count += 1
 
             # If the participant times out 3 times, mark them for exclusion
-            if player.timeout_count >= 3:
+            if player.timeout_count >= 4:
                 player.remove = True  # Mark player for removal
 
 class InteractiveGraph(Page):
@@ -1185,7 +1185,7 @@ class TaxRateVoting(Page):
             player.timeout_count += 1
 
             # If the participant times out 3 times, mark them for exclusion
-            if player.timeout_count >= 3:
+            if player.timeout_count >= 4:
                 player.remove = True  # Mark player for removal
 
 from collections import defaultdict
@@ -1515,7 +1515,7 @@ class SecondTaxRateVoting(Page):
             player.timeout_count += 1
 
             # If the participant times out 3 times, mark them for exclusion
-            if player.timeout_count >= 3:
+            if player.timeout_count >= 4:
                 player.remove = True  # Mark player for removal
 
 def calculate_gini(arr):
@@ -1648,7 +1648,7 @@ class InvestmentDecision(Page):
             player.timeout_count += 1
 
             # If the participant times out 3 times, mark them for exclusion
-            if player.timeout_count >= 3:
+            if player.timeout_count >= 4:
                 player.remove = True  # Mark player for removal
 class SelectOneForInvestmentPayment(WaitPage):
 
