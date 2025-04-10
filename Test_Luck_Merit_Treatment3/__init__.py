@@ -609,7 +609,7 @@ def get_entered_participants(player):
 
 # Pages
 class Introduction(Page):
-    timeout_seconds = 60
+    timeout_seconds = 70
 
     form_model = 'player'
     form_fields = ['consent']
@@ -623,7 +623,7 @@ class Introduction(Page):
             player.remove = True  # Mark player for removal if they didn't give consent
 
 class Instructions(Page):
-    timeout_seconds = 20  # Total time for the page
+    timeout_seconds = 30  # Total time for the page
 
     def is_displayed(player):
         return player.consent and not player.remove
@@ -634,12 +634,12 @@ class Instructions(Page):
             player.timeout_count += 1
 
             # If the participant times out 3 times, mark them for exclusion
-            if player.timeout_count >= 4:
+            if player.timeout_count >= 5:
                 player.remove = True  # Mark player for removal
 
 
 class SplitExplanation(Page):
-    timeout_seconds = 25  # Total time for the page (3 minutes)
+    timeout_seconds = 30  # Total time for the page (3 minutes)
 
     def is_displayed(player):
         return player.consent and not player.remove
@@ -650,12 +650,12 @@ class SplitExplanation(Page):
             player.timeout_count += 1
 
             # If the participant times out 3 times, mark them for exclusion
-            if player.timeout_count >= 4:
+            if player.timeout_count >= 5:
                 player.remove = True  # Mark player for removal
 
 
 class SampleQuestions(Page):
-    timeout_seconds = 45
+    timeout_seconds = 50
 
     def is_displayed(player):
         return player.consent and not player.remove
@@ -666,7 +666,7 @@ class SampleQuestions(Page):
             player.timeout_count += 1
 
             # If the participant times out 3 times, mark them for exclusion
-            if player.timeout_count >= 4:
+            if player.timeout_count >= 5:
                 player.remove = True  # Mark player for removal
 
 
@@ -710,12 +710,12 @@ class InitialPrediction(Page):
             player.timeout_count += 1
 
             # If the participant times out 3 times, mark them for exclusion
-            if player.timeout_count >= 4:
+            if player.timeout_count >= 5:
                 player.remove = True  # Mark player for removal
 
 
 class GradingExplanation(Page):
-    timeout_seconds = 60
+    timeout_seconds = 70
     form_model = 'player'
     form_fields = ['question4', 'question5', 'question6']
 
@@ -738,7 +738,7 @@ class GradingExplanation(Page):
 
 
 class FinalPrediction(Page):
-    timeout_seconds = 50
+    timeout_seconds = 60
 
     def is_displayed(player):
         return player.consent and not player.remove
@@ -777,7 +777,7 @@ class FlashImagePage(Page):
         }
 
 class PaymentExplanation(Page):
-    timeout_seconds = 40  # Total time for the page (3 minutes)
+    timeout_seconds = 50  # Total time for the page (3 minutes)
 
     def is_displayed(player):
         return player.consent and not player.remove
@@ -792,7 +792,7 @@ class PaymentExplanation(Page):
             player.timeout_count += 1
 
             # If the participant times out 3 times, mark them for exclusion
-            if player.timeout_count >= 4:
+            if player.timeout_count >= 5:
                 player.remove = True  # Mark player for removal
 
 class RavensTest(Page):
@@ -957,7 +957,7 @@ class SelectOneForPredictionLottery(WaitPage):
 
 
 class TestOutcome(Page):
-    timeout_seconds = 10
+    timeout_seconds = 15
     def is_displayed(player):
         return player.consent and not player.remove
     def vars_for_template(player: Player):
@@ -973,10 +973,10 @@ class TestOutcome(Page):
             player.timeout_count += 1
 
             # If the participant times out 3 times, mark them for exclusion
-            if player.timeout_count >= 4:
+            if player.timeout_count >= 5:
                 player.remove = True  # Mark player for removal
 class PerformanceHistogram(Page):
-    timeout_seconds = 20
+    timeout_seconds = 30
 
     def is_displayed(player):
         return player.consent and not player.remove
@@ -1034,11 +1034,11 @@ class PerformanceHistogram(Page):
             player.timeout_count += 1
 
             # If the participant times out 3 times, mark them for exclusion
-            if player.timeout_count >= 4:
+            if player.timeout_count >= 5:
                 player.remove = True  # Mark player for removal
 
 class InteractiveGraph(Page):
-    timeout_seconds = 40
+    timeout_seconds = 50
     form_model = 'player'
     form_fields = ['tax_vote']
 
@@ -1185,7 +1185,7 @@ class TaxRateVoting(Page):
             player.timeout_count += 1
 
             # If the participant times out 3 times, mark them for exclusion
-            if player.timeout_count >= 4:
+            if player.timeout_count >= 5:
                 player.remove = True  # Mark player for removal
 
 from collections import defaultdict
@@ -1282,7 +1282,7 @@ class TaxRateProcessing(WaitPage):
 
 
 class PerformanceEstimation(Page):
-    timeout_seconds = 25
+    timeout_seconds = 35
     def is_displayed(player):
         return player.consent and not player.remove
     form_model = 'player'
@@ -1307,7 +1307,7 @@ def generate_predefined_distribution(num_bars):
 class SecondTaxRateVoting(Page):
     form_model = 'player'
     form_fields = ['adjustment_values']
-    timeout_seconds = 60
+    timeout_seconds = 70
 
     def is_displayed(player):
         return player.consent and not player.remove
@@ -1515,7 +1515,7 @@ class SecondTaxRateVoting(Page):
             player.timeout_count += 1
 
             # If the participant times out 3 times, mark them for exclusion
-            if player.timeout_count >= 4:
+            if player.timeout_count >= 5:
                 player.remove = True  # Mark player for removal
 
 def calculate_gini(arr):
@@ -1588,7 +1588,7 @@ class FinalQuestions(Page):
     def is_displayed(player):
         return player.consent and not player.remove
 
-    timeout_seconds = 45
+    timeout_seconds = 60
 
     wait_for_all_groups = True
     form_model = 'player'
@@ -1628,7 +1628,7 @@ class FinalPayment(Page):
         }
 
 class InvestmentDecision(Page):
-    timeout_seconds = 25
+    timeout_seconds = 40
     form_model = 'player'
     form_fields = ['investment']
     def is_displayed(player):
@@ -1648,7 +1648,7 @@ class InvestmentDecision(Page):
             player.timeout_count += 1
 
             # If the participant times out 3 times, mark them for exclusion
-            if player.timeout_count >= 4:
+            if player.timeout_count >= 5:
                 player.remove = True  # Mark player for removal
 class SelectOneForInvestmentPayment(WaitPage):
 
