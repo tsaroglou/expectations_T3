@@ -21,7 +21,7 @@ class Constants(BaseConstants):
     name_in_url = 'Test_Luck_Merit'
     players_per_group = None
     num_rounds = 1
-    initial_payment = 1
+    initial_payment = 1.5
 
     investment_amount = 1.0
 
@@ -1607,7 +1607,7 @@ class FinalPayment(Page):
     wait_for_all_groups = True
     # Calculate bonus based on accurate prediction
     def vars_for_template(player: Player):
-        participation_fee = cu(1)  # Assuming this is defined in your Constants
+        participation_fee = cu(1.5)  # Assuming this is defined in your Constants
         player.pay_ravens_showed = cu(player.pay_ravens)
         player.bonus_guess_showed = cu(player.bonus_earned)
         player.finished = True
