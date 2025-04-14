@@ -1273,7 +1273,7 @@ def generate_predefined_distribution(num_bars):
 class SecondTaxRateVoting(Page):
     form_model = 'player'
     form_fields = ['adjustment_values']
-    timeout_seconds = 80
+    timeout_seconds = 100
 
     def is_displayed(player):
         return player.consent and not player.remove
@@ -1552,7 +1552,7 @@ class FinalQuestions(Page):
     def is_displayed(player):
         return player.consent and not player.remove
 
-    timeout_seconds = 70
+    timeout_seconds = 90
 
     wait_for_all_groups = True
     form_model = 'player'
