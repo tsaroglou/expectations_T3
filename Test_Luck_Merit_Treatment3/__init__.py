@@ -710,6 +710,8 @@ class GradingExplanation(Page):
         self.question6_correct = self.question6 == 'It could be either Participant A or B.'
 
 
+
+
 class FinalPrediction(Page):
     timeout_seconds = 100
 
@@ -1258,9 +1260,7 @@ class PerformanceEstimation(Page):
         player.payoff += player.pay_ravens + Constants.initial_payment
         player.true_performance_estimate_pct = (player.true_performance_estimate / 15) * 100
 
-        if timeout_happened:
-            # Increment the timeout count stored in participant.vars
-            player.remove = True  # Mark player for removal
+
 
 
 def generate_predefined_distribution(num_bars):
