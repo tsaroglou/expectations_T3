@@ -609,7 +609,7 @@ def get_entered_participants(player):
 
 # Pages
 class Introduction(Page):
-    timeout_seconds = 70
+    timeout_seconds = 80
 
     form_model = 'player'
     form_fields = ['consent']
@@ -635,7 +635,7 @@ class Instructions(Page):
 
 
 class SplitExplanation(Page):
-    timeout_seconds = 30  # Total time for the page (3 minutes)
+    timeout_seconds = 35  # Total time for the page (3 minutes)
 
     def is_displayed(player):
         return player.consent and not player.remove
@@ -705,7 +705,7 @@ class InitialPrediction(Page):
 
 
 class GradingExplanation(Page):
-    timeout_seconds = 70
+    timeout_seconds = 80
     form_model = 'player'
     form_fields = ['question4', 'question5', 'question6']
 
@@ -1265,7 +1265,7 @@ class TaxRateProcessing(WaitPage):
 
 
 class PerformanceEstimation(Page):
-    timeout_seconds = 35
+    timeout_seconds = 45
     def is_displayed(player):
         return player.consent and not player.remove
     form_model = 'player'
@@ -1290,7 +1290,7 @@ def generate_predefined_distribution(num_bars):
 class SecondTaxRateVoting(Page):
     form_model = 'player'
     form_fields = ['adjustment_values']
-    timeout_seconds = 70
+    timeout_seconds = 80
 
     def is_displayed(player):
         return player.consent and not player.remove
@@ -1569,7 +1569,7 @@ class FinalQuestions(Page):
     def is_displayed(player):
         return player.consent and not player.remove
 
-    timeout_seconds = 60
+    timeout_seconds = 70
 
     wait_for_all_groups = True
     form_model = 'player'
@@ -1609,7 +1609,7 @@ class FinalPayment(Page):
         }
 
 class InvestmentDecision(Page):
-    timeout_seconds = 40
+    timeout_seconds = 45
     form_model = 'player'
     form_fields = ['investment']
     def is_displayed(player):
