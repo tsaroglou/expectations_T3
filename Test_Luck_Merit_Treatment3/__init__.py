@@ -609,7 +609,7 @@ def get_entered_participants(player):
 
 # Pages
 class Introduction(Page):
-    timeout_seconds = 80
+    timeout_seconds = 100
 
     form_model = 'player'
     form_fields = ['consent']
@@ -678,14 +678,6 @@ class PredictionExplanation(Page):
         self.question2_correct = self.question2 == 'A random number between 0 and 0.5 Euro'
         self.question3_correct = self.question3 == '1.2 Euro'
 
-        if timeout_happened:
-            # Increment the timeout count stored in participant.vars
-            self.timeout_count += 1
-
-            # If the participant times out 3 times, mark them for exclusion
-            if self.timeout_count >= 3:
-                self.remove = True  # Mark player for removal
-
 
 class InitialPrediction(Page):
     timeout_seconds = 20000
@@ -717,18 +709,9 @@ class GradingExplanation(Page):
         self.question5_correct = self.question5 == '0 points.'
         self.question6_correct = self.question6 == 'It could be either Participant A or B.'
 
-        # Check if the page timed out
-        if timeout_happened:
-            # Increment the timeout count stored in participant.vars
-            self.timeout_count += 1
-
-            # If the participant times out 3 times, mark them for exclusion
-            if self.timeout_count >= 3:
-                self.remove = True  # Mark player for removal
-
 
 class FinalPrediction(Page):
-    timeout_seconds = 60
+    timeout_seconds = 100
 
     def is_displayed(player):
         return player.consent and not player.remove
@@ -1024,7 +1007,7 @@ class PerformanceHistogram(Page):
 
 
 class InteractiveGraph(Page):
-    timeout_seconds = 50
+    timeout_seconds = 110
     form_model = 'player'
     form_fields = ['tax_vote']
 
@@ -1265,7 +1248,7 @@ class TaxRateProcessing(WaitPage):
 
 
 class PerformanceEstimation(Page):
-    timeout_seconds = 45
+    timeout_seconds = 50
     def is_displayed(player):
         return player.consent and not player.remove
     form_model = 'player'
