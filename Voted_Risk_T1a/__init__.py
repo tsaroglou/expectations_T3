@@ -123,42 +123,43 @@ class Player(BasePlayer):
     remove = models.BooleanField(initial=False)
     # Comprehension check questions:
     comprehension_q1 = models.StringField(
-         choices=["Matrix A", "Matrix B"],
-         widget=widgets.RadioSelect,
-         label="1. If you vote for Matrix A and your paired participant votes for Matrix B, which matrix is used?"
+        choices=["Game 1", "Game 2"],
+        widget=widgets.RadioSelect,
+        label="1. If you vote for Game 1 and your paired participant votes for Game 2, which game is used?"
     )
     comprehension_q2 = models.StringField(
-         choices=["Matrix A", "Matrix B"],
-         widget=widgets.RadioSelect,
-         label="2. If both you and your paired participant vote for Matrix B, which matrix is used?"
+        choices=["Game 1", "Game 2"],
+        widget=widgets.RadioSelect,
+        label="2. If both you and your paired participant vote for Game 2, which game is used?"
     )
     comprehension_q3 = models.StringField(
-         choices=[
-             "I receive 3 points and my paired participant also receives 3 points.",
-             "I receive 4 points and my paired participant also receives 4 points.",
-             "I receive 4 points and my paired participant also receives 1 point."
-         ],
-         widget=widgets.RadioSelect,
-         label="3. In Matrix A, if you choose Action C and your paired participant chooses Action C, what are the payoffs?"
+        choices=[
+            "I receive 3 points and my paired participant also receives 3 points.",
+            "I receive 4 points and my paired participant also receives 4 points.",
+            "I receive 4 points and my paired participant also receives 1 point."
+        ],
+        widget=widgets.RadioSelect,
+        label="3. In Game A, if you choose Action A and your paired participant chooses Action A, what are the payoffs?"
     )
     comprehension_q4 = models.StringField(
-         choices=[
-             "I receive 0 points and my paired participant receives 7 points.",
-             "I receive 7 points and my paired participant receives 0 points.",
-             "I receive 5 points and my paired participant receives 5 points."
-         ],
-         widget=widgets.RadioSelect,
-         label="4. In Matrix B, if you choose Action C and your paired participant chooses Action D, what are the payoffs?"
+        choices=[
+            "I receive 0 points and my paired participant receives 7 points.",
+            "I receive 7 points and my paired participant receives 0 points.",
+            "I receive 5 points and my paired participant receives 5 points."
+        ],
+        widget=widgets.RadioSelect,
+        label="4. In Game 2, if you choose Action A and your paired participant chooses Action B, what are the payoffs?"
     )
     comprehension_q5 = models.StringField(
-         choices=[
-             "I receive 2 points and my paired participant receives 2 points.",
-             "I receive 3 points and my paired participant receives 3 points.",
-             "I receive 1 point and my paired participant receives 4 points."
-         ],
-         widget=widgets.RadioSelect,
-         label="5. In Matrix A, if you choose Action D and your paired participant chooses Action D, what are the payoffs?"
+        choices=[
+            "I receive 2 points and my paired participant receives 2 points.",
+            "I receive 3 points and my paired participant receives 3 points.",
+            "I receive 1 point and my paired participant receives 4 points."
+        ],
+        widget=widgets.RadioSelect,
+        label="5. In Game A, if you choose Action B and your paired participant chooses Action B, what are the points?"
     )
+
 
 #
 # BaseGamePage: All main pages check if the experiment is finished.
@@ -275,29 +276,29 @@ class ComprehensionFeedback(Page):
         # maps your field → correct answer + explanation + label
         feedback_map = {
             'comprehension_q1': {
-                'label': "1. If you vote for Matrix A and your paired participant votes for Matrix B, which matrix is used?",
-                'correct': "Matrix A",
-                'explanation': "When votes differ, Game A is selected by default."
+                'label': "1. If you vote for Game 1 and your paired participant votes for Game 2, which game is used?",
+                'correct': "Game 1",
+                'explanation': "When votes differ, Game 1 is selected by default."
             },
             'comprehension_q2': {
-                'label': "2. If both you and your paired participant vote for Matrix B, which matrix is used?",
-                'correct': "Matrix B",
-                'explanation': "Only if both vote for B do you play Game B."
+                'label': "2. If both you and your paired participant vote for Game 2, which game is used?",
+                'correct': "Game 2",
+                'explanation': "Only if both vote for Game 2 do you play Game 2."
             },
             'comprehension_q3': {
-                'label': "3. In Matrix A, if you choose Action C and your paired participant chooses Action C, what are the payoffs?",
+                'label': "3. In Game 1, if you choose Action A and your paired participant chooses Action B, what are the points?",
                 'correct': "I receive 3 points and my paired participant also receives 3 points.",
                 'explanation': "In Game A, the C–C cell yields (3, 3)."
             },
             'comprehension_q4': {
-                'label': "4. In Matrix B, if you choose Action C and your paired participant chooses Action D, what are the payoffs?",
+                'label': "4. In Game 2, if you choose Action A and your paired participant chooses Action B, what are the points?",
                 'correct': "I receive 0 points and my paired participant receives 7 points.",
                 'explanation': "In Game B, the C–D cell yields you 0 and them 7."
             },
             'comprehension_q5': {
-                'label': "5. In Matrix A, if you choose Action D and your paired participant chooses Action D, what are the payoffs?",
+                'label': "5. In Game 1, if you choose Action B and your paired participant chooses Action B, what are the points?",
                 'correct': "I receive 2 points and my paired participant receives 2 points.",
-                'explanation': "In Game A, the D–D cell yields (2, 2)."
+                'explanation': "In Game 1, the D–D cell yields (2, 2)."
             },
         }
         questions = []
