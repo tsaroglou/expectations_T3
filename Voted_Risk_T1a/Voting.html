@@ -1,0 +1,132 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+{% block head %}
+  <link rel="stylesheet" href="{% static 'Voted_Risk/styles.css' %}">
+  <style>
+    .matrix-container {
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-start;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    .matrix {
+      width: 45%;
+      text-align: center;
+    }
+    .vote-button {
+      display: block;
+      width: 100%;
+      padding: 15px;
+      font-size: 18px;
+      margin-top: 20px;
+      border: none;
+      border-radius: 8px;
+      background-color: #007bff;
+      color: #fff;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .vote-button:hover {
+      background-color: #0056b3;
+    }
+    .instructions-content p {
+      margin-bottom: 20px;
+      font-size: 16px;
+      line-height: 1.75;
+    }
+    .instructions-content ul {
+      margin-bottom: 20px;
+      padding-left: 20px;
+      list-style-type: disc;
+    }
+
+      .game-label {
+      text-align: center;
+      font-weight: bold;
+      font-size: 18px;
+      margin: 8px 0 16px;
+    }
+
+    .instructions-content h2 {
+      margin-top: 30px;
+      font-size: 20px;
+    }
+    .partner { color: blue; font-weight: bold; }
+    .you     { color: red;  font-weight: bold; }
+    /* Make partner payoffs semi‑transparent only inside tables */
+    table span.partner { opacity: 0.3; }
+  </style>
+{% endblock head %}
+{% block content %}
+<div class="container">
+  <h1>Your Vote</h1>
+  <p>Please review the two matrices below and select the one you prefer for this round.</p>
+
+  <div class="matrix-container">
+    <!-- Matrix A -->
+    <div class="matrix">
+      <h2>Game 1</h2>
+      <table class="payoff-matrix">
+        <thead>
+        <tr>
+            <th rowspan="2" class="axis-label" style="color: red;">Your Action</th>
+            <th colspan="2" class="axis-label" style="color: blue;opacity: 0.3;">Partner’s Action</th>
+          </tr>
+      <tr>
+            <th style="color: blue;opacity: 0.3;">A</th>
+            <th style="color: blue;opacity: 0.3;">B</th>
+          </tr>
+        </thead>
+        <tbody>
+         <tr>
+            <th style="color: red;">A</th>
+            <td><span class="you">{{ A1aa }}</span>, <span class="partner">{{ A1aa }}</span></td>
+            <td><span class="you">{{ A1ab }}</span>, <span class="partner">{{ A1ba }}</span></td>
+          </tr>
+          <tr>
+            <th style="color: red;">B</th>
+            <td><span class="you">{{ A1ba }}</span>, <span class="partner">{{ A1ab }}</span></td>
+            <td><span class="you">{{ A1bb }}</span>, <span class="partner">{{ A1bb }}</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <form method="post">
+        <button type="submit" name="vote" value="Matrix A" class="vote-button">Vote Game 1</button>
+      </form>
+    </div>
+
+    <!-- Matrix B -->
+    <div class="matrix">
+      <h2>Game 2</h2>
+      <table class="payoff-matrix">
+        <thead>
+         <tr>
+            <th rowspan="2" class="axis-label" style="color: red;">Your Action</th>
+            <th colspan="2" class="axis-label" style="color: blue;opacity: 0.3;">Partner’s Action</th>
+          </tr>
+         <tr>
+            <th style="color: blue;opacity: 0.3;">A</th>
+            <th style="color: blue;opacity: 0.3;">B</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th style="color: red;">A</th>
+            <td><span class="you">{{ A2aa }}</span>, <span class="partner">{{ A2aa }}</span></td>
+            <td><span class="you">{{ A2ab }}</span>, <span class="partner">{{ A2ba }}</span></td>
+          </tr>
+          <tr>
+            <th style="color: red;">B</th>
+            <td><span class="you">{{ A2ba }}</span>, <span class="partner">{{ A2ab }}</span></td>
+            <td><span class="you">{{ A2bb }}</span>, <span class="partner">{{ A2bb }}</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <form method="post">
+        <button type="submit" name="vote" value="Matrix B" class="vote-button">Vote Game 2</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,22 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+{% block head %}
+  <link rel="stylesheet" href="{% static 'Voted_Risk/styles.css' %}">
+  <style>
+    .passed-message {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #28a745;  /* A green color to indicate success */
+      text-align: center;
+      font-weight: bold;
+    }
+  </style>
+{% endblock head %}
+{% block content %}
+<div class="container">
+  <h1>Comprehension Check Passed</h1>
+  <p class="passed-message">Congratulations! You have passed the comprehension test.</p>
+  <p>Please click "Next" to proceed with the experiment.</p>
+  {% next_button %}
+</div>
+{% endblock content %}
