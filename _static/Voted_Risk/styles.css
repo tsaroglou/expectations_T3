@@ -1,4 +1,13 @@
 /* Base styles */
+
+.game-label {
+  text-align: center !important;
+  font-weight: bold !important;
+  font-size: 18px !important;
+  margin: 8px 0 16px !important;
+}
+
+
 body {
   font-family: 'Arial', sans-serif;
   background-color: #f9fafc;
@@ -8,19 +17,60 @@ body {
 }
 
 .container {
-  max-width: 800px;
-  margin: 50px auto;
+  max-width: 1000px;
+  margin: 25px auto;
   background-color: #ffffff;
-  padding: 40px;
+  padding: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
+
+#instr-modal .modal-content {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  height: 80%;
+  margin: 5% auto;
+  border-radius: 8px;
+  background: #fff;
+}
+
+/* This is the scrollable, padded area */
+#instr-modal .modal-inner {
+  flex: 1 1 auto;       /* take up all leftover space */
+  overflow-y: auto;     /* vertical scroll if needed */
+  padding: 20px;        /* inner margins */
+}
+
+/* Keep the close button on top */
+#instr-close {
+  position: absolute;
+  top: 8px; right: 12px;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 10;
+}
+
+
+.modalcontainer {
+  max-width: 1000px;
+  margin: 25px auto;
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
 
 h1, h2 {
   color: #222;
   text-align: center;
   margin-bottom: 20px;
 }
+
+
+
+
 
 p {
   font-size: 16px;
@@ -79,6 +129,40 @@ th {
   margin-bottom: 30px;
 }
 
+table span.partner {
+  opacity: 0.20;
+}
+
+/* Leave .you (red) fully opaque */
+table span.you {
+  opacity: 1;
+}
+.instructions-content p {
+      margin-bottom: 20px;
+      font-size: 16px;
+      line-height: 1.75;
+    }
+    .instructions-content ul {
+      margin-bottom: 20px;
+      padding-left: 20px;
+      list-style-type: disc;
+    }
+
+      .game-label {
+      text-align: center;
+      font-weight: bold;
+      font-size: 18px;
+      margin: 8px 0 16px;
+    }
+
+    .instructions-content h2 {
+      margin-top: 30px;
+      font-size: 20px;
+    }
+    .partner { color: blue; font-weight: bold; }
+    .you     { color: red;  font-weight: bold; }
+    /* Make partner payoffs semi‑transparent only inside tables */
+    table span.partner { opacity: 0.3; }
 /* Matrix styling */
 .matrix {
   margin-bottom: 30px;
@@ -93,6 +177,16 @@ th {
 
 .matrix table {
   margin: 0 auto;
+}
+td.selected-cell {
+  background-color: rgba(255, 255, 0, 0.4);
+}
+
+table .text-blue {
+    color: rgba(0, 0, 255, 0.6);  /* blue at 60% opacity */
+}
+table .text-red {
+    color: rgba(255, 0, 0, 1.0);  /* red at full opacity */
 }
 
 /* Highlight effect for selected matrix */
