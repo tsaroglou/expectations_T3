@@ -1,0 +1,132 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block head %}
+  <link rel="stylesheet" href="{% static 'Voted_Risk/styles.css' %}">
+  <style>
+    /* Page‑specific styles for Instructions */
+    .instructions-content p {
+      margin-bottom: 20px;
+      font-size: 16px;
+      line-height: 1.75;
+    }
+    .instructions-content ul {
+      margin-bottom: 20px;
+      padding-left: 20px;
+      list-style-type: disc;
+    }
+
+      .game-label {
+      text-align: center;
+      font-weight: bold;
+      font-size: 18px;
+      margin: 8px 0 16px;
+    }
+
+    .instructions-content h2 {
+      margin-top: 30px;
+      font-size: 20px;
+    }
+    .partner { color: blue; font-weight: bold; }
+    .you     { color: red;  font-weight: bold; }
+    /* Make partner payoffs semi‑transparent only inside tables */
+    table span.partner { opacity: 0.3; }
+  </style>
+{% endblock head %}
+
+{% block content %}
+<div class="container">
+  <h1>Instructions (Part 2)</h1>
+
+  <div class="instructions-content">
+    <p>There are two different games you might play in each round: <strong>Game 1</strong> and <strong>Game 2</strong>.</p>
+
+    <p>The games differ in terms of the <strong>points</strong> you and your paired participant might earn, as shown below:</p>
+
+    <div class="matrix-container">
+      <!-- Game 1 -->
+      <div class="matrix-section">
+        <div class="game-label">Game 1</div>
+        <table class="payoff-matrix">
+          <thead>
+            <tr>
+              <th rowspan="2" style="color:red;">Your Option</th>
+              <th colspan="2" style="color:blue;opacity:0.3;">Partner’s Option</th>
+            </tr>
+            <tr>
+              <th style="color:blue;opacity:0.3;">A</th>
+              <th style="color:blue;opacity:0.3;">B</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th style="color:red;">A</th>
+              <td><span class="you">{{ A1aa }}</span>, <span class="partner">{{ A1aa }}</span></td>
+              <td><span class="you">{{ A1ab }}</span>, <span class="partner">{{ A1ba }}</span></td>
+            </tr>
+            <tr>
+              <th style="color:red;">B</th>
+              <td><span class="you">{{ A1ba }}</span>, <span class="partner">{{ A1ab }}</span></td>
+              <td><span class="you">{{ A1bb }}</span>, <span class="partner">{{ A1bb }}</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Game 2 -->
+      <div class="matrix-section">
+        <div class="game-label">Game 2</div>
+        <table class="payoff-matrix">
+          <thead>
+            <tr>
+              <th rowspan="2" style="color:red;">Your Option</th>
+              <th colspan="2" style="color:blue;opacity:0.3;">Partner’s Option</th>
+            </tr>
+            <tr>
+              <th style="color:blue;opacity:0.3;">A</th>
+              <th style="color:blue;opacity:0.3;">B</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th style="color:red;">A</th>
+              <td><span class="you">{{ A2aa }}</span>, <span class="partner">{{ A2aa }}</span></td>
+              <td><span class="you">{{ A2ab }}</span>, <span class="partner">{{ A2ba }}</span></td>
+            </tr>
+            <tr>
+              <th style="color:red;">B</th>
+              <td><span class="you">{{ A2ba }}</span>, <span class="partner">{{ A2ab }}</span></td>
+              <td><span class="you">{{ A2bb }}</span>, <span class="partner">{{ A2bb }}</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <h2><b>How the game is selected in each round</b></h2>
+
+    <p>Before each round begins, you and your partner will each <strong>vote</strong> for which game you would prefer to play in that round.</p>
+
+    <ul>
+      <li>If <u>both participants</u> vote for Game 2, then Game 2 will be played.</li>
+      <li>If either participant votes for Game 1, then Game 1 will be played.</li>
+    </ul>
+
+      <p>In other words, Game 2 is only selected if both you and your paired participant agree to play it in a given round.</p>
+
+    <p>After voting, both you and your partner will <strong>learn each other's votes</strong> and which game will be played.</p>
+
+    <h2><b>Making your choice</b></h2>
+
+    <p>After the game is selected, you and your partner will each independently and simultaneously choose between Option A and Option B for the selected game.</p>
+
+    <p>Finally, you and your paired participant learn about each other's choices and the resulting points each has earned. Then, you move on to the next round and the process is repeated.</p>
+
+    <p style="text-align:center;">Click Next to start the comprehension check.</p>
+  </div>
+
+  <div style="text-align:center;">
+    {% next_button %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+{% block head %}
+  <link rel="stylesheet" href="{% static 'Voted_Risk/styles.css' %}">
+  <style>
+    .consent-content {
+      margin-top: 20px;
+    }
+    .consent-content p {
+      margin-bottom: 20px;
+      font-size: 16px;
+      line-height: 1.75;
+    }
+  </style>
+{% endblock head %}
+{% block content %}
+<div class="container">
+  <h1>Welcome</h1>
+  <div class="consent-content">
+    <p>We are researchers at the Interdisciplinary Transformation University Austria studying human decision-making.</p>
+    <p>The purpose of this research study is to investigate decision making. You will interact anonymously with other players who also take part in this study. The study will take approximately 30 minutes.</p>
+    <p>For your participation in the study, you will earn a base payment for simply participating. In addition, you can earn an additional bonus depending on your choices and the choices of other players.</p>
+    <p>The decision-making situation is completely anonymous, and there is no possibility that you can identify or be identified by any other participant or the researcher. Your data will be kept confidential and saved under an anonymous ID that does not reveal your identity.</p>
+    <p>After the study is completed, the aggregate results will be submitted for publication in a scientific journal. At that time, the data files will be uploaded to a public repository so that other scientists may verify the results. These public data files will not contain any information that can identify you.</p>
+    <p><strong>Participation and Withdrawal:</strong> Your participation is completely voluntary. You may refuse to participate at any time without penalty or loss of benefit.</p>
+    <p>For questions, concerns, or suggestions about this research, please contact: <a href="mailto:socialdynamics@it-u.at">socialdynamics@it-u.at</a></p>
+    <p>"I confirm that I have read the description of this study and that I give my consent to participate."</p>
+  </div>
+    <div class="form-group">
+      {{ form.consent }}
+    </div>
+    <button type="submit" class="btn btn-primary">Submit Consent</button>
+  </form>
+</div>
+{% endblock content %}

@@ -8,7 +8,7 @@ Cooperation under Agreed Risk Experiment
 import json
 
 class Constants(BaseConstants):
-    name_in_url = 'cooperation_risk_'
+    name_in_url = 'cooperation_risk_pre'
     players_per_group = None
     num_rounds = 100    # Maximum rounds; experiment will end early once the lottery triggers.
     min_rounds = 1     # Must play at least 20 rounds before the lottery may end the game.
@@ -509,9 +509,9 @@ class PassedComprehension(Page):
     def vars_for_template(self):
         return {}
 
-    def app_after_this_page(self, upcoming_apps, **kwargs):
-        return 'MainExperiment'
     # You may include additional instructions or simply a congratulatory message.
+    def app_after_this_page(self, upcoming_apps, **kwargs):
+        return 'Voted_Risk_T1a_MAIN'
 
 
 class FailedComprehension(Page):
@@ -520,19 +520,6 @@ class FailedComprehension(Page):
 
     def app_after_this_page(self, upcoming_apps, **kwargs):
         return 'end'
-
-
-class GroupAfterPassedComprehension(WaitPage):
-    def after_all_players_arrive(self):
-        eligible_players = [p for p in self.subsession.get_players() if
-                            p.pair is None and (p.first_attempt_passed or p.second_attempt_passed)]
-        pair_id = 1
-        while len(eligible_players) >= 2:
-            p1, p2 = eligible_players[0], eligible_players[1]
-            p1.pair = pair_id
-            p2.pair = pair_id
-            pair_id += 1
-            eligible_players = eligible_players[2:]
 
 
 # Voting – main game loop page.

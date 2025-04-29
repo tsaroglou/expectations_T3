@@ -8,8 +8,8 @@ Cooperation under Agreed Risk Experiment
 import json
 
 class Constants(BaseConstants):
-    name_in_url = 'cooperation_risk_'
-    players_per_group = None
+    name_in_url = 'cooperation_risk_main'
+    players_per_group = 2
     num_rounds = 100    # Maximum rounds; experiment will end early once the lottery triggers.
     min_rounds = 1     # Must play at least 20 rounds before the lottery may end the game.
     # Payoff matrices:
@@ -112,7 +112,7 @@ class Group(BaseGroup):
 
     def set_payoffs(self):
         players = sorted(self.get_players(), key=lambda p: p.id_in_group)
-        if any(p.consent and p.action == "" for p in players):
+        if any(p.action == "" for p in players):
             return
         current_game = self.field_maybe_none('current_game') or 'A'
         action_tuple = (players[0].action, players[1].action)
@@ -126,6 +126,10 @@ class Group(BaseGroup):
         players[1].payoff = c(payoff_tuple[1])
 
 class Player(BasePlayer):
+    is_paid = models.BooleanField(initial=False)
+    special_paying_player = models.BooleanField(initial=False)
+    paying_player = models.BooleanField(initial=False)
+
     first_attempt_passed = models.BooleanField(initial=False)
     second_attempt_passed = models.BooleanField(initial=False)
     first_wrong_questions = models.LongStringField()
@@ -271,8 +275,7 @@ class BaseGamePage(Page):
         if finished_round is not None and self.round_number > finished_round:
             return False
         if self.round_number > 1:
-            self.consent = self.participant.vars.get("consent", False)
-        return self.consent and not self.remove and not self.group.game_over
+            return not self.remove and not self.group.game_over
 
 #
 # PAGES
@@ -301,7 +304,7 @@ class NoConsent(Page):
 # Instructions – shown only in round 1.
 class Instructions(Page):
     def is_displayed(self):
-        return self.consent and not self.remove and self.round_number == 1
+        return not self.remove and self.round_number == 1
     def vars_for_template(self):
         return {
             'C': Constants,
@@ -318,7 +321,7 @@ class Instructions(Page):
 
 class Instructions2(Page):
     def is_displayed(self):
-        return self.consent and not self.remove and self.round_number == 1
+        return  not self.remove and self.round_number == 1
     def vars_for_template(self):
         return {
             'C': Constants,
@@ -356,7 +359,7 @@ class ComprehensionCheck(Page):
     form_fields = ['comprehension_q1', 'comprehension_q2', 'comprehension_q3', 'comprehension_q4', 'comprehension_q5']
 
     def is_displayed(self):
-        return self.consent and not self.remove and self.round_number == 1
+        return not self.remove and self.round_number == 1
 
     def before_next_page(self, timeout_happened):
         correct_answers = {
@@ -396,7 +399,7 @@ class ComprehensionFeedback(Page):
     """
     def is_displayed(self):
         # show to everyone (even if they failed) on round 1
-        return self.consent and self.round_number == 1
+        return  self.round_number == 1
 
     def vars_for_template(self):
         # maps your field → correct answer + explanation + label
@@ -505,12 +508,9 @@ class ComprehensionCheck2(Page):
 class PassedComprehension(Page):
     def is_displayed(self):
         # Only show in round 1 after comprehension check if participant is not removed.
-        return self.round_number == 1 and self.consent and not self.remove and  (self.first_attempt_passed or self.second_attempt_passed)
+        return self.round_number == 1 and not self.remove and  (self.first_attempt_passed or self.second_attempt_passed)
     def vars_for_template(self):
         return {}
-
-    def app_after_this_page(self, upcoming_apps, **kwargs):
-        return 'MainExperiment'
     # You may include additional instructions or simply a congratulatory message.
 
 
@@ -522,18 +522,6 @@ class FailedComprehension(Page):
         return 'end'
 
 
-class GroupAfterPassedComprehension(WaitPage):
-    def after_all_players_arrive(self):
-        eligible_players = [p for p in self.subsession.get_players() if
-                            p.pair is None and (p.first_attempt_passed or p.second_attempt_passed)]
-        pair_id = 1
-        while len(eligible_players) >= 2:
-            p1, p2 = eligible_players[0], eligible_players[1]
-            p1.pair = pair_id
-            p2.pair = pair_id
-            pair_id += 1
-            eligible_players = eligible_players[2:]
-
 
 # Voting – main game loop page.
 class Voting(BaseGamePage):
@@ -542,9 +530,9 @@ class Voting(BaseGamePage):
 
     def is_displayed(self):
         if self.round_number <= Constants.min_rounds:
-            return self.consent and not self.remove and (self.first_attempt_passed or self.second_attempt_passed)
+            return not self.remove
         else:
-            return self.consent and not self.remove and not self.group.game_over and (self.first_attempt_passed or self.second_attempt_passed)
+            return self.remove and not self.group.game_over
 
     def vars_for_template(self):
         return {
@@ -560,7 +548,6 @@ class Voting(BaseGamePage):
             'A2bb': Constants.A2bb,
         }
 
-
 class VoteWaitPage(WaitPage):
     def after_all_players_arrive(self):
         self.group.set_game()
@@ -571,9 +558,9 @@ class Action(BaseGamePage):
     form_fields = ['action']
     def is_displayed(self):
         if self.round_number <= Constants.min_rounds:
-            return self.consent and not self.remove
+            return not self.remove
         else:
-            return self.consent and not self.remove and not self.group.game_over
+            return not self.remove and not self.group.game_over
     def vars_for_template(self):
         partner = self.get_others_in_group()[0]
         return {
@@ -602,9 +589,9 @@ class ActionWaitPage(WaitPage):
 class Results(BaseGamePage):
     def is_displayed(self):
         if self.round_number <= Constants.min_rounds:
-            return self.consent and not self.remove
+            return not self.remove
         else:
-            return self.consent and not self.remove and not self.group.game_over
+            return not self.remove and not self.group.game_over
     def vars_for_template(self):
         partner = self.get_others_in_group()[0]
         return {
@@ -648,13 +635,13 @@ class AdditionalMeasurements(Page):
 
     def is_displayed(self):
         finished_round = self.participant.vars.get("finished_round")
-        return self.consent and not self.remove and finished_round is not None and self.round_number == finished_round
+        return not self.remove and finished_round is not None and self.round_number == finished_round
 
 
 class CalculatePayoffs(WaitPage):
     def is_displayed(self):
         finished_round = self.participant.vars.get("finished_round")
-        return self.consent and not self.remove and ((finished_round is not None and self.round_number == finished_round) or self.round_number == Constants.num_rounds)
+        return not self.remove and ((finished_round is not None and self.round_number == finished_round) or self.round_number == Constants.num_rounds)
     def vars_for_template(self):
         total_payoff = sum([p.payoff for p in self.in_all_rounds()]) / 25
 
@@ -664,11 +651,9 @@ class CalculatePayoffs(WaitPage):
 class PaymentAndDebrief(Page):
     def is_displayed(self):
         finished_round = self.participant.vars.get("finished_round")
-        return self.consent and not self.remove and ((finished_round is not None and self.round_number == finished_round) or self.round_number == Constants.num_rounds)
+        return not self.remove and ((finished_round is not None and self.round_number == finished_round) or self.round_number == Constants.num_rounds)
     def vars_for_template(self):
         total_payoff = sum([p.payoff for p in self.in_all_rounds()])/25
-
-        self.subsession.determine_special_payoffs()
 
         return {
             'final_payment': c(total_payoff)
@@ -680,15 +665,12 @@ class PaymentAndDebrief(Page):
 
 
 page_sequence = [
-    Consent,
-    NoConsent,
-    Instructions,
-    Instructions2,
-    ComprehensionCheck,
-    ComprehensionFeedback,
-    AfterFeedback,
-    ComprehensionCheck2,
-    PassedComprehension,
-    FailedComprehension,
+    Voting,
+    VoteWaitPage,
+    Action,
+    ActionWaitPage,
+    Results,
+    LotteryWaitPage,
+    PaymentAndDebrief,
 ]
 

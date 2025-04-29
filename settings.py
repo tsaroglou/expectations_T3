@@ -11,11 +11,15 @@ from os import environ
 
 
 SESSION_CONFIGS = [
-
     dict(
-        name='Social', app_sequence=['Voted_Risk_T1a'], num_demo_participants=1
+        name='Voted_Risk_T1a',
+        display_name="Voted Risk Treatment 1a",
+        num_demo_participants=4,
+        app_sequence=['Voted_Risk_T1a_PRE', 'Voted_Risk_T1a_MAIN'],
+        group_by_arrival_time=True,  # correct for PRE
     ),
 ]
+
 
 # if you set a property in SESSION_CONFIG_DEFAULTS, it will be inherited by all configs
 # in SESSION_CONFIGS, except those that explicitly override it.
