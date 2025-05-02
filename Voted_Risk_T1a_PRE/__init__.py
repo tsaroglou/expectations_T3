@@ -126,6 +126,7 @@ class Group(BaseGroup):
         players[1].payoff = c(payoff_tuple[1])
 
 class Player(BasePlayer):
+    display_group_id = models.IntegerField()
     first_attempt_passed = models.BooleanField(initial=False)
     second_attempt_passed = models.BooleanField(initial=False)
     first_wrong_questions = models.LongStringField()
@@ -509,6 +510,9 @@ class PassedComprehension(Page):
     def vars_for_template(self):
         return {}
 
+    def before_next_page(self, timeout_happened):
+        self.participant.vars['passed_comprehension'] = True
+
     # You may include additional instructions or simply a congratulatory message.
     def app_after_this_page(self, upcoming_apps, **kwargs):
         return 'Voted_Risk_T1a_MAIN'
@@ -517,6 +521,9 @@ class PassedComprehension(Page):
 class FailedComprehension(Page):
     def is_displayed(self):
         return self.round_number == 1 and not (self.first_attempt_passed or self.second_attempt_passed)
+
+    def before_next_page(self, timeout_happened):
+        self.participant.vars['passed_comprehension'] = False
 
     def app_after_this_page(self, upcoming_apps, **kwargs):
         return 'end'

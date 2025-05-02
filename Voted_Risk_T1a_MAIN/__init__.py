@@ -39,6 +39,12 @@ class Constants(BaseConstants):
 
 class Subsession(BaseSubsession):
 
+    def group_by_arrival_time_method(self, waiting_players):
+        eligible = [p for p in waiting_players if p.participant.vars.get('passed_comprehension') is True]
+        if len(eligible) >= 2:
+            return eligible[:2]  # Match two eligible players
+        return
+
     def determine_special_payoffs(self):
         players = self.get_players()
         # Randomly select one participant for a special payout based on their decisions
@@ -85,21 +91,20 @@ class Subsession(BaseSubsession):
 
     def creating_session(self):
         if self.round_number == 1:
+            # Assign treatment once
             treatment = random.choice(Constants.treatment_choices)
             self.session.vars['treatment'] = treatment
 
         for player in self.get_players():
             player.treatment = self.session.vars['treatment']
 
-        if self.round_number == 1:
-            for player in self.get_players():
-                player.group = None  # <<< MANUALLY ungroup everyone!
-
 
 class Group(BaseGroup):
     current_game = models.StringField(initial='A')  # "A" for Matrix A, "B" for Matrix B.
     game_over = models.BooleanField(initial=False)
     finished = models.BooleanField(initial=False)
+    display_group_id = models.IntegerField()
+    pair_id = models.IntegerField()
 
     def set_game(self):
         votes = [p.field_maybe_none('vote') for p in self.get_players()]
@@ -126,6 +131,7 @@ class Group(BaseGroup):
         players[1].payoff = c(payoff_tuple[1])
 
 class Player(BasePlayer):
+    display_group_id = models.IntegerField()
     is_paid = models.BooleanField(initial=False)
     special_paying_player = models.BooleanField(initial=False)
     paying_player = models.BooleanField(initial=False)
@@ -521,6 +527,27 @@ class FailedComprehension(Page):
     def app_after_this_page(self, upcoming_apps, **kwargs):
         return 'end'
 
+class WaitToBeGrouped(WaitPage):
+    group_by_arrival_time = True
+
+    @staticmethod
+    def is_displayed(player):
+        return player.participant.vars.get('passed_comprehension', False)
+
+    @staticmethod
+    def after_all_players_arrive(group):
+        session = group.session
+
+        if 'pair_id_counter' not in session.vars:
+            session.vars['pair_id_counter'] = 1
+
+        group.display_group_id = session.vars['pair_id_counter']
+        session.vars['pair_id_counter'] += 1
+
+        for p in group.get_players():
+            p.participant.vars['display_group_id'] = group.display_group_id
+            p.display_group_id = group.display_group_id  # ✅ Set field so monitor shows it
+
 
 
 # Voting – main game loop page.
@@ -665,6 +692,7 @@ class PaymentAndDebrief(Page):
 
 
 page_sequence = [
+    WaitToBeGrouped,
     Voting,
     VoteWaitPage,
     Action,

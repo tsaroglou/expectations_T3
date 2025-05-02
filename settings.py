@@ -30,8 +30,23 @@ SESSION_CONFIG_DEFAULTS = dict(
     real_world_currency_per_point=1.00, participation_fee=5.00, doc=""
 )
 
-PARTICIPANT_FIELDS = [ 'finished']
-SESSION_FIELDS = ['prolific_completion_url']
+PARTICIPANT_FIELDS = ['display_group_id']
+
+MONITOR_TABLE_ROWS = [
+    'id_in_session',
+    'code',
+    'display_group_id',  # Must match exact name
+    'current_page_name',
+    'page_index',
+    'is_on_wait_page',
+    'time_on_page',
+    'last_request_timestamp',
+]
+
+
+
+
+SESSION_FIELDS = ['prolific_completion_url', 'display_group_id']
 
 # ISO-639 code
 # for example: de, fr, ja, ko, zh-hans
