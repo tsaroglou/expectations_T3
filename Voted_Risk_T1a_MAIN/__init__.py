@@ -496,7 +496,7 @@ class WaitToBeGrouped(WaitPage):
 
     @staticmethod
     def is_displayed(player):
-        return player.participant.vars.get('passed_comprehension', False) and self.round_number == 1
+        return player.participant.vars.get('passed_comprehension', False) and player.round_number == 1
 
     @staticmethod
     def after_all_players_arrive(group):
