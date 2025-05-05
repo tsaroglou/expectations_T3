@@ -45,49 +45,6 @@ class Subsession(BaseSubsession):
             return eligible[:2]  # Match two eligible players
         return
 
-    def determine_special_payoffs(self):
-        players = self.get_players()
-        # Randomly select one participant for a special payout based on their decisions
-        special_paying_player = random.choice(players)
-        special_paying_player.is_paid = True  # Necesitarás un campo para rastrear quién recibe el pago
-        special_paying_player.paying_player = True
-
-        decision_num = random.choice(['1', '2', '3', '4'])
-
-        # Access the decision attribute dynamically based on the chosen decision number
-        decision_selected = getattr(special_paying_player, f'decision_{decision_num}')
-
-        # Randomly select another participant
-        other_player = random.choice([p for p in players if p != special_paying_player])
-        other_player.is_paid = True  # Necesitarás un campo para rastrear quién recibe el pago
-        other_player.other_player = True
-
-        # Update database fields
-        special_paying_player.special_paying_player_id = special_paying_player.unique_in_session_id
-        special_paying_player.decision_num = decision_num
-        special_paying_player.decision_selected = decision_selected
-        special_paying_player.other_player_id = other_player.unique_in_session_id
-
-        # Store similar info for the other player if necessary (optional)
-        other_player.other_player_id = other_player.unique_in_session_id  # This might be redundant
-
-        # Calculate payoffs based on the selected decision
-        if decision_selected == 'L':
-            special_paying_player.payoff += c(2)  # both get 2
-            other_player.payoff += c(2)
-        else:
-            if decision_num == '1':
-                special_paying_player.payoff += c(2)  # payer gets 2, other gets 1
-                other_player.payoff += c(1)
-            elif decision_num == '2':
-                special_paying_player.payoff += c(3)  # payer gets 3, other gets 1
-                other_player.payoff += c(1)
-            elif decision_num == '3':
-                special_paying_player.payoff += c(4)  # payer gets 4, other gets 2
-                other_player.payoff += c(2)
-            elif decision_num == '4':
-                special_paying_player.payoff += c(3)  # payer gets 3, other gets 5
-                other_player.payoff += c(5)
 
     def creating_session(self):
         if self.round_number == 1:
@@ -132,9 +89,14 @@ class Group(BaseGroup):
 
 class Player(BasePlayer):
     display_group_id = models.IntegerField()
-    is_paid = models.BooleanField(initial=False)
-    special_paying_player = models.BooleanField(initial=False)
-    paying_player = models.BooleanField(initial=False)
+
+    investment = models.CurrencyField(
+        min=0, max=2,
+        doc="""How much would you like to invest?"""
+    )
+    lottery_outcome = models.CurrencyField()
+    investment_total = models.CurrencyField()
+
 
     first_attempt_passed = models.BooleanField(initial=False)
     second_attempt_passed = models.BooleanField(initial=False)
@@ -529,6 +491,8 @@ class FailedComprehension(Page):
 
 class WaitToBeGrouped(WaitPage):
     group_by_arrival_time = True
+    template_name = 'Voted_Risk_T1a_MAIN/WaitToBeGrouped.html'
+
 
     @staticmethod
     def is_displayed(player):
@@ -655,6 +619,25 @@ class LotteryWaitPage(WaitPage):
             else:
                 self.group.game_over = False
 
+class Investment(Page):
+    form_model = 'player'
+    form_fields = ['investment']
+
+    def is_displayed(self):
+        finished_round = self.participant.vars.get("finished_round")
+        return not self.remove and finished_round is not None and self.round_number == finished_round
+
+    def before_next_page(self, **kwargs):
+        # Store the potential lottery outcome without affecting the actual payoff
+        if random.choice([True, False]):  # 50% chance to win the lottery
+            self.lottery_outcome = self.investment * 2.5
+            self.investment_total =  self.lottery_outcome + 2-self.investment
+
+        else:
+            self.lottery_outcome = 0
+            self.investment_total =  self.lottery_outcome + 2-self.investment
+
+
 # AdditionalMeasurements – final additional page shown on the finished round.
 class AdditionalMeasurements(Page):
     form_model = 'player'
@@ -664,15 +647,6 @@ class AdditionalMeasurements(Page):
         finished_round = self.participant.vars.get("finished_round")
         return not self.remove and finished_round is not None and self.round_number == finished_round
 
-
-class CalculatePayoffs(WaitPage):
-    def is_displayed(self):
-        finished_round = self.participant.vars.get("finished_round")
-        return not self.remove and ((finished_round is not None and self.round_number == finished_round) or self.round_number == Constants.num_rounds)
-    def vars_for_template(self):
-        total_payoff = sum([p.payoff for p in self.in_all_rounds()]) / 25
-
-        self.subsession.determine_special_payoffs()
 
 # PaymentAndDebrief – final page; shows accumulated payoff and ends experiment.
 class PaymentAndDebrief(Page):
@@ -699,6 +673,8 @@ page_sequence = [
     ActionWaitPage,
     Results,
     LotteryWaitPage,
+    Investment,
+    AdditionalMeasurements,
     PaymentAndDebrief,
 ]
 

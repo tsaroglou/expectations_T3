@@ -1,0 +1,40 @@
+{% block content %}
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f0f0f0;
+        color: #333;
+        line-height: 1.6;
+        padding: 20px;
+    }
+    form {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    p {
+        font-size: 16px;
+        margin-bottom: 20px;
+    }
+    button {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+    button:hover {
+        background-color: #0056b3;
+    }
+</style>
+
+<form method="post">
+
+    <p>You are now given £2 and must choose the portion of this amount (between £0 and £2, inclusive) that you wish to invest. <br> <br> The amount not invested is yours to keep. Whatever amount is invested will become 2.5 times larger with a 50% chance and will become 0 with a 50% chance. <br> <br> After the experiment is finished, one participant in this session will be randomly picked and paid according to the outcome of their decision.</p>
+    <p>How much would you like to invest? {{ form.investment }}</p>
+    <button type="submit">Next</button>
+</form>
+{% endblock %}
