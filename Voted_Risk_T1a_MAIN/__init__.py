@@ -523,7 +523,7 @@ class Voting(BaseGamePage):
         if self.round_number <= Constants.min_rounds:
             return not self.remove
         else:
-            return self.remove and not self.group.game_over
+            return not self.remove and not self.group.game_over
 
     def vars_for_template(self):
         return {
@@ -547,11 +547,13 @@ class VoteWaitPage(WaitPage):
 class Action(BaseGamePage):
     form_model = 'player'
     form_fields = ['action']
+
     def is_displayed(self):
         if self.round_number <= Constants.min_rounds:
             return not self.remove
         else:
             return not self.remove and not self.group.game_over
+
     def vars_for_template(self):
         partner = self.get_others_in_group()[0]
         return {
@@ -559,7 +561,8 @@ class Action(BaseGamePage):
             'partner_vote': partner.vote,
             'current_matrix': "Matrix B" if self.group.current_game == 'B' else "Matrix A",
             'matrix_A': Constants.matrix_A,
-            'matrix_B': Constants.matrix_B,   'A1aa': Constants.A1aa,
+            'matrix_B': Constants.matrix_B,
+            'A1aa': Constants.A1aa,
             'A1ab': Constants.A1ab,
             'A1ba': Constants.A1ba,
             'A1bb': Constants.A1bb,
@@ -664,7 +667,6 @@ class PaymentAndDebrief(Page):
     def app_after_this_page(self, upcoming_apps, **kwargs):
         return None
 
-
 page_sequence = [
     WaitToBeGrouped,
     Voting,
@@ -677,4 +679,3 @@ page_sequence = [
     AdditionalMeasurements,
     PaymentAndDebrief,
 ]
-
