@@ -213,7 +213,7 @@ class Player(BasePlayer):
     )
     comprehension_q5 = models.StringField(
         choices=[
-            "I receive 4 points and my paired participant receives 4 points.",
+            "I receive 3 points and my paired participant receives 3 points.",
             "I receive 0 points and my paired participant receives 12 points.",
             "I receive 7 points and my paired participant receives 7 point."
         ],
@@ -364,7 +364,7 @@ class ComprehensionCheck(Page):
             'comprehension_q2': 'Game 2',
             'comprehension_q3': 'I receive 5 points and my paired participant also receives 5 points.',
             'comprehension_q4': 'I receive 0 points and my paired participant receives 12 points.',
-            'comprehension_q5': 'I receive 4 points and my paired participant receives 4 points.',
+            'comprehension_q5': 'I receive 3 points and my paired participant receives 3 points.',
         }
         wrong = []
         for field, correct in correct_answers.items():
