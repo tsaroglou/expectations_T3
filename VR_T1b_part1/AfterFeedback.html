@@ -1,0 +1,44 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block head %}
+  <link rel="stylesheet" href="{% static 'Voted_Risk/styles.css' %}">
+  <style>
+    .after-feedback-message {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #333;
+      text-align: center;
+    }
+    .note {
+      text-align: center;
+      margin-top: 15px;
+      font-size: 16px;
+      color: #555;
+    }
+    .next-button {
+      display: flex;
+      justify-content: center;
+      margin-top: 30px;
+    }
+  </style>
+{% endblock head %}
+
+{% block content %}
+<div class="container">
+  <h1 style="text-align: center;">Review & Retry</h1>
+  <p class="after-feedback-message">
+    Thank you for reviewing your comprehension feedback.
+  </p>
+  <p class="note">
+    You incorrectly responded to at least one of the comprehension questions.<br>
+    You will now have one final opportunity to demonstrate your understanding with another set of questions.
+  </p>
+  <p class="note">
+    If any responses are incorrect again, you will not be able to proceed with the experiment, and you will only receive the participation fee.
+  </p>
+  <div class="next-button">
+    {% next_button %}
+  </div>
+</div>
+{% endblock content %}
