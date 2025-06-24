@@ -11,7 +11,7 @@ class Constants(BaseConstants):
     name_in_url = 'cooperation_risk_main'
     players_per_group = 2
     num_rounds = 100    # Maximum rounds; experiment will end early once the lottery triggers.
-    min_rounds = 1     # Must play at least 20 rounds before the lottery may end the game.
+    min_rounds = 20     # Must play at least 20 rounds before the lottery may end the game.
     # Payoff matrices:
     matrix_A = {
         ('C', 'C'): (6, 6),
@@ -19,7 +19,7 @@ class Constants(BaseConstants):
         ('D', 'C'): (7, 4),
         ('D', 'D'): (5, 5),
     }
-    
+
     A1aa = matrix_A[('C', 'C')][0]
     A1ab = matrix_A[('C', 'D')][0]
     A1ba = matrix_A[('D', 'C')][0]
