@@ -351,7 +351,7 @@ class Results(BaseGamePage):
 class LotteryWaitPage(WaitPage):
     wait_for_all_groups = False
     def after_all_players_arrive(self):
-        if self.round_number > Constants.min_rounds:
+        if self.round_number > 20:
             if random.random() < 0.5:
                 self.group.game_over = True
                 for p in self.group.get_players():
