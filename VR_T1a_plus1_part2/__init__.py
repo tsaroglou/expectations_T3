@@ -2,6 +2,7 @@ from otree.api import *
 from otree.api import Currency as c
 import random
 
+
 doc = """
 Cooperation under Agreed Risk Experiment
 """
@@ -11,7 +12,7 @@ class Constants(BaseConstants):
     name_in_url = 'cooperation_risk_main'
     players_per_group = 2
     num_rounds = 100    # Maximum rounds; experiment will end early once the lottery triggers.
-    min_rounds = 20     # Must play at least 20 rounds before the lottery may end the game.
+    min_rounds = 2     # Must play at least 20 rounds before the lottery may end the game.
     # Payoff matrices:
     matrix_A = {
         ('C', 'C'): (6, 6),
@@ -349,20 +350,15 @@ class Results(BaseGamePage):
 
 # LotteryWaitPage – group-level lottery to decide if the game should end.
 class LotteryWaitPage(WaitPage):
-    wait_for_all_players = True  # wait for your pair
-
-    def is_displayed(self):
-        # Only run the lottery once min_rounds is reached, and only if the game isn't already over.
-        return (self.round_number >= Constants.min_rounds) and (not self.group.game_over)
-
+    wait_for_all_groups = False
     def after_all_players_arrive(self):
-        # 50% chance to end the game this round
-        if random.random() < 0.5:
-            self.group.game_over = True
-            for p in self.group.get_players():
-                p.participant.vars["finished_round"] = self.round_number
-        # If we "lose" the lottery, we leave game_over=False
-        # and next round we'll come back here again until it finally hits.
+        if self.round_number > Constants.min_rounds:
+            if random.random() < 0.5:
+                self.group.game_over = True
+                for p in self.group.get_players():
+                    p.participant.vars["finished_round"] = self.round_number
+            else:
+                self.group.game_over = False
 
 class Investment(Page):
     form_model = 'player'

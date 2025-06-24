@@ -2,6 +2,7 @@ from otree.api import *
 from otree.api import Currency as c
 import random
 
+
 doc = """
 Cooperation under Agreed Risk Experiment
 """
@@ -11,7 +12,7 @@ class Constants(BaseConstants):
     name_in_url = 'cooperation_risk_main'
     players_per_group = 2
     num_rounds = 100    # Maximum rounds; experiment will end early once the lottery triggers.
-    min_rounds = 1     # Must play at least 20 rounds before the lottery may end the game.
+    min_rounds = 2     # Must play at least 20 rounds before the lottery may end the game.
     # Payoff matrices:
     matrix_A = {
         ('C', 'C'): (5, 5),
