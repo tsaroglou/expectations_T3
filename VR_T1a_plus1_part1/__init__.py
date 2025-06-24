@@ -14,10 +14,10 @@ class Constants(BaseConstants):
     min_rounds = 1     # Must play at least 20 rounds before the lottery may end the game.
     # Payoff matrices:
     matrix_A = {
-        ('C', 'C'): (5, 5),
-        ('C', 'D'): (3, 6),
-        ('D', 'C'): (6, 3),
-        ('D', 'D'): (4, 4),
+        ('C', 'C'): (6, 6),
+        ('C', 'D'): (4, 7),
+        ('D', 'C'): (7, 4),
+        ('D', 'D'): (5, 5),
     }
     A1aa = matrix_A[('C', 'C')][0]
     A1ab = matrix_A[('C', 'D')][0]
@@ -35,142 +35,29 @@ class Constants(BaseConstants):
     A2ba = matrix_B[('D', 'C')][0]
     A2bb = matrix_B[('D', 'D')][0]
 
-    treatment_choices = ['T1', 'T2']
 
 class Subsession(BaseSubsession):
 
-    def determine_special_payoffs(self):
-        players = self.get_players()
-        # Randomly select one participant for a special payout based on their decisions
-        special_paying_player = random.choice(players)
-        special_paying_player.is_paid = True  # Necesitarás un campo para rastrear quién recibe el pago
-        special_paying_player.paying_player = True
-
-        decision_num = random.choice(['1', '2', '3', '4'])
-
-        # Access the decision attribute dynamically based on the chosen decision number
-        decision_selected = getattr(special_paying_player, f'decision_{decision_num}')
-
-        # Randomly select another participant
-        other_player = random.choice([p for p in players if p != special_paying_player])
-        other_player.is_paid = True  # Necesitarás un campo para rastrear quién recibe el pago
-        other_player.other_player = True
-
-        # Update database fields
-        special_paying_player.special_paying_player_id = special_paying_player.unique_in_session_id
-        special_paying_player.decision_num = decision_num
-        special_paying_player.decision_selected = decision_selected
-        special_paying_player.other_player_id = other_player.unique_in_session_id
-
-        # Store similar info for the other player if necessary (optional)
-        other_player.other_player_id = other_player.unique_in_session_id  # This might be redundant
-
-        # Calculate payoffs based on the selected decision
-        if decision_selected == 'L':
-            special_paying_player.payoff += c(2)  # both get 2
-            other_player.payoff += c(2)
-        else:
-            if decision_num == '1':
-                special_paying_player.payoff += c(2)  # payer gets 2, other gets 1
-                other_player.payoff += c(1)
-            elif decision_num == '2':
-                special_paying_player.payoff += c(3)  # payer gets 3, other gets 1
-                other_player.payoff += c(1)
-            elif decision_num == '3':
-                special_paying_player.payoff += c(4)  # payer gets 4, other gets 2
-                other_player.payoff += c(2)
-            elif decision_num == '4':
-                special_paying_player.payoff += c(3)  # payer gets 3, other gets 5
-                other_player.payoff += c(5)
 
     def creating_session(self):
-        if self.round_number == 1:
-            treatment = random.choice(Constants.treatment_choices)
-            self.session.vars['treatment'] = treatment
-
-        for player in self.get_players():
-            player.treatment = self.session.vars['treatment']
-
         if self.round_number == 1:
             for player in self.get_players():
                 player.group = None  # <<< MANUALLY ungroup everyone!
 
 
 class Group(BaseGroup):
-    current_game = models.StringField(initial='A')  # "A" for Matrix A, "B" for Matrix B.
     game_over = models.BooleanField(initial=False)
     finished = models.BooleanField(initial=False)
 
-    def set_game(self):
-        votes = [p.field_maybe_none('vote') for p in self.get_players()]
-        if any(vote is None for vote in votes):
-            return
-        if all(vote == 'Matrix B' for vote in votes):
-            self.current_game = 'B'
-        else:
-            self.current_game = 'A'
-
-    def set_payoffs(self):
-        players = sorted(self.get_players(), key=lambda p: p.id_in_group)
-        if any(p.consent and p.action == "" for p in players):
-            return
-        current_game = self.field_maybe_none('current_game') or 'A'
-        action_tuple = (players[0].action, players[1].action)
-        if current_game == 'B':
-            payoff_tuple = Constants.matrix_B.get(action_tuple)
-        else:
-            payoff_tuple = Constants.matrix_A.get(action_tuple)
-        if payoff_tuple is None:
-            return
-        players[0].payoff = c(payoff_tuple[0])
-        players[1].payoff = c(payoff_tuple[1])
-
 class Player(BasePlayer):
-    display_group_id = models.IntegerField()
     first_attempt_passed = models.BooleanField(initial=False)
     second_attempt_passed = models.BooleanField(initial=False)
     first_wrong_questions = models.LongStringField()
     second_wrong_questions = models.LongStringField()
-    pair = models.IntegerField()
-    def find_partner(self):
-        """Find the player in the same pair."""
-        others = [p for p in self.subsession.get_players() if p.pair == self.pair and p.id_in_subsession != self.id_in_subsession]
-        return others[0] if others else None
 
-    decision_1 = models.StringField(
-        choices=[
-            ('L', '2€ for you  <br> 2€ for the other participant'),
-            ('R', '2€ for you  <br> 1€ for the other participant')
-        ],
-        widget=widgets.RadioSelectHorizontal
-    )
-    decision_2 = models.StringField(
-        choices=[
-            ('L', '2€ for you <br> 2€ for the other participant'),
-            ('R', '3€ for you  <br> 1€ for the other participant')
-        ],
-        widget=widgets.RadioSelectHorizontal
-    )
-    decision_3 = models.StringField(
-        choices=[
-            ('L', '2€ for you  <br> 2€ for the other participant'),
-            ('R', '2€ for you  <br> 4€ for the other participant')
-        ],
-        widget=widgets.RadioSelectHorizontal
-    )
-    decision_4 = models.StringField(
-        choices=[
-            ('L', '2€ for you  <br> 2€ for the other participant'),
-            ('R', '3€ for you  <br> 5€ for the other participant')
-        ],
-        widget=widgets.RadioSelectHorizontal
-    )
 
     consent = models.BooleanField(label="Do you consent to participate?")
-    comprehension_answer = models.StringField(
-        label="Based on the matrices shown, which matrix would be used if participants vote differently?",
-        initial=""
-    )
+
     vote = models.StringField(
         choices=['Matrix A', 'Matrix B'],
         label="Select the payoff matrix you prefer for this round",
@@ -181,7 +68,7 @@ class Player(BasePlayer):
         label="Choose your action: Action C or Action D",
         initial=""
     )
-    treatment = models.StringField()
+    treatment = models.StringField(initial='T1a')
     remove = models.BooleanField(initial=False)
     # Comprehension check questions:
     comprehension_q1 = models.StringField(
@@ -216,7 +103,7 @@ class Player(BasePlayer):
         choices=[
             "I receive 3 points and my paired participant receives 3 points.",
             "I receive 0 points and my paired participant receives 12 points.",
-            "I receive 7 points and my paired participant receives 7 points."
+            "I receive 7 points and my paired participant receives 7 point."
         ],
         widget=widgets.RadioSelect,
         label="5. In Game 2, if you both choose Option B, what are the points?"

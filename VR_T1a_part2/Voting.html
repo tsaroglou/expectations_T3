@@ -56,12 +56,87 @@
     .you     { color: red;  font-weight: bold; }
     /* Make partner payoffs semi‑transparent only inside tables */
     table span.partner { opacity: 0.3; }
-  </style>
+    /* --- picker buttons --- */
+  .vote-select {
+    display: block;
+    margin: 12px auto;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: 2px solid #007bff;
+    border-radius: 6px;
+    background: #fff;
+    color: #007bff;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+  }
+  .vote-select.selected {
+    background: #007bff;
+    color: #fff;
+  }
+  /* --- submit button --- */
+  .submit-btn {
+    display: block;
+    margin: 20px auto;
+    padding: 12px 24px;
+    font-size: 18px;
+    border: none;
+    border-radius: 8px;
+    background-color: #28a745;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  .submit-btn:disabled {
+    background-color: #aaa;
+    cursor: not-allowed;
+  }
+  .submit-btn:not(:disabled):hover {
+    background-color: #218838;
+  }
+  /* --- timer & modal --- */
+  .main-timer {
+    position: fixed; top: 10px; left: 50%;
+    transform: translateX(-50%);
+    background: #f8f9fa; padding: 6px 10px;
+    border-radius: 4px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    font-weight: bold; z-index: 1000;
+  }
+  .timeout-modal {
+    display: none; position: fixed; top: 0; left: 0;
+    width: 100%; height: 100%; background: rgba(0,0,0,0.4);
+    z-index: 2000;
+  }
+  .timeout-modal-content {
+    background: #fff; margin: 15% auto; padding: 20px;
+    max-width: 400px; border-radius: 8px; text-align: center;
+  }
+  .timeout-btn {
+    margin-top: 15px; padding: 10px 20px;
+    border: none; border-radius: 4px;
+    background: #007bff; color: #fff; cursor: pointer;
+    transition: background 0.3s;
+  }
+  .timeout-btn:hover { background: #0069d9; }
+  .timeout-timer { font-weight: bold; margin-top: 10px; }
+</style>
 {% endblock head %}
+
 {% block content %}
-<div class="container">
-  <h1>Your Vote</h1>
- <p style="text-align: center;">Please review the two games below and select the one you prefer for this round.</p>
+<form id="voteForm" method="post">
+  <!-- hidden fields oTree expects -->
+  <input type="hidden" name="vote" id="voteInput">
+  <input type="hidden" name="remove" id="removeInput" value="False">
+
+  <!-- main 25s timer -->
+  <div class="main-timer">
+    Time remaining: <span id="mainTimer">25</span>s
+  </div>
+
+  <h1 style="text-align:center;">Your Vote</h1>
+  <p style="text-align:center;">
+    Click the button under the game you prefer, then hit “Submit Vote.”
+  </p>
+
 
   <div class="matrix-container">
     <!-- Matrix A -->
@@ -90,11 +165,15 @@
             <td><span class="you">{{ A1bb }}</span>, <span class="partner">{{ A1bb }}</span></td>
           </tr>
         </tbody>
-      </table>
-      <form method="post">
-        <button type="submit" name="vote" value="Matrix A" class="vote-button">Vote Game 1</button>
-      </form>
-    </div>
+        </table>
+
+         <button type="button"
+              class="vote-select"
+              data-value="Matrix A">
+        Vote Game 1
+      </button>
+
+      </div>
 
     <!-- Matrix B -->
     <div class="matrix">
@@ -122,11 +201,125 @@
             <td><span class="you">{{ A2bb }}</span>, <span class="partner">{{ A2bb }}</span></td>
           </tr>
         </tbody>
-      </table>
-      <form method="post">
-        <button type="submit" name="vote" value="Matrix B" class="vote-button">Vote Game 2</button>
-      </form>
+       </table>
+         <button type="button"
+              class="vote-select"
+              data-value="Matrix B">
+        Vote Game 2
+      </button>
+      </div>
+    </div>
+
+ <!-- now that you’ve picked, submit -->
+  <button type="submit"
+          class="submit-btn"
+          id="submitBtn"
+          disabled>
+    Submit Vote
+  </button>
+
+  <!-- 15s “are you still here?” modal -->
+  <div id="timeoutModal" class="timeout-modal">
+    <div class="timeout-modal-content">
+      <p>
+        Still there? Click <strong>Continue</strong> for another <strong>25 s</strong>.
+        Otherwise you’ll be removed.
+      </p>
+      <button type="button"
+              id="modalYesButton"
+              class="timeout-btn">
+        Continue
+      </button>
+      <div class="timeout-timer">
+        Time remaining: <span id="modalTimer">15</span>s
+      </div>
     </div>
   </div>
-</div>
+</form>
+<script>
+(function(){
+  // 1) Cache frequently used elements
+  const selects     = document.querySelectorAll('.vote-select');
+  const voteInput   = document.getElementById('voteInput');
+  const removeInput = document.getElementById('removeInput');
+  const submitBtn   = document.getElementById('submitBtn');
+  const form        = document.getElementById('voteForm');
+  const mainTimer   = document.getElementById('mainTimer');
+  const modalTimer  = document.getElementById('modalTimer');
+  const modal       = document.getElementById('timeoutModal');
+  const modalYes    = document.getElementById('modalYesButton');
+
+  // 2) Selection logic
+  selects.forEach(btn => {
+    btn.addEventListener('click', () => {
+      selects.forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      voteInput.value = btn.dataset.value;
+      submitBtn.disabled = false;
+    });
+  });
+
+  // 3) Countdown constants
+  const MAIN_DURATION  = 25; // seconds before modal
+  const MODAL_DURATION = 15; // seconds in modal
+
+  let mainLeft, modalLeft;
+
+  // 4) Main timer: recursive setTimeout
+  function startMain() {
+    mainLeft = MAIN_DURATION;
+    mainTimer.textContent = mainLeft;
+    function tick() {
+      mainLeft--;
+      if (mainLeft >= 0) {
+        mainTimer.textContent = mainLeft;
+      }
+      if (mainLeft > 0) {
+        setTimeout(tick, 1000);
+      } else {
+        showModal();
+      }
+    }
+    // kick it off
+    setTimeout(tick, 1000);
+  }
+
+  // 5) Modal timer: recursive setTimeout
+  function showModal() {
+  modal.style.display = 'block';
+  modalLeft = MODAL_DURATION;
+  modalTimer.textContent = modalLeft;
+
+  function tickModal() {
+    modalLeft--;
+    modalTimer.textContent = modalLeft;
+    if (modalLeft > 0) {
+      setTimeout(tickModal, 1000);
+    } else {
+      // fallback vote if none selected
+      if (!voteInput.value) {
+        voteInput.value = 'Matrix A';
+      }
+      // mark removal
+      removeInput.value = 'True';
+      // re-enable & click the real submit button
+      submitBtn.disabled = false;
+      submitBtn.click();
+    }
+  }
+  setTimeout(tickModal, 1000);
+}
+
+  // 6) “Continue” button in modal
+  modalYes.addEventListener('click', function(e) {
+    e.preventDefault();
+    modal.style.display = 'none';
+    removeInput.value = 'False';
+    startMain();
+  });
+
+  // 7) Start everything when page loads
+  window.addEventListener('load', startMain);
+})();
+</script>
 {% endblock content %}

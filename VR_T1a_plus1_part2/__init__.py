@@ -14,11 +14,12 @@ class Constants(BaseConstants):
     min_rounds = 1     # Must play at least 20 rounds before the lottery may end the game.
     # Payoff matrices:
     matrix_A = {
-        ('C', 'C'): (5, 5),
-        ('C', 'D'): (3, 6),
-        ('D', 'C'): (6, 3),
-        ('D', 'D'): (4, 4),
+        ('C', 'C'): (6, 6),
+        ('C', 'D'): (4, 7),
+        ('D', 'C'): (7, 4),
+        ('D', 'D'): (5, 5),
     }
+    
     A1aa = matrix_A[('C', 'C')][0]
     A1ab = matrix_A[('C', 'D')][0]
     A1ba = matrix_A[('D', 'C')][0]
@@ -35,8 +36,6 @@ class Constants(BaseConstants):
     A2ba = matrix_B[('D', 'C')][0]
     A2bb = matrix_B[('D', 'D')][0]
 
-    treatment_choices = ['T1', 'T2']
-
 class Subsession(BaseSubsession):
 
     def group_by_arrival_time_method(self, waiting_players):
@@ -48,13 +47,7 @@ class Subsession(BaseSubsession):
 
     def creating_session(self):
         if self.round_number == 1:
-            # Assign treatment once
-            treatment = random.choice(Constants.treatment_choices)
-            self.session.vars['treatment'] = treatment
             self.session.vars['game_sequences'] = {}
-
-        for player in self.get_players():
-            player.treatment = self.session.vars['treatment']
 
 
 class Group(BaseGroup):
@@ -89,6 +82,7 @@ class Group(BaseGroup):
         players[1].payoff = c(payoff_tuple[1])
 
 class Player(BasePlayer):
+
     display_group_id = models.IntegerField()
     investment = models.CurrencyField(
         min=0, max=2,
@@ -101,8 +95,7 @@ class Player(BasePlayer):
 
     first_attempt_passed = models.BooleanField(initial=False)
     second_attempt_passed = models.BooleanField(initial=False)
-    first_wrong_questions = models.LongStringField()
-    second_wrong_questions = models.LongStringField()
+
     pair = models.IntegerField()
     def find_partner(self):
         """Find the player in the same pair."""
@@ -139,10 +132,7 @@ class Player(BasePlayer):
     )
 
     consent = models.BooleanField(label="Do you consent to participate?")
-    comprehension_answer = models.StringField(
-        label="Based on the matrices shown, which matrix would be used if participants vote differently?",
-        initial=""
-    )
+
     vote = models.StringField(
         choices=['Matrix A', 'Matrix B'],
         label="Select the payoff matrix you prefer for this round",
@@ -153,85 +143,12 @@ class Player(BasePlayer):
         label="Choose your action: Action C or Action D",
         initial=""
     )
-    treatment = models.StringField()
-    remove = models.BooleanField(initial=False)
-    # Comprehension check questions:
-    comprehension_q1 = models.StringField(
-        choices=["Game 1", "Game 2"],
-        widget=widgets.RadioSelect,
-        label="1. If one participant votes for Game 1 and the other for Game 2, which game is played?"
-    )
-    comprehension_q2 = models.StringField(
-        choices=["Game 1", "Game 2"],
-        widget=widgets.RadioSelect,
-        label="2. Which game is played if both participants choose Game 2?"
-    )
-    comprehension_q3 = models.StringField(
-        choices=[
-            "I receive 5 points and my paired participant also receives 5 points.",
-            "I receive 6 points and my paired participant receives 3 points.",
-            "I receive 4 points and my paired participant also receives 4 point."
-        ],
-        widget=widgets.RadioSelect,
-        label="3. In Game 1, if you choose Option A and your paired participant chooses Option A, what are the points?"
-    )
-    comprehension_q4 = models.StringField(
-        choices=[
-            "I receive 0 points and my paired participant receives 12 points.",
-            "I receive 7 points and my paired participant also receives 7 points.",
-            "I receive 12 points and my paired participant receives 0 points."
-        ],
-        widget=widgets.RadioSelect,
-        label="4. In Game 2, if you choose Option A and your partner chooses Option B, what are the points?"
-    )
-    comprehension_q5 = models.StringField(
-        choices=[
-            "I receive 3 points and my paired participant receives 3 points.",
-            "I receive 0 points and my paired participant receives 12 points.",
-            "I receive 7 points and my paired participant receives 7 point."
-        ],
-        widget=widgets.RadioSelect,
-        label="5. In Game 2, if you both choose Option B, what are the points?"
-    )
+    treatment = models.StringField(initial="T1a")
 
-    comprehension_q6 = models.StringField(
-        choices=["Game 1", "Game 2"],
-        widget=widgets.RadioSelect,
-        label="6. If you and your paired participant both vote for Game 2, which game is played?"
-    )
-    comprehension_q7 = models.StringField(
-        choices=["Game 1", "Game 2"],
-        widget=widgets.RadioSelect,
-        label="7. If one participant votes for Game 1 and the other for Game 2, which game is played?"
-    )
-    comprehension_q8 = models.StringField(
-        choices=[
-            "I receive 6 points and my paired participant receives 3 points.",
-            "I receive 4 points and my paired participant also receives 4 points.",
-            "I receive 5 points and my paired participant also receives 5 points."
-        ],
-        widget=widgets.RadioSelect,
-        label="8. In Game 1, if you choose Option B and your paired participant chooses Option A, what are the points?"
-    )
-    comprehension_q9 = models.StringField(
-        choices=[
-            "I receive 3 points and my paired participant receives 3 points.",
-            "I receive 0 points and my paired participant receives 12 points.",
-            "I receive 3 points and my paired participant receives 6 points."
-        ],
-        widget=widgets.RadioSelect,
-        label="9. In Game 2, if both choose Option B, what are the points?"
-    )
-    comprehension_q10 = models.StringField(
-        choices=[
-            "I receive 12 points and my paired participant receives 0 points.",
-            "I receive 0 points and my paired participant receives 12 points.",
-            "I receive 3 points and my paired participant receives 3 points."
-        ],
-        widget=widgets.RadioSelect,
-        label="10. In Game 2, if you choose Option B and your partner chooses Option A, what are the points?"
-    )
-#
+    remove = models.BooleanField(initial=False)
+    partner_removed = models.BooleanField(initial=False)
+
+
 # BaseGamePage: All main pages check if the experiment is finished.
 #
 class BaseGamePage(Page):
@@ -249,7 +166,7 @@ class BaseGamePage(Page):
 
 class WaitToBeGrouped(WaitPage):
     group_by_arrival_time = True
-    template_name = 'VR_T1a_part2/WaitToBeGrouped.html'
+    template_name = 'Voted_Risk_T1a_MAIN/WaitToBeGrouped.html'
 
 
     @staticmethod
@@ -275,13 +192,23 @@ class WaitToBeGrouped(WaitPage):
 # Voting – main game loop page.
 class Voting(BaseGamePage):
     form_model = 'player'
-    form_fields = ['vote']
-
+    form_fields = ['vote', 'remove']
     def is_displayed(self):
-        if self.round_number <= Constants.min_rounds:
-            return not self.remove
-        else:
-            return not self.remove and not self.group.game_over
+        # only show if neither you nor your partner have been removed
+        return not (self.remove or self.partner_removed or self.group.game_over)
+
+    def before_next_page(self, timeout_happened, **kwargs):
+        if timeout_happened:
+            # you get removed on timeout
+            self.remove = True
+            partner = [p for p in self.group.get_players() if p != self][0]
+            partner.partner_removed = True
+        if self.remove and not self.partner_removed:
+            other = [p for p in self.group.get_players() if p != self][0]
+            # mark partner as removed as well so they skip ActionWaitPage
+            other.remove = True
+            other.partner_removed = True
+
 
     def vars_for_template(self):
         return {
@@ -297,6 +224,7 @@ class Voting(BaseGamePage):
             'A2bb': Constants.A2bb,
         }
 
+
 class VoteWaitPage(WaitPage):
     def after_all_players_arrive(self):
         self.group.set_game()
@@ -304,13 +232,26 @@ class VoteWaitPage(WaitPage):
 # Action – main game loop page; displays vote info and both matrices with the selected one highlighted.
 class Action(BaseGamePage):
     form_model = 'player'
-    form_fields = ['action']
+    form_fields = ['action', 'remove']
 
     def is_displayed(self):
-        if self.round_number <= Constants.min_rounds:
-            return not self.remove
-        else:
-            return not self.remove and not self.group.game_over
+        # show only if neither player nor partner has been removed, and game not over
+        return not (self.remove or self.partner_removed or self.group.game_over)
+
+    def before_next_page(self, timeout_happened, **kwargs):
+        # Always default to C on natural timeout
+
+
+        if timeout_happened:
+            self.action = 'C'
+        # If this player was flagged for removal via modal expiry, notify partner once
+        if self.remove and not self.partner_removed:
+            other = [p for p in self.group.get_players() if p != self][0]
+            # mark partner as removed as well so they skip ActionWaitPage
+            other.remove = True
+            other.partner_removed = True
+            # do not mark other.remove so they only see PartnerRemoved
+            # partner_removed flag will route them to PartnerRemoved page
 
     def vars_for_template(self):
         partner = self.get_others_in_group()[0]
@@ -330,22 +271,58 @@ class Action(BaseGamePage):
             'A2bb': Constants.A2bb,
         }
 
-    def before_next_page(self, timeout_happened, **kwargs):
-        if timeout_happened:
-            self.action = 'C'
 
+class ClearingOut(WaitPage):
+    pass
+class RemovalTimeout(Page):
+    def is_displayed(self):
+        return self.remove and not self.partner_removed
+
+class PartnerRemoved(Page):
+    def is_displayed(self):
+        return self.partner_removed
 
 class ActionWaitPage(WaitPage):
+    timeout_seconds = 5
+
+    def is_displayed(self):
+        # show only if neither removed nor partner removed
+        return not (self.remove or self.partner_removed)
+
+    def next_page(self):
+        # If this player was the one who timed out, send to RemoveTimeout
+        if self.remove and not self.partner_removed:
+            return 'RemoveTimeout'
+        # If this player is the partner, send to PartnerRemoved
+        if self.partner_removed:
+            return 'PartnerRemoved'
+        # Otherwise go to Results
+        return 'Results'
     def after_all_players_arrive(self):
         self.group.set_payoffs()
 
 # Results – displays votes, actions, and both players' payoffs.
 class Results(BaseGamePage):
+    form_model = 'player'
+    form_fields = ['remove']  # we need remove here to catch timeout
+
     def is_displayed(self):
-        if self.round_number <= Constants.min_rounds:
-            return not self.remove
-        else:
-            return not self.remove and not self.group.game_over
+        # only show if neither you nor your partner have been removed
+        return not (self.remove or self.partner_removed or self.group.game_over)
+
+    def before_next_page(self, timeout_happened, **kwargs):
+        if timeout_happened:
+            # mark you removed
+            self.remove = True
+            # alert partner
+            partner = [p for p in self.group.get_players() if p != self][0]
+            partner.partner_removed = True
+
+        if self.remove and not self.partner_removed:
+            other = [p for p in self.group.get_players() if p != self][0]
+            # mark partner as removed as well so they skip ActionWaitPage
+            other.remove = True
+            other.partner_removed = True
     def vars_for_template(self):
         partner = self.get_others_in_group()[0]
         return {
@@ -379,11 +356,6 @@ class LotteryWaitPage(WaitPage):
                 self.group.game_over = True
                 for p in self.group.get_players():
                     p.participant.vars["finished_round"] = self.round_number
-                for p in self.group.get_players():
-                    if p.id_in_group == 1:
-                        matrix_sequence = [pg.group.current_game for pg in p.in_all_rounds()]
-                        p.participant.vars['matrix_sequence'] = matrix_sequence
-                        p.matrix_sequence = json.dumps(matrix_sequence)
             else:
                 self.group.game_over = False
 
@@ -405,6 +377,11 @@ class Investment(Page):
             self.lottery_outcome = 0
             self.investment_total =  self.lottery_outcome + 2-self.investment
 
+            # Only for player 1: collect matrix sequence from all rounds
+        if self.id_in_group == 1:
+            matrix_sequence = [p.group.current_game for p in self.in_all_rounds()]
+            self.participant.vars['matrix_sequence'] = matrix_sequence
+            self.matrix_sequence = json.dumps(matrix_sequence)
 
 
 # AdditionalMeasurements – final additional page shown on the finished round.
@@ -435,13 +412,24 @@ class PaymentAndDebrief(Page):
     def app_after_this_page(self, upcoming_apps, **kwargs):
         return None
 
+
+
 page_sequence = [
     WaitToBeGrouped,
     Voting,
+    ClearingOut,
+    RemovalTimeout,
+    PartnerRemoved,
     VoteWaitPage,
     Action,
+    ClearingOut,
+    RemovalTimeout,
+    PartnerRemoved,
     ActionWaitPage,
     Results,
+    ClearingOut,
+    RemovalTimeout,
+    PartnerRemoved,
     LotteryWaitPage,
     Investment,
     AdditionalMeasurements,

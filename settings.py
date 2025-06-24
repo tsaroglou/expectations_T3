@@ -9,13 +9,12 @@ from os import environ
  #   },
 #]
 
-
 SESSION_CONFIGS = [
     dict(
         name='Voted_Risk_T1a',
         display_name="Voted Risk Treatment 1a",
         num_demo_participants=4,
-        app_sequence=['Voted_Risk_T1a_PRE', 'Voted_Risk_T1a_MAIN'],
+        app_sequence=['VR_T1a_part1', 'VR_T1a_part2'],
         group_by_arrival_time=True,  # correct for PRE
     ),
 ]
@@ -53,10 +52,9 @@ SESSION_FIELDS = ['prolific_completion_url', 'display_group_id']
 LANGUAGE_CODE = 'en'
 
 # e.g. EUR, GBP, CNY, JPY
-REAL_WORLD_CURRENCY_CODE = 'EUR'
+REAL_WORLD_CURRENCY_CODE = 'GBP'
 USE_POINTS = False
-REAL_WORLD_CURRENCY_DECIMAL_PLACES = 2  # Optional, for decimal precision
-
+REAL_WORLD_CURRENCY_DECIMAL_PLACES = 2
 
 ROOMS = [
     dict(
