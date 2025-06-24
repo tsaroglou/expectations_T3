@@ -12,7 +12,7 @@ class Constants(BaseConstants):
     name_in_url = 'cooperation_risk_main'
     players_per_group = 2
     num_rounds = 100    # Maximum rounds; experiment will end early once the lottery triggers.
-    min_rounds = 2     # Must play at least 20 rounds before the lottery may end the game.
+    min_rounds = 20     # Must play at least 20 rounds before the lottery may end the game.
     # Payoff matrices:
     matrix_A = {
         ('C', 'C'): (5, 5),
@@ -82,6 +82,7 @@ class Group(BaseGroup):
         players[1].payoff = c(payoff_tuple[1])
 
 class Player(BasePlayer):
+    played = models.BooleanField(initial=False)
 
     display_group_id = models.IntegerField()
     investment = models.CurrencyField(
@@ -198,6 +199,8 @@ class Voting(BaseGamePage):
         return not (self.remove or self.partner_removed or self.group.game_over)
 
     def before_next_page(self, timeout_happened, **kwargs):
+        self.played = True
+
         if timeout_happened:
             # you get removed on timeout
             self.remove = True
