@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 
 # Load your CSV file
-file_path = "/Users/theo/Downloads/VR_T1a_part2_2025-06-24 (4).csv"
+file_path = "/Users/theo/Downloads/VR_T1a_part2_2025-06-24 (5).csv"
 df = pd.read_csv(file_path)
 
 # Step 1: Keep only rows where player.played == 1
