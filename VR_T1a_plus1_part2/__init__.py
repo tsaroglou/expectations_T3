@@ -349,15 +349,20 @@ class Results(BaseGamePage):
 
 # LotteryWaitPage – group-level lottery to decide if the game should end.
 class LotteryWaitPage(WaitPage):
-    wait_for_all_groups = False
+    wait_for_all_players = True  # wait for your pair
+
+    def is_displayed(self):
+        # Only run the lottery once min_rounds is reached, and only if the game isn't already over.
+        return (self.round_number >= Constants.min_rounds) and (not self.group.game_over)
+
     def after_all_players_arrive(self):
-        if self.round_number > 20:
-            if random.random() < 0.5:
-                self.group.game_over = True
-                for p in self.group.get_players():
-                    p.participant.vars["finished_round"] = self.round_number
-            else:
-                self.group.game_over = False
+        # 50% chance to end the game this round
+        if random.random() < 0.5:
+            self.group.game_over = True
+            for p in self.group.get_players():
+                p.participant.vars["finished_round"] = self.round_number
+        # If we "lose" the lottery, we leave game_over=False
+        # and next round we'll come back here again until it finally hits.
 
 class Investment(Page):
     form_model = 'player'
