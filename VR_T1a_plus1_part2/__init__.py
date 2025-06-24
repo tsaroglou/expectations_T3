@@ -84,6 +84,8 @@ class Group(BaseGroup):
 
 class Player(BasePlayer):
     played = models.BooleanField(initial=False)
+    total_money = models.CurrencyField()
+
 
     display_group_id = models.IntegerField()
     investment = models.CurrencyField(

@@ -12,7 +12,7 @@ class Constants(BaseConstants):
     name_in_url = 'cooperation_risk_main'
     players_per_group = 2
     num_rounds = 100    # Maximum rounds; experiment will end early once the lottery triggers.
-    min_rounds = 20     # Must play at least 20 rounds before the lottery may end the game.
+    min_rounds = 1     # Must play at least 20 rounds before the lottery may end the game.
     # Payoff matrices:
     matrix_A = {
         ('C', 'C'): (5, 5),
@@ -83,6 +83,7 @@ class Group(BaseGroup):
 
 class Player(BasePlayer):
     played = models.BooleanField(initial=False)
+    total_money = models.CurrencyField()
 
     display_group_id = models.IntegerField()
     investment = models.CurrencyField(
@@ -404,7 +405,7 @@ class PaymentAndDebrief(Page):
         return not self.remove and ((finished_round is not None and self.round_number == finished_round) or self.round_number == Constants.num_rounds)
     def vars_for_template(self):
         total_payoff = sum([p.payoff for p in self.in_all_rounds()])/30
-
+        self.total_money=total_payoff
         return {
             'final_payment': c(total_payoff)
         }
