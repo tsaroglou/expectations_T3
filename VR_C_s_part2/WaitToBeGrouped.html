@@ -1,0 +1,23 @@
+{% extends "otree/WaitPage.html" %}
+
+{% block title %}
+    <p style="text-align: center;">
+        Please wait to be grouped. </p>
+{% endblock %}
+{% block content %}
+  <div class="card text-center mt-5">
+    <div class="card-body">
+      <h4 class="card-title">Hang tight!</h4>
+      <p class="card-text">We are matching you with another participant.</p>
+      <div class="spinner-border mt-3 text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    setTimeout(function() {
+      window.location.reload(true);
+    }, 3000); // 3000 ms = 3 seconds
+  </script>
+{% endblock %}

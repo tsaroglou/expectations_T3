@@ -1,0 +1,295 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block head %}
+  <link rel="stylesheet" href="{% static 'Voted_Risk/styles.css' %}">
+  <style>
+    .question { margin-bottom: 1rem; }
+
+    /* Mid-top floating button */
+    #instr-button {
+      position: fixed;
+      top: 135px;
+      left: 74%;
+      transform: translateX(-50%);
+      z-index: 1000;
+      background: #0056b3;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    /* Modal backdrop */
+    #instr-modal {
+      display: none;
+      position: fixed;
+      top:0; left:0; width:100%; height:100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 1001;
+    }
+    /* Modal box */
+    #instr-modal .modal-content {
+      background: #fff;
+      width: 80%; height: 80%;
+      margin: 5% auto;
+      border-radius: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Make modal‐content a flex column, so we can flex the inner area */
+#instr-modal .modal-content {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  height: 80%;
+  margin: 5% auto;
+  border-radius: 8px;
+  background: #fff;
+}
+
+/* This is the scrollable, padded area */
+#instr-modal .modal-inner {
+  flex: 1 1 auto;       /* take up all leftover space */
+  overflow-y: auto;     /* vertical scroll if needed */
+  padding: 60px;        /* inner margins */
+}
+
+/* Keep the close button on top */
+#instr-close {
+  position: absolute;
+  top: 8px; right: 12px;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 10;
+}
+    #instr-close {
+      position: absolute;
+      top: 8px; right: 12px;
+      font-size: 24px;
+      cursor: pointer;
+    }
+    #instr-modal iframe {
+      width:100%; height:100%; border:none;
+    }
+
+    .question {
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 1.5rem;
+        margin-right:20rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* Question legend/title */
+.question legend {
+  font-weight: bold;
+  margin-bottom: 12px;
+  font-size: 1.1rem;
+}
+
+/* Radio options as button-like pills */
+.question .otree_radio {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 8px;
+}
+.question .otree_radio input {
+  display: none; /* hide the real radio */
+}
+.question .otree_radio label {
+  padding: 8px 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+.question .otree_radio input:checked + label {
+  background: #0056b3;
+  color: #fff;
+  border-color: #0056b3;
+}
+
+
+    /* Match Instruction page tables exactly */
+    .matrix-container {
+        position:fixed;
+                margin-left:28rem;
+                        margin-top:-8rem;
+
+      display: flex;
+      justify-content: normal;
+      gap: 20px;
+         flex-direction: column; /* vertical stacking */
+    align-items: center;    /* center horizontally */
+                width: 50%;
+        scale: 80%;
+
+    }
+    .matrix-container-normal {
+      display: flex;
+      justify-content: space-around;
+      gap: 20px;
+      margin-bottom: 1.5rem;
+    }
+    .matrix-section {
+        width: 45%;
+        text-align: center;
+    }
+    .game-label {
+      text-align: center;
+      font-weight: bold;
+      font-size: 18px;
+      margin: 8px 0 16px;
+    }
+    .axis-label { font-weight: bold; }
+    .you     { color: red;   font-weight: bold; }
+    .partner { color: blue;  font-weight: bold; }
+    /* only inside tables */
+    table span.partner { opacity: 0.3; }
+  </style>
+{% endblock head %}
+
+{% block content %}
+<div class="container">
+  <h1 style="text-align: left;">Comprehension Check</h1>
+  <p style="text-align: left;"> Please answer these questions to verify your understanding.</p>
+
+   <div class="matrix-container">
+
+    <!-- Game 2 Matrix -->
+    <div class="matrix-section">
+<br>
+      <table class="payoff-matrix">
+        <thead>
+          <tr>
+            <th rowspan="2" style="color:red;">Your Options</th>
+            <th colspan="2" style="color:blue;opacity:0.3;">Partner’s Options</th>
+          </tr>
+          <tr>
+            <th style="color:blue;opacity:0.3;">A</th>
+            <th style="color:blue;opacity:0.3;">B</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th style="color:red;">A</th>
+            <td><span class="you">{{ A1aa }}</span>, <span class="partner">{{ A1aa }}</span></td>
+            <td><span class="you">{{ A1ab }}</span>, <span class="partner">{{ A1ba }}</span></td>
+          </tr>
+          <tr>
+            <th style="color:red;">B</th>
+            <td><span class="you">{{ A1ba }}</span>, <span class="partner">{{ A1ab }}</span></td>
+            <td><span class="you">{{ A1bb }}</span>, <span class="partner">{{ A1bb }}</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+   <form method="post">
+
+    <div class="question">
+      <fieldset>
+        <legend>{{ form.comprehension_q8.label }}</legend>
+        {{ form.comprehension_q8 }}
+      </fieldset>
+    </div>
+
+    <div class="question">
+      <fieldset>
+        <legend>{{ form.comprehension_q9.label }}</legend>
+        {{ form.comprehension_q9 }}
+      </fieldset>
+    </div>
+
+    <div class="question">
+      <fieldset>
+        <legend>{{ form.comprehension_q10.label }}</legend>
+        {{ form.comprehension_q10 }}
+      </fieldset>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit Answers</button>
+  </form>
+</div>
+
+<!-- Floating mid-top button -->
+<button id="instr-button" type="button">Check Instructions Summary</button>
+
+<!-- Modal backdrop -->
+<div id="instr-modal">
+  <div class="modal-content">
+    <span id="instr-close">&times;</span>
+
+    <!-- NEW scrollable, padded container -->
+    <div class="modal-inner">
+      <div class="instructions-content">
+
+  <div class="matrix-container-normal">
+
+    <!-- Game B -->
+    <div class="matrix-section">
+      <table class="payoff-matrix">
+        <thead>
+          <tr>
+            <th rowspan="2" class="axis-label" style="color: red;">Your Options</th>
+            <th colspan="2" class="axis-label" style="color: blue;opacity: 0.3;">Partner’s Options</th>
+          </tr>
+          <tr>
+            <th style="color: blue;opacity: 0.3;">A</th>
+            <th style="color: blue;opacity: 0.3;">B</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th style="color: red;">A</th>
+            <td><span class="you">{{ A1aa }}</span>, <span class="partner">{{ A1aa }}</span></td>
+            <td><span class="you">{{ A1ab }}</span>, <span class="partner">{{ A1ba }}</span></td>
+          </tr>
+          <tr>
+            <th style="color: red;">B</th>
+            <td><span class="you">{{ A1ba }}</span>, <span class="partner">{{ A1ab }}</span></td>
+            <td><span class="you">{{ A1bb }}</span>, <span class="partner">{{ A1bb }}</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <ul>
+        <li>If you choose <b>A</b> and partner chooses <b>A</b>: <br>you earn <span class="you">{{ A1aa }}</span>, they earn <span class="partner">{{ A1aa }}</span>.</li>
+        <li>If you choose <b>A</b> and partner chooses <b>B</b>: <br>you earn <span class="you">{{ A1ab }}</span>, they earn <span class="partner">{{ A1ba }}</span>.</li>
+        <li>If you choose <b>B</b> and partner chooses <b>A</b>: <br>you earn <span class="you">{{ A1ba }}</span>, they earn <span class="partner">{{ A1ab }}</span>.</li>
+        <li>If you choose <b>B</b> and partner chooses <b>B</b>: <br>you both earn <span class="you">{{ A1bb }}</span>.</li>
+      </ul>
+    </div>
+  </div>
+        <hr>
+
+
+
+      <h2><b>Summary</b></h2>
+    <ul>
+        <p style="text-align: center;">In each round, the sequence of events is the following:</p>
+      <p><strong>1. Option choice:</strong> You choose <b>Option A</b> or <b>Option B</b> for the game.</p>
+      <p><strong>2. Points:</strong> You and your partner earn the points shown in the point table cell corresponding to your choices. These points are added to your running total points.</p>
+    </ul>
+   </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const btn   = document.getElementById('instr-button');
+  const modal = document.getElementById('instr-modal');
+  const close = document.getElementById('instr-close');
+  btn.onclick   = () => modal.style.display = 'block';
+  close.onclick = () => modal.style.display = 'none';
+  window.onclick = e => { if (e.target === modal) modal.style.display = 'none'; };
+</script>
+{% endblock content %}

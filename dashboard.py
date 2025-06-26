@@ -33,7 +33,7 @@ filtered = filtered[filtered['round_number'].between(*round_range)]
 # Summary stats
 st.subheader("Summary Statistics")
 st.write("**Overall Means (Filtered)**")
-st.dataframe(filtered[['Cooperated', 'Chose_Risk']].mean().rename("Mean").to_frame())
+st.dataframe(filtered.select_dtypes(include='number').mean().rename("Mean").to_frame())
 
 # Grouped means
 st.write("**Means by Game Type and Vote**")
@@ -41,26 +41,30 @@ grouped = filtered.groupby(['current_game', 'Chose_Risk'])[['Cooperated']].mean(
 st.dataframe(grouped)
 
 # Custom graph builder
-st.subheader("Custom Line Graph")
+st.subheader("Custom Graph")
 
 # Select axes
-y_axis = st.selectbox("Y-axis variable", options=['Cooperated', 'Chose_Risk'])
-x_axis = st.selectbox("X-axis variable", options=['round_number', 'current_game', 'Chose_Risk'])
+y_axis = st.selectbox("Y-axis variable", options=[col for col in filtered.select_dtypes(include='number').columns])
+x_axis = st.selectbox("X-axis variable", options=[col for col in filtered.columns if col != y_axis])
+chart_type = st.selectbox("Chart type", options=["Line", "Bar"])
 
-# Optional group-by
+# Multi group-by
 group_by = st.multiselect("Group by (optional)", options=[col for col in df.columns if col not in [x_axis, y_axis]])
 
 # Build chart data
 if group_by:
-    chart_data = (filtered.groupby([x_axis] + group_by)[y_axis]
-                           .mean()
-                           .reset_index()
-                           .pivot(index=x_axis, columns=group_by[0], values=y_axis))
+    grouped_data = filtered.groupby([x_axis] + group_by)[y_axis].mean().reset_index()
+    grouped_data['Group'] = grouped_data[group_by].astype(str).agg(' | '.join, axis=1)
+    chart_data = grouped_data.pivot(index=x_axis, columns='Group', values=y_axis)
 else:
-    chart_data = filtered.groupby(x_axis)[y_axis].mean()
+    chart_data = filtered.groupby(x_axis)[y_axis].mean().to_frame()
 
 # Plot
-st.line_chart(chart_data)
+st.subheader(f"{chart_type} Chart of {y_axis} by {x_axis}")
+if chart_type == "Line":
+    st.line_chart(chart_data)
+elif chart_type == "Bar":
+    st.bar_chart(chart_data)
 
 # Expanded data view
 with st.expander("See filtered raw data"):

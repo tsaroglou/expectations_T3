@@ -7,9 +7,8 @@ doc = """
 Cooperation under Agreed Risk Experiment
 """
 import json
-
 class Constants(BaseConstants):
-    name_in_url = 'CR_main'
+    name_in_url = 'CS_main'
     players_per_group = 2
     num_rounds = 100    # Maximum rounds; experiment will end early once the lottery triggers.
     min_rounds = 20     # Must play at least 20 rounds before the lottery may end the game.
@@ -61,10 +60,6 @@ class Group(BaseGroup):
         votes = [p.field_maybe_none('vote') for p in self.get_players()]
         if any(vote is None for vote in votes):
             return
-        if all(vote == 'Matrix B' for vote in votes):
-            self.current_game = 'B'
-        else:
-            self.current_game = 'A'
 
     def set_payoffs(self):
         players = sorted(self.get_players(), key=lambda p: p.id_in_group)
@@ -72,16 +67,29 @@ class Group(BaseGroup):
             return
         current_game = self.field_maybe_none('current_game') or 'A'
         action_tuple = (players[0].action, players[1].action)
-        if current_game == 'B':
-            payoff_tuple = Constants.matrix_B.get(action_tuple)
-        else:
-            payoff_tuple = Constants.matrix_A.get(action_tuple)
+        payoff_tuple = Constants.matrix_A.get(action_tuple)
+
         if payoff_tuple is None:
             return
         players[0].payoff = c(payoff_tuple[0])
         players[1].payoff = c(payoff_tuple[1])
 
 class Player(BasePlayer):
+    strategy = models.LongStringField(
+        label='1. Did you follow a specific strategy while playing this game?',
+        blank=True,
+        max_length=1000,
+    )
+    factors = models.LongStringField(
+        label='2. What factors or thoughts most influenced your choices in this game?',
+        blank=True,
+        max_length=1000,
+    )
+    belief = models.LongStringField(
+        label='3. How do you believe your partner viewed the situation? How did that belief affect you?',
+        blank=True,
+        max_length=1000,
+    )
     played = models.BooleanField(initial=False)
     total_money = models.CurrencyField()
 
@@ -145,7 +153,7 @@ class Player(BasePlayer):
         label="Choose your action: Action C or Action D",
         initial=""
     )
-    treatment = models.StringField(initial="T1a")
+    treatment = models.StringField(initial="CR")
 
     remove = models.BooleanField(initial=False)
     partner_removed = models.BooleanField(initial=False)
@@ -190,49 +198,6 @@ class WaitToBeGrouped(WaitPage):
             p.display_group_id = group.display_group_id  # ✅ Set field so monitor shows it
 
 
-
-# Voting – main game loop page.
-class Voting(BaseGamePage):
-    form_model = 'player'
-    form_fields = ['vote', 'remove']
-    def is_displayed(self):
-        # only show if neither you nor your partner have been removed
-        return not (self.remove or self.partner_removed or self.group.game_over)
-
-    def before_next_page(self, timeout_happened, **kwargs):
-        self.played = True
-
-        if timeout_happened:
-            # you get removed on timeout
-            self.remove = True
-            partner = [p for p in self.group.get_players() if p != self][0]
-            partner.partner_removed = True
-        if self.remove and not self.partner_removed:
-            other = [p for p in self.group.get_players() if p != self][0]
-            # mark partner as removed as well so they skip ActionWaitPage
-            other.remove = True
-            other.partner_removed = True
-
-
-    def vars_for_template(self):
-        return {
-            'matrix_A': Constants.matrix_A,
-            'matrix_B': Constants.matrix_B,
-            'A1aa': Constants.A1aa,
-            'A1ab': Constants.A1ab,
-            'A1ba': Constants.A1ba,
-            'A1bb': Constants.A1bb,
-            'A2aa': Constants.A2aa,
-            'A2ab': Constants.A2ab,
-            'A2ba': Constants.A2ba,
-            'A2bb': Constants.A2bb,
-        }
-
-
-class VoteWaitPage(WaitPage):
-    def after_all_players_arrive(self):
-        self.group.set_game()
-
 # Action – main game loop page; displays vote info and both matrices with the selected one highlighted.
 class Action(BaseGamePage):
     form_model = 'player'
@@ -260,9 +225,7 @@ class Action(BaseGamePage):
     def vars_for_template(self):
         partner = self.get_others_in_group()[0]
         return {
-            'player_vote': self.vote,
-            'partner_vote': partner.vote,
-            'current_matrix': "Matrix B" if self.group.current_game == 'B' else "Matrix A",
+            'current_matrix': "Matrix A",
             'matrix_A': Constants.matrix_A,
             'matrix_B': Constants.matrix_B,
             'A1aa': Constants.A1aa,
@@ -332,7 +295,7 @@ class Results(BaseGamePage):
         return {
             'player_vote': self.vote,
             'partner_vote': partner.vote,
-            'current_matrix': "Matrix B" if self.group.current_game == 'B' else "Matrix A",
+            'current_matrix': "Matrix A",
             'player_action': self.action,
             'partner_action': partner.action,
             'payoff': self.payoff,
@@ -397,6 +360,14 @@ class AdditionalMeasurements(Page):
         finished_round = self.participant.vars.get("finished_round")
         return not self.remove and finished_round is not None and self.round_number == finished_round
 
+class OpenEnded(Page):
+    form_model = 'player'
+    form_fields = ['strategy', 'factors', 'belief']
+
+    def is_displayed(self):
+        finished_round = self.participant.vars.get("finished_round")
+        return not self.remove and finished_round is not None and self.round_number == finished_round
+
 
 # PaymentAndDebrief – final page; shows accumulated payoff and ends experiment.
 class PaymentAndDebrief(Page):
@@ -420,11 +391,6 @@ class PaymentAndDebrief(Page):
 
 page_sequence = [
     WaitToBeGrouped,
-    Voting,
-    ClearingOut,
-    RemovalTimeout,
-    PartnerRemoved,
-    VoteWaitPage,
     Action,
     ClearingOut,
     RemovalTimeout,
@@ -437,5 +403,6 @@ page_sequence = [
     LotteryWaitPage,
     Investment,
     AdditionalMeasurements,
+    OpenEnded,
     PaymentAndDebrief,
 ]
