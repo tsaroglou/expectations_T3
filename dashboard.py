@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Load the Excel data
-xls = pd.ExcelFile("summary_analysis.xlsx")
+xls = pd.ExcelFile("summary_analysis_controls.xlsx")
 df = xls.parse("Filtered Selected")
 
 st.title("Interactive Dashboard - Cooperation and Risk")

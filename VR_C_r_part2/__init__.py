@@ -154,7 +154,7 @@ class Player(BasePlayer):
         label="Choose your action: Action C or Action D",
         initial=""
     )
-    treatment = models.StringField(initial="CR")
+    treatment = models.StringField(initial="CR_real")
 
     remove = models.BooleanField(initial=False)
     partner_removed = models.BooleanField(initial=False)
@@ -209,7 +209,7 @@ class Action(BaseGamePage):
         return not (self.remove or self.partner_removed or self.group.game_over)
 
     def before_next_page(self, timeout_happened, **kwargs):
-        # Always default to C on natural timeout
+        self.played = True
 
 
         if timeout_happened:

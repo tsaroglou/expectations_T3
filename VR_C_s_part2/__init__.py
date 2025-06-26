@@ -208,8 +208,7 @@ class Action(BaseGamePage):
         return not (self.remove or self.partner_removed or self.group.game_over)
 
     def before_next_page(self, timeout_happened, **kwargs):
-        # Always default to C on natural timeout
-
+        self.played = True
 
         if timeout_happened:
             self.action = 'C'
