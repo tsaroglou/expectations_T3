@@ -8,16 +8,16 @@ Cooperation under Agreed Risk Experiment
 import json
 
 class Constants(BaseConstants):
-    name_in_url = 'T1a_pre'
+    name_in_url = 'CY_pre'
     players_per_group = None
     num_rounds = 100    # Maximum rounds; experiment will end early once the lottery triggers.
     min_rounds = 20     # Must play at least 20 rounds before the lottery may end the game.
     # Payoff matrices:
     matrix_A = {
-        ('C', 'C'): (6, 6),
-        ('C', 'D'): (4, 7),
-        ('D', 'C'): (7, 4),
-        ('D', 'D'): (5, 5),
+        ('C', 'C'): (5, 5),
+        ('C', 'D'): (3, 6),
+        ('D', 'C'): (6, 3),
+        ('D', 'D'): (4, 4),
     }
     A1aa = matrix_A[('C', 'C')][0]
     A1ab = matrix_A[('C', 'D')][0]
@@ -71,16 +71,7 @@ class Player(BasePlayer):
     treatment = models.StringField(initial='T1a')
     remove = models.BooleanField(initial=False)
     # Comprehension check questions:
-    comprehension_q1 = models.StringField(
-        choices=["Game 1", "Game 2"],
-        widget=widgets.RadioSelect,
-        label="1. If one participant votes for Game 1 and the other for Game 2, which game is played?"
-    )
-    comprehension_q2 = models.StringField(
-        choices=["Game 1", "Game 2"],
-        widget=widgets.RadioSelect,
-        label="2. Which game is played if both participants choose Game 2?"
-    )
+
     comprehension_q3 = models.StringField(
         choices=[
             "I receive 5 points and my paired participant also receives 5 points.",
@@ -88,16 +79,16 @@ class Player(BasePlayer):
             "I receive 4 points and my paired participant also receives 4 point."
         ],
         widget=widgets.RadioSelect,
-        label="3. In Game 1, if you choose Option A and your paired participant also chooses Option A, what are the points?"
+        label="1. In Game 1, if you choose Option A and your paired participant also chooses Option A, what are the points?"
     )
     comprehension_q4 = models.StringField(
         choices=[
-            "I receive 0 points and my paired participant receives 12 points.",
             "I receive 7 points and my paired participant also receives 7 points.",
+            "I receive 0 points and my paired participant receives 12 points.",
             "I receive 12 points and my paired participant receives 0 points."
         ],
         widget=widgets.RadioSelect,
-        label="4. In Game 2, if you choose Option A and your partner chooses Option B, what are the points?"
+        label="2. In Game 2, if you choose Option A and your partner chooses Option B, what are the points?"
     )
     comprehension_q5 = models.StringField(
         choices=[
@@ -106,19 +97,9 @@ class Player(BasePlayer):
             "I receive 7 points and my paired participant receives 7 point."
         ],
         widget=widgets.RadioSelect,
-        label="5. In Game 2, if you both choose Option B, what are the points?"
+        label="3. In Game 2, if you both choose Option B, what are the points?"
     )
 
-    comprehension_q6 = models.StringField(
-        choices=["Game 1", "Game 2"],
-        widget=widgets.RadioSelect,
-        label="6. If you and your paired participant both vote for Game 2, which game is played?"
-    )
-    comprehension_q7 = models.StringField(
-        choices=["Game 1", "Game 2"],
-        widget=widgets.RadioSelect,
-        label="7. If one participant votes for Game 1 and the other for Game 2, which game is played?"
-    )
     comprehension_q8 = models.StringField(
         choices=[
             "I receive 6 points and my paired participant receives 3 points.",
@@ -126,16 +107,16 @@ class Player(BasePlayer):
             "I receive 5 points and my paired participant also receives 5 points."
         ],
         widget=widgets.RadioSelect,
-        label="8. In Game 1, if you choose Option B and your paired participant chooses Option A, what are the points?"
+        label="4. In Game 1, if you choose Option B and your paired participant chooses Option A, what are the points?"
     )
     comprehension_q9 = models.StringField(
         choices=[
-            "I receive 3 points and my paired participant receives 3 points.",
             "I receive 0 points and my paired participant receives 12 points.",
+            "I receive 3 points and my paired participant receives 3 points.",
             "I receive 3 points and my paired participant receives 6 points."
         ],
         widget=widgets.RadioSelect,
-        label="9. In Game 2, if both choose Option B, what are the points?"
+        label="5. In Game 2, if both choose Option B, what are the points?"
     )
     comprehension_q10 = models.StringField(
         choices=[
@@ -144,7 +125,7 @@ class Player(BasePlayer):
             "I receive 3 points and my paired participant receives 3 points."
         ],
         widget=widgets.RadioSelect,
-        label="10. In Game 2, if you choose Option B and your partner chooses Option A, what are the points?"
+        label="6. In Game 2, if you choose Option B and your partner chooses Option A, what are the points?"
     )
 #
 # BaseGamePage: All main pages check if the experiment is finished.
@@ -241,15 +222,13 @@ class instructions_snippet(Page):
 # ComprehensionCheck – shown only in round 1.
 class ComprehensionCheck(Page):
     form_model = 'player'
-    form_fields = ['comprehension_q1', 'comprehension_q2', 'comprehension_q3', 'comprehension_q4', 'comprehension_q5']
+    form_fields = ['comprehension_q3', 'comprehension_q4', 'comprehension_q5']
 
     def is_displayed(self):
         return self.consent and not self.remove and self.round_number == 1
 
     def before_next_page(self, timeout_happened):
         correct_answers = {
-            'comprehension_q1': 'Game 1',
-            'comprehension_q2': 'Game 2',
             'comprehension_q3': 'I receive 5 points and my paired participant also receives 5 points.',
             'comprehension_q4': 'I receive 0 points and my paired participant receives 12 points.',
             'comprehension_q5': 'I receive 3 points and my paired participant receives 3 points.',
@@ -289,28 +268,18 @@ class ComprehensionFeedback(Page):
     def vars_for_template(self):
         # maps your field → correct answer + explanation + label
         feedback_map = {
-            'comprehension_q1': {
-                'label': "1. If you vote for Game 1 and your paired participant votes for Game 2, which game is used?",
-                'correct': "Game 1",
-                'explanation': "When votes differ, Game 1 is selected by default."
-            },
-            'comprehension_q2': {
-                'label': "2. If both you and your paired participant vote for Game 2, which game is used?",
-                'correct': "Game 2",
-                'explanation': "If both vote for Game 2, you play Game 2."
-            },
             'comprehension_q3': {
-                'label': "3. In Game 1, if you choose Option A and your paired participant also chooses Option A, what are the points?",
+                'label': "1. In Game 1, if you choose Option A and your paired participant also chooses Option A, what are the points?",
                 'correct': "I receive 5 points and my paired participant also receives 5 points.",
                 'explanation': "In Game 1, the A–A cell yields you 5 and them also 5."
             },
             'comprehension_q4': {
-                'label': "4. In Game 2, if you choose Option A and your paired participant chooses Option B, what are the points?",
+                'label': "2. In Game 2, if you choose Option A and your paired participant chooses Option B, what are the points?",
                 'correct': "I receive 0 points and my paired participant receives 12 points.",
                 'explanation': "In Game 2, the A–B cell yields you 0 and them 12."
             },
             'comprehension_q5': {
-                'label': "5. In Game 2, if you choose Option B and your paired participant chooses Option B, what are the points?",
+                'label': "3. In Game 2, if you choose Option B and your paired participant chooses Option B, what are the points?",
                 'correct': "I receive 3 points and my paired participant receives 3 points.",
                 'explanation': "In Game 2, the B-B cell yields you 3 and them also 3."
             },
@@ -355,15 +324,13 @@ class AfterFeedback(Page):
 # Second ComprehensionCheck
 class ComprehensionCheck2(Page):
     form_model = 'player'
-    form_fields = ['comprehension_q6', 'comprehension_q7', 'comprehension_q8', 'comprehension_q9', 'comprehension_q10']
+    form_fields = ['comprehension_q8', 'comprehension_q9', 'comprehension_q10']
 
     def is_displayed(self):
         return self.round_number == 1 and not self.first_attempt_passed
 
     def before_next_page(self, timeout_happened):
         correct_answers = {
-            'comprehension_q6': 'Game 2',
-            'comprehension_q7': 'Game 1',
             'comprehension_q8': 'I receive 6 points and my paired participant receives 3 points.',
             'comprehension_q9': 'I receive 3 points and my paired participant receives 3 points.',
             'comprehension_q10': 'I receive 12 points and my paired participant receives 0 points.',
@@ -402,7 +369,7 @@ class PassedComprehension(Page):
 
     # You may include additional instructions or simply a congratulatory message.
     def app_after_this_page(self, upcoming_apps, **kwargs):
-        return 'VR_T1a_part2'
+        return 'VR_C_y_part2'
 
 
 class FailedComprehension(Page):

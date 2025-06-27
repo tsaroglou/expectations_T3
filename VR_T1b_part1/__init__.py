@@ -8,7 +8,7 @@ Cooperation under Agreed Risk Experiment
 import json
 
 class Constants(BaseConstants):
-    name_in_url = 'T1a_pre'
+    name_in_url = 'T1b_pre'
     players_per_group = None
     num_rounds = 100    # Maximum rounds; experiment will end early once the lottery triggers.
     min_rounds = 20     # Must play at least 20 rounds before the lottery may end the game.
@@ -88,7 +88,7 @@ class Player(BasePlayer):
             "I receive 4 points and my paired participant also receives 4 point."
         ],
         widget=widgets.RadioSelect,
-        label="3. In Game 1, if you choose Option A and your paired participant also chooses Option A, what are the points?"
+        label="3. In Game 2, if you choose Option A and your paired participant also chooses Option A, what are the points?"
     )
     comprehension_q4 = models.StringField(
         choices=[
@@ -97,7 +97,7 @@ class Player(BasePlayer):
             "I receive 12 points and my paired participant receives 0 points."
         ],
         widget=widgets.RadioSelect,
-        label="4. In Game 2, if you choose Option A and your partner chooses Option B, what are the points?"
+        label="4. In Game 1, if you choose Option A and your partner chooses Option B, what are the points?"
     )
     comprehension_q5 = models.StringField(
         choices=[
@@ -106,7 +106,7 @@ class Player(BasePlayer):
             "I receive 7 points and my paired participant receives 7 point."
         ],
         widget=widgets.RadioSelect,
-        label="5. In Game 2, if you both choose Option B, what are the points?"
+        label="5. In Game 1, if you both choose Option B, what are the points?"
     )
 
     comprehension_q6 = models.StringField(
@@ -126,7 +126,7 @@ class Player(BasePlayer):
             "I receive 5 points and my paired participant also receives 5 points."
         ],
         widget=widgets.RadioSelect,
-        label="8. In Game 1, if you choose Option B and your paired participant chooses Option A, what are the points?"
+        label="8. In Game 2, if you choose Option B and your paired participant chooses Option A, what are the points?"
     )
     comprehension_q9 = models.StringField(
         choices=[
@@ -135,7 +135,7 @@ class Player(BasePlayer):
             "I receive 3 points and my paired participant receives 6 points."
         ],
         widget=widgets.RadioSelect,
-        label="9. In Game 2, if both choose Option B, what are the points?"
+        label="9. In Game 1, if both choose Option B, what are the points?"
     )
     comprehension_q10 = models.StringField(
         choices=[
@@ -144,7 +144,7 @@ class Player(BasePlayer):
             "I receive 3 points and my paired participant receives 3 points."
         ],
         widget=widgets.RadioSelect,
-        label="10. In Game 2, if you choose Option B and your partner chooses Option A, what are the points?"
+        label="10. In Game 1, if you choose Option B and your partner chooses Option A, what are the points?"
     )
 #
 # BaseGamePage: All main pages check if the experiment is finished.
@@ -300,19 +300,19 @@ class ComprehensionFeedback(Page):
                 'explanation': "If both vote for Game 2, you play Game 2."
             },
             'comprehension_q3': {
-                'label': "3. In Game 1, if you choose Option A and your paired participant also chooses Option A, what are the points?",
+                'label': "3. In Game 2, if you choose Option A and your paired participant also chooses Option A, what are the points?",
                 'correct': "I receive 5 points and my paired participant also receives 5 points.",
-                'explanation': "In Game 1, the A–A cell yields you 5 and them also 5."
+                'explanation': "In Game 2, the A–A cell yields you 5 and them also 5."
             },
             'comprehension_q4': {
-                'label': "4. In Game 2, if you choose Option A and your paired participant chooses Option B, what are the points?",
+                'label': "4. In Game 1, if you choose Option A and your paired participant chooses Option B, what are the points?",
                 'correct': "I receive 0 points and my paired participant receives 12 points.",
-                'explanation': "In Game 2, the A–B cell yields you 0 and them 12."
+                'explanation': "In Game 1, the A–B cell yields you 0 and them 12."
             },
             'comprehension_q5': {
-                'label': "5. In Game 2, if you choose Option B and your paired participant chooses Option B, what are the points?",
+                'label': "5. In Game 1, if you choose Option B and your paired participant chooses Option B, what are the points?",
                 'correct': "I receive 3 points and my paired participant receives 3 points.",
-                'explanation': "In Game 2, the B-B cell yields you 3 and them also 3."
+                'explanation': "In Game 1, the B-B cell yields you 3 and them also 3."
             },
         }
         questions = []
@@ -402,7 +402,7 @@ class PassedComprehension(Page):
 
     # You may include additional instructions or simply a congratulatory message.
     def app_after_this_page(self, upcoming_apps, **kwargs):
-        return 'VR_T1a_part2'
+        return 'VR_T1b_part2'
 
 
 class FailedComprehension(Page):

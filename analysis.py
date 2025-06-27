@@ -6,8 +6,12 @@ import matplotlib.patches as mpatches
 file_path = "/Users/theo/Downloads/VR_T1a_part2_2025-06-24 (6).csv"
 df = pd.read_csv(file_path)
 
+# Drop all rows for any participant where any row has player.remove == 1
+remove_ids = df.loc[df['player.remove'] == 1, 'participant.code'].unique()
+df = df[~df['participant.code'].isin(remove_ids)].copy()
+
 # Step 1: Keep only rows where player.played == 1
-df = df[df['player.played'] == 1]
+df = df[df['player.action'].notna()].copy()
 df = df.reset_index(drop=True)  # ✅ Add this line
 
 # Step 2: Sort by participant.code and subsession.round_number
@@ -202,7 +206,7 @@ selected_columns = [
     'player.decision_1', 'player.decision_2',
     'player.decision_3', 'player.decision_4',
     'player.treatment', 'group.current_game',
-    'Cooperated', 'Chose_Risk'
+    'Cooperated', 'Chose_Risk', 'player.matrix_sequence'
 ]
 filtered_selected_df = df[selected_columns].copy()
 
@@ -243,6 +247,21 @@ filtered_selected_df.columns = (
     .str.replace('group\\.', '', regex=True)
 )
 
+# Format matrix_sequence: convert string to list, reformat using single quotes + trailing comma
+import ast
+
+def format_sequence(seq):
+    try:
+        # Safely parse the string back to list
+        sequence_list = ast.literal_eval(seq)
+        # Convert to desired format: single-quoted items and trailing comma
+        formatted = "[" + ", ".join(f"'{x}'" for x in sequence_list) + "],"
+        return formatted
+    except:
+        return seq  # fallback if parsing fails
+
+# Apply formatting to player.matrix_sequence column
+filtered_selected_df['matrix_sequence'] = filtered_selected_df['matrix_sequence'].apply(format_sequence)
 
 ## Step 10: Export all tables to a single Excel file
 with pd.ExcelWriter("summary_analysis.xlsx") as writer:
@@ -253,5 +272,12 @@ with pd.ExcelWriter("summary_analysis.xlsx") as writer:
     df.to_excel(writer, sheet_name='Filtered Data', index=False)
     money_df.to_excel(writer, sheet_name='Total Money', index=False)
     filtered_selected_df.to_excel(writer, sheet_name='Filtered Selected', index=False)  # ✅ New sheet
+
+# Save all unique matrix sequences to a .txt file in desired format
+unique_sequences = filtered_selected_df['matrix_sequence'].dropna().unique()
+
+with open("matrix_sequences.txt", "w") as f:
+    for seq in unique_sequences:
+        f.write(seq + "\n")
 
 print("\nAll tables saved to 'summary_analysis.xlsx'.")

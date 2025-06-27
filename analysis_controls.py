@@ -3,8 +3,15 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 
 # Load your CSV file
-file_path = "/Users/theo/Downloads/VR_T1a_part2_2025-06-24 (6).csv"
+file_path = "/Users/theo/Downloads/Pilot - Only Risk Part 2.csv"
 df = pd.read_csv(file_path)
+
+
+
+# Drop all rows for any participant where any row has player.remove == 1
+remove_ids = df.loc[df['player.remove'] == 1, 'participant.code'].unique()
+df = df[~df['participant.code'].isin(remove_ids)].copy()
+
 
 # Step 1: Keep only rows where player.played == 1
 df = df[df['player.action'].notna()].copy()

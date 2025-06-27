@@ -9,18 +9,17 @@ Cooperation under Agreed Risk Experiment
 import json
 
 class Constants(BaseConstants):
-    name_in_url = 'T1a_main'
+    name_in_url = 'T1b_main'
     players_per_group = 2
     num_rounds = 100    # Maximum rounds; experiment will end early once the lottery triggers.
     min_rounds = 20     # Must play at least 20 rounds before the lottery may end the game.
     # Payoff matrices:
     matrix_A = {
-        ('C', 'C'): (6, 6),
-        ('C', 'D'): (4, 7),
-        ('D', 'C'): (7, 4),
-        ('D', 'D'): (5, 5),
+        ('C', 'C'): (5, 5),
+        ('C', 'D'): (3, 6),
+        ('D', 'C'): (6, 3),
+        ('D', 'D'): (4, 4),
     }
-
     A1aa = matrix_A[('C', 'C')][0]
     A1ab = matrix_A[('C', 'D')][0]
     A1ba = matrix_A[('D', 'C')][0]
@@ -52,7 +51,7 @@ class Subsession(BaseSubsession):
 
 
 class Group(BaseGroup):
-    current_game = models.StringField(initial='A')  # "A" for Matrix A, "B" for Matrix B.
+    current_game = models.StringField(initial='B')  # "A" for Matrix A, "B" for Matrix B.
     game_over = models.BooleanField(initial=False)
     finished = models.BooleanField(initial=False)
     display_group_id = models.IntegerField()
@@ -62,16 +61,16 @@ class Group(BaseGroup):
         votes = [p.field_maybe_none('vote') for p in self.get_players()]
         if any(vote is None for vote in votes):
             return
-        if all(vote == 'Matrix B' for vote in votes):
-            self.current_game = 'B'
-        else:
+        if all(vote == 'Matrix A' for vote in votes):
             self.current_game = 'A'
+        else:
+            self.current_game = 'B'
 
     def set_payoffs(self):
         players = sorted(self.get_players(), key=lambda p: p.id_in_group)
         if any(p.action == "" for p in players):
             return
-        current_game = self.field_maybe_none('current_game') or 'A'
+        current_game = self.field_maybe_none('current_game') or 'B'
         action_tuple = (players[0].action, players[1].action)
         if current_game == 'B':
             payoff_tuple = Constants.matrix_B.get(action_tuple)
@@ -85,7 +84,6 @@ class Group(BaseGroup):
 class Player(BasePlayer):
     played = models.BooleanField(initial=False)
     total_money = models.CurrencyField()
-
 
     display_group_id = models.IntegerField()
     investment = models.CurrencyField(
@@ -147,7 +145,7 @@ class Player(BasePlayer):
         label="Choose your action: Action C or Action D",
         initial=""
     )
-    treatment = models.StringField(initial="T1a_plus")
+    treatment = models.StringField(initial="T1a")
 
     remove = models.BooleanField(initial=False)
     partner_removed = models.BooleanField(initial=False)
@@ -203,6 +201,7 @@ class Voting(BaseGamePage):
 
     def before_next_page(self, timeout_happened, **kwargs):
         self.played = True
+
         if timeout_happened:
             # you get removed on timeout
             self.remove = True
@@ -263,7 +262,7 @@ class Action(BaseGamePage):
         return {
             'player_vote': self.vote,
             'partner_vote': partner.vote,
-            'current_matrix': "Matrix B" if self.group.current_game == 'B' else "Matrix A",
+            'current_matrix': "Matrix A" if self.group.current_game == 'A' else "Matrix B",
             'matrix_A': Constants.matrix_A,
             'matrix_B': Constants.matrix_B,
             'A1aa': Constants.A1aa,
@@ -333,7 +332,7 @@ class Results(BaseGamePage):
         return {
             'player_vote': self.vote,
             'partner_vote': partner.vote,
-            'current_matrix': "Matrix B" if self.group.current_game == 'B' else "Matrix A",
+            'current_matrix': "Matrix B" if self.group.current_game == 'A' else "Matrix B",
             'player_action': self.action,
             'partner_action': partner.action,
             'payoff': self.payoff,
@@ -405,8 +404,8 @@ class PaymentAndDebrief(Page):
         finished_round = self.participant.vars.get("finished_round")
         return not self.remove and ((finished_round is not None and self.round_number == finished_round) or self.round_number == Constants.num_rounds)
     def vars_for_template(self):
-        total_payoff = sum([p.payoff for p in self.in_all_rounds()])/30
-
+        total_payoff = sum([p.payoff for p in self.in_all_rounds()])/40
+        self.total_money=total_payoff
         return {
             'final_payment': c(total_payoff)
         }
