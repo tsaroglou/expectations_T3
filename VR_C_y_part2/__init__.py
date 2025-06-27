@@ -104,6 +104,7 @@ class Group(BaseGroup):
         players[1].payoff = c(payoff_tuple[1])
 
 class Player(BasePlayer):
+
     played = models.BooleanField(initial=False)
     total_money = models.CurrencyField()
 
@@ -125,6 +126,22 @@ class Player(BasePlayer):
         """Find the player in the same pair."""
         others = [p for p in self.subsession.get_players() if p.pair == self.pair and p.id_in_subsession != self.id_in_subsession]
         return others[0] if others else None
+
+    strategy = models.LongStringField(
+        label='1. Did you follow a specific strategy while playing this game?',
+        blank=True,
+        max_length=1000,
+    )
+    factors = models.LongStringField(
+        label='2. What factors or thoughts most influenced your choices in this game?',
+        blank=True,
+        max_length=1000,
+    )
+    belief = models.LongStringField(
+        label='3. How do you believe your partner viewed the situation? How did that belief affect you?',
+        blank=True,
+        max_length=1000,
+    )
 
     decision_1 = models.StringField(
         choices=[
@@ -433,6 +450,15 @@ class PaymentAndDebrief(Page):
         return None
 
 
+class OpenEnded(Page):
+    form_model = 'player'
+    form_fields = ['strategy', 'factors', 'belief']
+
+    def is_displayed(self):
+        finished_round = self.participant.vars.get("finished_round")
+        return not self.remove and finished_round is not None and self.round_number == finished_round
+
+
 
 page_sequence = [
     WaitToBeGrouped,
@@ -449,5 +475,6 @@ page_sequence = [
     LotteryWaitPage,
     Investment,
     AdditionalMeasurements,
+    OpenEnded,
     PaymentAndDebrief,
 ]

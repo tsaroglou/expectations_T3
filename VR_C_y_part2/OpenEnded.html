@@ -1,0 +1,58 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block head %}
+  <link rel="stylesheet" href="{% static 'Voted_Risk/styles.css' %}">
+  <style>
+    .question { background: #f9f9f9; border:1px solid #ddd; border-radius:8px; padding:16px; margin-bottom:1.5rem; }
+    .question legend { font-weight:bold; margin-bottom:0.5rem; font-size:1.1rem; }
+    textarea { width:100%; resize:vertical; min-height:6em; padding:8px; font-family:inherit; font-size:1rem; }
+    .btn-primary {
+      display:block; margin:1rem auto; padding:0.75rem 1.5rem; font-size:1.125rem;
+      border:none; border-radius:6px; background-color:#007bff; color:#fff; cursor:pointer;
+    }
+    .btn-primary:disabled { background-color:#aaa; cursor:not-allowed; }
+    .btn-primary:not(:disabled):hover { background-color:#0056b3; }
+  </style>
+{% endblock head %}
+
+{% block content %}
+<div class="container">
+  <h1 class="text-center">Feedback</h1>
+  <p class="text-center">Please answer each question in up to 100 words.</p>
+  <form method="post">
+    <div class="question">
+      <fieldset>
+        <legend>{{ form.strategy.label }}</legend>
+        {{ form.strategy }}
+      </fieldset>
+    </div>
+    <div class="question">
+      <fieldset>
+        <legend>{{ form.factors.label }}</legend>
+        {{ form.factors }}
+      </fieldset>
+    </div>
+    <div class="question">
+      <fieldset>
+        <legend>{{ form.belief.label }}</legend>
+        {{ form.belief }}
+      </fieldset>
+    </div>
+    <button type="submit" id="submitBtn" class="btn-primary" disabled>Submit Answers</button>
+  </form>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const submitBtn  = document.getElementById('submitBtn');
+    const textareas  = document.querySelectorAll('textarea');
+    function updateButton() {
+      const allFilled = Array.from(textareas).every(t => t.value.trim().length > 0);
+      submitBtn.disabled = !allFilled;
+    }
+    textareas.forEach(t => t.addEventListener('input', updateButton));
+    updateButton();
+  });
+</script>
+{% endblock content %}
