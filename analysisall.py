@@ -8,8 +8,12 @@ treatment_files = [
     ("/Users/theo/Downloads/Pilot results/Pilot - Only Safe Part 2.csv", "OnlySafe"),
     ("/Users/theo/Downloads/Pilot results/Pilot - Only Risk Part 2.csv", "OnlyRisk"),
     ("/Users/theo/Downloads/Pilot results/VR_T1b_part2_2025-06-27.csv", "T1b"),
-    ("/Users/theo/Downloads/Pilot results/VR_C_y_part2_2025-06-27.csv", "Yoked_on_T1a")
+    ("/Users/theo/Downloads/Pilot results/VR_C_y_part2_2025-06-27.csv", "Yoked_on_T1a"),
+    ("/Users/theo/Downloads/Pilot results/VR_C_s_plus1_part2_2025-07-03.csv", "OnlySafe+1")
 ]
+
+
+
 
 df_list = []
 for path, treatment in treatment_files:
