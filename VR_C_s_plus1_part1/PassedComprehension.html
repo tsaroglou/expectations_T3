@@ -1,0 +1,24 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block content %}
+<div class="container">
+  <h1 style="text-align: center;">Comprehension Passed</h1>
+  <p style="text-align:center; color:green; font-weight:bold;">
+    Congratulations! You successfully completed the comprehension check.
+  </p>
+
+  <p style="text-align:center;">
+    In the next screen, you will be matched with another participant to take part in the main part of the experiment. On each decision screen, you will have <strong>25 seconds</strong> to submit your choice. As soon as time expires, a pop-up window will appear asking you to confirm that you wish to continue.
+  </p>
+  <p style="text-align:center;">
+    You will then have <strong>15 seconds</strong> to click “Continue.”
+    <ul style="display:inline-block; text-align:left; margin-top:.5em;">
+      <li>If you confirm within 15 seconds, you will receive another 25-second decision period.</li>
+      <li>If you do <em>not</em> confirm before the pop-up closes, you will be removed from the experiment.</li>
+    </ul>
+  </p>
+  <p style="text-align:center;">Click <strong>Next</strong> to continue to the main part of the experiment.</p>
+  {% next_button %}
+</div>
+{% endblock %}

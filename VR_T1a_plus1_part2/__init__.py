@@ -9,39 +9,16 @@ Cooperation under Agreed Risk Experiment
 import json
 
 class Constants(BaseConstants):
-    name_in_url = 'CY_main'
+    name_in_url = 'T1a_main'
     players_per_group = 2
     num_rounds = 100    # Maximum rounds; experiment will end early once the lottery triggers.
     min_rounds = 20     # Must play at least 20 rounds before the lottery may end the game.
     # Payoff matrices:
-
-    all_sequences = [
-        ['B', 'A', 'A', 'A', 'A', 'B', 'A', 'A', 'B', 'B', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'B', 'A', 'A', 'A', 'A',
-         'A', 'A', 'A', 'A'],
-        ['A', 'B', 'B', 'A', 'A', 'A', 'A', 'B', 'A', 'B', 'A', 'A', 'B', 'B', 'A', 'A', 'A', 'B', 'B', 'A', 'A', 'A'],
-        ['A', 'B', 'B', 'A', 'A', 'A', 'B', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'B', 'A', 'A', 'A', 'B', 'A',
-         'A', 'B'],
-        ['A', 'A', 'A', 'A', 'A', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A'],
-        ['B', 'B', 'A', 'B', 'A', 'B', 'A', 'B', 'A', 'B', 'A', 'A', 'A', 'B', 'A', 'A', 'A', 'A', 'A', 'A', 'B'],
-        ['A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A',
-         'A'],
-        ['A', 'A', 'A', 'B', 'B', 'B', 'A', 'A', 'A', 'B', 'A', 'B', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A'],
-        ['A', 'B', 'B', 'B', 'A', 'A', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B'],
-        ['A', 'A', 'B', 'A', 'A', 'B', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A'],
-        ['A', 'A', 'B', 'B', 'B', 'A', 'B', 'A', 'B', 'A', 'A', 'B', 'A', 'B', 'B', 'B', 'A', 'B', 'B', 'A', 'B'],
-        ['A', 'A', 'B', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A'],
-        ['A', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B'],
-    # Last sequence not completed:
-
-        ['B', 'A', 'A', 'A', 'A', 'A', 'B', 'A', 'A', 'A', 'A', 'A', 'B', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A'],
-    ]
-
-
     matrix_A = {
-        ('C', 'C'): (5, 5),
-        ('C', 'D'): (3, 6),
-        ('D', 'C'): (6, 3),
-        ('D', 'D'): (4, 4),
+        ('C', 'C'): (6, 6),
+        ('C', 'D'): (4, 7),
+        ('D', 'C'): (7, 4),
+        ('D', 'D'): (5, 5),
     }
     A1aa = matrix_A[('C', 'C')][0]
     A1ab = matrix_A[('C', 'D')][0]
@@ -61,15 +38,17 @@ class Constants(BaseConstants):
 
 class Subsession(BaseSubsession):
 
-
     def group_by_arrival_time_method(self, waiting_players):
         eligible = [p for p in waiting_players if p.participant.vars.get('passed_comprehension') is True]
         if len(eligible) >= 2:
             return eligible[:2]  # Match two eligible players
         return
 
+
     def creating_session(self):
-        pass
+        if self.round_number == 1:
+            self.session.vars['game_sequences'] = {}
+
 
 class Group(BaseGroup):
     current_game = models.StringField(initial='A')  # "A" for Matrix A, "B" for Matrix B.
@@ -79,14 +58,11 @@ class Group(BaseGroup):
     pair_id = models.IntegerField()
 
     def set_game(self):
-        player = self.get_players()[0]  # Any player is fine
-        sequence = player.participant.vars.get('sequence')
-        if sequence:
-            index = self.subsession.round_number - 1
-            if index < len(sequence):
-                self.current_game = sequence[index]
-            else:
-                self.current_game = 'A'  # fallback
+        votes = [p.field_maybe_none('vote') for p in self.get_players()]
+        if any(vote is None for vote in votes):
+            return
+        if all(vote == 'Matrix B' for vote in votes):
+            self.current_game = 'B'
         else:
             self.current_game = 'A'
 
@@ -106,7 +82,6 @@ class Group(BaseGroup):
         players[1].payoff = c(payoff_tuple[1])
 
 class Player(BasePlayer):
-
     played = models.BooleanField(initial=False)
     total_money = models.CurrencyField()
 
@@ -128,22 +103,6 @@ class Player(BasePlayer):
         """Find the player in the same pair."""
         others = [p for p in self.subsession.get_players() if p.pair == self.pair and p.id_in_subsession != self.id_in_subsession]
         return others[0] if others else None
-
-    strategy = models.LongStringField(
-        label='1. Did you follow a specific strategy while playing this game?',
-        blank=True,
-        max_length=1000,
-    )
-    factors = models.LongStringField(
-        label='2. What factors or thoughts most influenced your choices in this game?',
-        blank=True,
-        max_length=1000,
-    )
-    belief = models.LongStringField(
-        label='3. How do you believe your partner viewed the situation? How did that belief affect you?',
-        blank=True,
-        max_length=1000,
-    )
 
     decision_1 = models.StringField(
         choices=[
@@ -219,26 +178,6 @@ class WaitToBeGrouped(WaitPage):
     @staticmethod
     def after_all_players_arrive(group):
         session = group.session
-        players = group.get_players()
-
-        if 'sequence_index' not in session.vars:
-            session.vars['sequence_index'] = 0
-        if 'reusable_sequences' not in session.vars:
-            session.vars['reusable_sequences'] = []
-
-        if session.vars['reusable_sequences']:
-            sequence = session.vars['reusable_sequences'].pop(0)
-        else:
-            sequence_index = session.vars['sequence_index']
-            if sequence_index >= len(Constants.all_sequences):
-                for p in players:
-                    p.remove = True
-                return
-            sequence = Constants.all_sequences[sequence_index]
-            session.vars['sequence_index'] += 1
-
-        for p in players:
-            p.participant.vars['sequence'] = sequence
 
         if 'pair_id_counter' not in session.vars:
             session.vars['pair_id_counter'] = 1
@@ -246,10 +185,53 @@ class WaitToBeGrouped(WaitPage):
         group.display_group_id = session.vars['pair_id_counter']
         session.vars['pair_id_counter'] += 1
 
-        for p in players:
+        for p in group.get_players():
             p.participant.vars['display_group_id'] = group.display_group_id
-            p.display_group_id = group.display_group_id
+            p.display_group_id = group.display_group_id  # ✅ Set field so monitor shows it
 
+
+
+# Voting – main game loop page.
+class Voting(BaseGamePage):
+    form_model = 'player'
+    form_fields = ['vote', 'remove']
+    def is_displayed(self):
+        # only show if neither you nor your partner have been removed
+        return not (self.remove or self.partner_removed or self.group.game_over)
+
+    def before_next_page(self, timeout_happened, **kwargs):
+        self.played = True
+
+        if timeout_happened:
+            # you get removed on timeout
+            self.remove = True
+            partner = [p for p in self.group.get_players() if p != self][0]
+            partner.partner_removed = True
+        if self.remove and not self.partner_removed:
+            other = [p for p in self.group.get_players() if p != self][0]
+            # mark partner as removed as well so they skip ActionWaitPage
+            other.remove = True
+            other.partner_removed = True
+
+
+    def vars_for_template(self):
+        return {
+            'matrix_A': Constants.matrix_A,
+            'matrix_B': Constants.matrix_B,
+            'A1aa': Constants.A1aa,
+            'A1ab': Constants.A1ab,
+            'A1ba': Constants.A1ba,
+            'A1bb': Constants.A1bb,
+            'A2aa': Constants.A2aa,
+            'A2ab': Constants.A2ab,
+            'A2ba': Constants.A2ba,
+            'A2bb': Constants.A2bb,
+        }
+
+
+class VoteWaitPage(WaitPage):
+    def after_all_players_arrive(self):
+        self.group.set_game()
 
 # Action – main game loop page; displays vote info and both matrices with the selected one highlighted.
 class Action(BaseGamePage):
@@ -261,7 +243,7 @@ class Action(BaseGamePage):
         return not (self.remove or self.partner_removed or self.group.game_over)
 
     def before_next_page(self, timeout_happened, **kwargs):
-        self.played = True
+        # Always default to C on natural timeout
 
 
         if timeout_happened:
@@ -298,20 +280,10 @@ class ClearingOut(WaitPage):
     pass
 class RemovalTimeout(Page):
     def is_displayed(self):
-        if self.remove and not self.partner_removed:
-            sequence = self.participant.vars.get('sequence')
-            if sequence:
-                self.session.vars.setdefault('reusable_sequences', []).append(sequence)
         return self.remove and not self.partner_removed
 
-
-# Update PartnerRemoved to recycle sequence
 class PartnerRemoved(Page):
     def is_displayed(self):
-        if self.partner_removed:
-            sequence = self.participant.vars.get('sequence')
-            if sequence:
-                self.session.vars.setdefault('reusable_sequences', []).append(sequence)
         return self.partner_removed
 
 class ActionWaitPage(WaitPage):
@@ -379,24 +351,17 @@ class Results(BaseGamePage):
             'A2bb': Constants.A2bb,
         }
 
-class SetGame(WaitPage):
-    def is_displayed(self):
-        return not self.group.game_over and not self.remove and not self.partner_removed
-    def after_all_players_arrive(self):
-        self.group.set_game()
-
-
-# Ensure groups play full sequences without randomness in LotteryWaitPage
+# LotteryWaitPage – group-level lottery to decide if the game should end.
 class LotteryWaitPage(WaitPage):
     wait_for_all_groups = False
     def after_all_players_arrive(self):
-        sequence = self.group.get_players()[0].participant.vars.get('sequence')
-        if sequence and self.round_number >= len(sequence):
-            self.group.game_over = True
-            for p in self.group.get_players():
-                p.participant.vars["finished_round"] = self.round_number
-        else:
-            self.group.game_over = False
+        if self.round_number > Constants.min_rounds:
+            if random.random() < 0.5:
+                self.group.game_over = True
+                for p in self.group.get_players():
+                    p.participant.vars["finished_round"] = self.round_number
+            else:
+                self.group.game_over = False
 
 class Investment(Page):
     form_model = 'player'
@@ -439,7 +404,7 @@ class PaymentAndDebrief(Page):
         finished_round = self.participant.vars.get("finished_round")
         return not self.remove and ((finished_round is not None and self.round_number == finished_round) or self.round_number == Constants.num_rounds)
     def vars_for_template(self):
-        total_payoff = sum([p.payoff for p in self.in_all_rounds()])/40
+        total_payoff = sum([p.payoff for p in self.in_all_rounds()])/50
         self.total_money=total_payoff
         return {
             'final_payment': c(total_payoff)
@@ -452,19 +417,14 @@ class PaymentAndDebrief(Page):
         return None
 
 
-class OpenEnded(Page):
-    form_model = 'player'
-    form_fields = ['strategy', 'factors', 'belief']
-
-    def is_displayed(self):
-        finished_round = self.participant.vars.get("finished_round")
-        return not self.remove and finished_round is not None and self.round_number == finished_round
-
-
 
 page_sequence = [
     WaitToBeGrouped,
-    SetGame,
+    Voting,
+    ClearingOut,
+    RemovalTimeout,
+    PartnerRemoved,
+    VoteWaitPage,
     Action,
     ClearingOut,
     RemovalTimeout,
@@ -477,6 +437,5 @@ page_sequence = [
     LotteryWaitPage,
     Investment,
     AdditionalMeasurements,
-    OpenEnded,
     PaymentAndDebrief,
 ]

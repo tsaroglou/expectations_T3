@@ -3,17 +3,20 @@
 {% block head %}
   <link rel="stylesheet" href="{% static 'Voted_Risk/styles.css' %}">
   <style>
-     .matrix-container {
+    .instruction {
+      text-align: center;
+    }
+      .matrix-container {
       display: flex;
-      justify-content: space-around;
-      align-items: flex-start;
-      gap: 15px;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
       margin-bottom: 30px;
     }
     .matrix {
       width: 40%;
+      scale:120%;
       text-align: center;
-      opacity: 0.3;
       transition: opacity 0.2s ease;
     }
     .matrix.highlight {
@@ -64,15 +67,12 @@
 
   /* selection buttons under each matrix */
   /* --- center column of two buttons --- */
-   .action-controls {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  width: 20%;
-  margin-top: 100px;    /* ← add this */
-}
+  .action-controls {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
     .action-select {
       padding: 12px 20px;
       font-size: 16px;
@@ -82,11 +82,14 @@
       color: #28a745;
       cursor: pointer;
       transition: background-color 0.2s, color 0.2s;
+      width: 200px;
+      text-align: center;
     }
     .action-select.selected {
       background: #28a745;
       color: #fff;
     }
+
   /* the final submit button */
    /* --- submit button below --- */
     .submit-btn {
@@ -146,24 +149,17 @@
   </div>
 
   <h1>Your Decision</h1>
-  <p>
-    Please review the games below. Your vote and your partner’s vote are shown.
-    The selected game is highlighted; the other one is dimmed.
-    Make your choice for this round.
-  </p>
-
-  <div class="info-box">
-    <p><strong>Your Vote:</strong> <span style="color: blue;">{% if player_vote == 'Matrix A' %} Game 1 {% endif %} {% if player_vote == 'Matrix B' %} Game 2 {% endif %}</span></p>
-    <p><strong>Your Partner’s Vote:</strong> <span style="color: red;">{% if partner_vote == 'Matrix A' %} Game 1 {% endif %} {% if partner_vote == 'Matrix B' %} Game 2 {% endif %} </span></p>
-    <p><strong>Selected Game:</strong> {% if current_matrix == 'Matrix A' %} Game 1 {% endif %} {% if current_matrix == 'Matrix B' %} Game 2 {% endif %}</p>
-  </div>
-
+  <p class="instruction">Please review the game below and make your choice for this round.</p>
+<br><br>
   <div class="matrix-container">
-    <!-- Matrix A -->
-    <div class="matrix {% if current_matrix == 'Matrix A' %}highlight{% endif %}">
-      <h2>Game 1</h2>
+
+
+
+    <!-- Matrix B -->
+    <div class="matrix">
+      <h2>Game</h2>
       <table class="payoff-matrix">
- <thead>
+        <thead>
           <tr>
             <th rowspan="2" class="axis-label" style="color: red;">Your Options</th>
             <th colspan="2" class="axis-label" style="color: blue;opacity: 0.3;">Partner’s Options</th>
@@ -184,11 +180,17 @@
             <td><span class="you">{{ A1ba }}</span>, <span class="partner">{{ A1ab }}</span></td>
             <td><span class="you">{{ A1bb }}</span>, <span class="partner">{{ A1bb }}</span></td>
           </tr>
+
         </tbody>
+
       </table>
+
+
     </div>
 
-       <!-- CENTER CONTROLS -->
+  </div>
+
+ <!-- CENTER CONTROLS -->
     <div class="action-controls">
       <button type="button" class="action-select" data-value="C">
         Select Option A
@@ -197,39 +199,7 @@
         Select Option B
       </button>
     </div>
-
-
-    <!-- Matrix B -->
-    <div class="matrix {% if current_matrix == 'Matrix B' %}highlight{% endif %}">
-      <h2>Game 2</h2>
-      <table class="payoff-matrix">
-        <thead>
-          <tr>
-            <th rowspan="2" class="axis-label" style="color: red;">Your Options</th>
-            <th colspan="2" class="axis-label" style="color: blue;opacity: 0.3;">Partner’s Options</th>
-          </tr>
-          <tr>
-            <th style="color: blue;opacity: 0.3;">A</th>
-            <th style="color: blue;opacity: 0.3;">B</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th style="color: red;">A</th>
-            <td><span class="you">{{ A2aa }}</span>, <span class="partner">{{ A2aa }}</span></td>
-            <td><span class="you">{{ A2ab }}</span>, <span class="partner">{{ A2ba }}</span></td>
-          </tr>
-          <tr>
-            <th style="color: red;">B</th>
-            <td><span class="you">{{ A2ba }}</span>, <span class="partner">{{ A2ab }}</span></td>
-            <td><span class="you">{{ A2bb }}</span>, <span class="partner">{{ A2bb }}</span></td>
-          </tr>
-        </tbody>
-      </table>
-
-    </div>
-  </div>
-
+<br>
    <!-- Submit sits below everything -->
   <button type="submit" class="submit-btn" id="submitBtn" disabled>
     Submit Choice

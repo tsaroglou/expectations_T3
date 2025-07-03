@@ -1,0 +1,218 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block head %}
+  <link rel="stylesheet" href="{% static 'Voted_Risk/styles.css' %}">
+  <style>
+    .matrix-container {
+      display: flex;
+      justify-content: space-around;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    /* Dim all matrices by default */
+    .matrix {
+      width: 45%;
+      text-align: center;
+      scale: 120%;
+      transition: opacity 0.2s ease;
+    }
+    /* Highlight the selected matrix */
+    .matrix.highlight {
+      opacity: 1;
+    }
+    /* Highlight the payoff cell reached */
+    .selected-cell {
+      background-color: rgba(255, 255, 0, 0.4);
+    }
+    .info-box {
+      background-color: #eef2f7;
+      padding: 15px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+      border: 1px solid #dfe4ea;
+      text-align: center;
+    }
+    .partner { color: blue;  font-weight: bold; }
+    .you     { color: red;   font-weight: bold; }
+    /* Partner payoff in tables semi-transparent */
+    table span.partner { opacity: 0.3; }
+  /* ==== main timer + modal styles ==== */
+    .main-timer {
+      position: fixed;
+      top: 10px; left: 50%;
+      transform: translateX(-50%);
+      background: #f8f9fa;
+      padding: 8px 12px;
+      border-radius: 4px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      font-weight: bold;
+      z-index: 1000;
+      text-align: center;
+    }
+    .timeout-modal {
+      display: none;
+      position: fixed; z-index: 2000;
+      left: 0; top: 0; width: 100%; height: 100%;
+      background-color: rgba(0,0,0,0.4);
+    }
+    .timeout-modal-content {
+      background-color: #fff;
+      margin: 15% auto;
+      padding: 20px;
+      border-radius: 8px;
+      width: 80%;
+      max-width: 400px;
+      text-align: center;
+    }
+    .timeout-btn {
+      padding: 10px 20px;
+      margin-top: 15px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      background-color: #007bff;
+      color: #fff;
+    }
+    .timeout-btn:hover { background-color: #0069d9; }
+    .timeout-timer { font-weight: bold; margin-top: 10px; }
+  </style>
+{% endblock head %}
+
+{% block content %}
+<form method="post">
+  <!-- hidden field to let the Python page logic know if we timed out -->
+  <input type="hidden" name="remove" id="removeInput" value="False">
+
+  <div class="container">
+    <!-- ==== main countdown bar ==== -->
+    <div class="main-timer">
+      Time remaining: <span id="mainTimer">25</span>s
+    </div>
+  <h1>Round Results</h1>
+<br>
+  <div class="matrix-container">
+    <!-- Game 2 -->
+    <div class="matrix">
+      <table class="payoff-matrix">
+        <thead>
+          <tr>
+            <th rowspan="2" class="axis-label" style="color: red;">Your Options</th>
+            <th colspan="2" class="axis-label" style="color: blue;opacity:0.3">Partner’s Options</th>
+          </tr>
+          <tr>
+            <th style="color: blue;opacity:0.3">A</th>
+            <th style="color: blue;opacity:0.3">B</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th style="color: red;">A</th>
+            <td class="{% if current_matrix == 'Matrix A' and player_action == 'C' and partner_action == 'C' %}selected-cell{% endif %}">
+              <span class="you">{{ A1aa }}</span>, <span class="partner">{{ A1aa }}</span>
+            </td>
+            <td class="{% if current_matrix == 'Matrix A' and player_action == 'C' and partner_action == 'D' %}selected-cell{% endif %}">
+              <span class="you">{{ A1ab }}</span>, <span class="partner">{{ A1ba }}</span>
+            </td>
+          </tr>
+          <tr>
+            <th style="color: red;">B</th>
+            <td class="{% if current_matrix == 'Matrix A' and player_action == 'D' and partner_action == 'C' %}selected-cell{% endif %}">
+              <span class="you">{{ A1ba }}</span>, <span class="partner">{{ A1ab }}</span>
+            </td>
+            <td class="{% if current_matrix == 'Matrix A' and player_action == 'D' and partner_action == 'D' %}selected-cell{% endif %}">
+              <span class="you">{{ A1bb }}</span>, <span class="partner">{{ A1bb }}</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="info-box">
+    <p>
+      <strong>Your Choice:</strong>
+      <span class="you">{% if player_action == 'C' %}A{% else %}B{% endif %}</span>
+    </p>
+    <p>
+      <strong>Partner’s Choice:</strong>
+      <span class="partner">{% if partner_action == 'C' %}A{% else %}B{% endif %}</span>
+    </p>
+    <p>
+      <strong>Your Points this round:</strong>
+      <span class="you">{{ payoff_points }}</span>
+    </p>
+    <p>
+      <strong>Partner’s Points this round:</strong>
+      <span class="partner">{{ partner_payoff_points }}</span>
+    </p>
+  </div>
+
+   {% next_button %}
+  </div>
+
+  <!-- ==== timeout modal ==== -->
+  <div id="timeoutModal" class="timeout-modal">
+    <div class="timeout-modal-content">
+      <p>
+        Are you still there? Click <strong>Continue</strong> and you will receive another <strong>25 seconds</strong>.
+        Otherwise, you’ll be removed from the experiment.
+      </p>
+      <button type="button" id="modalYesButton" class="timeout-btn">Continue</button>
+      <div class="timeout-timer">
+        Time remaining: <span id="modalTimer">15</span>s
+      </div>
+    </div>
+  </div>
+</form>
+
+<script>
+  (function() {
+    var MAIN_TIME = 25, MODAL_TIME = 15;
+    var mainTimeLeft, modalTimeLeft, mainInterval, modalInterval;
+
+    function updateMainDisplay() {
+      document.getElementById('mainTimer').textContent = mainTimeLeft;
+    }
+    function startMainTimer() {
+      clearInterval(mainInterval);
+      mainTimeLeft = MAIN_TIME;
+      updateMainDisplay();
+      mainInterval = setInterval(function() {
+        mainTimeLeft--;
+        updateMainDisplay();
+        if (mainTimeLeft <= 0) {
+          clearInterval(mainInterval);
+          showModal();
+        }
+      }, 1000);
+    }
+
+    function showModal() {
+      document.getElementById('timeoutModal').style.display = 'block';
+      modalTimeLeft = MODAL_TIME;
+      document.getElementById('modalTimer').textContent = modalTimeLeft;
+      modalInterval = setInterval(function() {
+        modalTimeLeft--;
+        document.getElementById('modalTimer').textContent = modalTimeLeft;
+        if (modalTimeLeft <= 0) {
+          clearInterval(modalInterval);
+          // mark for removal and submit
+          document.getElementById('removeInput').value = 'True';
+          document.querySelector('form').submit();
+        }
+      }, 1000);
+    }
+
+    document.getElementById('modalYesButton').addEventListener('click', function(e) {
+      e.preventDefault();
+      clearInterval(modalInterval);
+      document.getElementById('timeoutModal').style.display = 'none';
+      document.getElementById('removeInput').value = 'False';
+      startMainTimer();
+    });
+
+    window.addEventListener('load', startMainTimer);
+  })();
+</script>
+{% endblock content %}
