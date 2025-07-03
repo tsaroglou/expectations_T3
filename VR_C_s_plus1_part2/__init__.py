@@ -8,7 +8,7 @@ Cooperation under Agreed Risk Experiment
 """
 import json
 class Constants(BaseConstants):
-    name_in_url = 'CS_main'
+    name_in_url = 'CS_p1_main'
     players_per_group = 2
     num_rounds = 100    # Maximum rounds; experiment will end early once the lottery triggers.
     min_rounds = 20     # Must play at least 20 rounds before the lottery may end the game.
@@ -153,7 +153,7 @@ class Player(BasePlayer):
         label="Choose your action: Action C or Action D",
         initial=""
     )
-    treatment = models.StringField(initial="CR")
+    treatment = models.StringField(initial="CR_p1")
 
     remove = models.BooleanField(initial=False)
     partner_removed = models.BooleanField(initial=False)
