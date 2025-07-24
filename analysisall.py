@@ -9,7 +9,8 @@ treatment_files = [
     ("/Users/theo/Downloads/Pilot results/Pilot - Only Risk Part 2.csv", "OnlyRisk"),
     ("/Users/theo/Downloads/Pilot results/VR_T1b_part2_2025-06-27.csv", "T1b"),
     ("/Users/theo/Downloads/Pilot results/VR_C_y_part2_2025-06-27.csv", "Yoked_on_T1a"),
-    ("/Users/theo/Downloads/Pilot results/VR_C_s_plus1_part2_2025-07-03.csv", "OnlySafe+1")
+    ("/Users/theo/Downloads/Pilot results/VR_C_s_plus1_part2_2025-07-03.csv", "OnlySafe+1"),
+    ("/Users/theo/Downloads/Pilot results/VR_T1a_plus1_part2_2025-07-03.csv", "T1a+1")
 ]
 
 
@@ -25,9 +26,19 @@ df = pd.concat(df_list, ignore_index=True)
 
 # === STEP 2: Filter relevant rows ===
 df = df[df['player.action'].notna()]  # Only where action is not empty
+
 if 'player.remove' in df.columns:
     to_remove = df[df['player.remove'] == 1]['participant.code'].unique()
     df = df[~df['participant.code'].isin(to_remove)]
+
+# === NEW: Drop participants who never reached round 20 ===
+if 'subsession.round_number' in df.columns:
+    df = (
+        df
+        .groupby('participant.code')
+        .filter(lambda d: d['subsession.round_number'].max() >= 20)
+        .reset_index(drop=True)
+    )
 
 # === STEP 3: Create variables ===
 df['Cooperated'] = df['player.action'].map({'C': 1, 'D': 0})
@@ -156,7 +167,7 @@ plt.savefig("cooperation_over_time_by_treatment.png")
 plt.show()
 
 # === NEW: Cooperation by own/partner risk, split by treatment and marked by game ===
-df_risk = df[df['treatment'].isin(['T1a', 'T1b']) & df['Chose_Risk'].notna()]
+df_risk = df[df['treatment'].isin(['T1a', 'T1b', 'T1a+1']) & df['Chose_Risk'].notna()]
 df_risk = df_risk[['participant.code', 'group.id_in_subsession', 'subsession.round_number', 'Chose_Risk', 'Cooperated', 'treatment', 'group.current_game']]
 
 def label_condition(row_self, row_partner):
@@ -192,16 +203,16 @@ summary = summary.rename(columns={
 })
 
 # Plotting
-fig, ax = plt.subplots(figsize=(10, 6))
-colors = {'T1a': 'steelblue', 'T1b': 'orange'}
+fig, ax = plt.subplots(figsize=(15, 6))
+colors = {'T1a': 'steelblue', 'T1b': 'orange', 'T1a+1': 'red'}
 conditions = summary['condition'].unique()
 hatch_map = {'//': 'Game A', '..': 'Game B'}
 
-for i, treatment in enumerate(['T1a', 'T1b']):
+for i, treatment in enumerate(['T1a', 'T1b', 'T1a+1']):
     subset = summary[summary['Treatment'] == treatment]
     for j, row in subset.iterrows():
         x = list(conditions).index(row['condition']) + i * 0.35
-        bar = ax.bar(x, row['Mean Cooperation'], width=0.35, label=f"{treatment}" if j == 0 else "",
+        bar = ax.bar(x, row['Mean Cooperation'], width=0.25, label=f"{treatment}" if j == 0 else "",
                      color=colors[treatment], hatch=row['Hatch'], edgecolor='black')
         ax.text(x, row['Mean Cooperation'] + 0.02, f"{row['Mean Cooperation']:.2f}", ha='center', fontsize=9)
 
@@ -217,6 +228,7 @@ ax.grid(True, linestyle='--', alpha=0.6, axis='y')
 handles = [
     plt.Rectangle((0,0),1,1, color='steelblue', edgecolor='black', label='T1a'),
     plt.Rectangle((0,0),1,1, color='orange', edgecolor='black', label='T1b'),
+    plt.Rectangle((0, 0), 1, 1, color='red', edgecolor='black', label='T1a+1'),
     plt.Rectangle((0,0),1,1, color='white', hatch='//', edgecolor='black', label='Game A'),
     plt.Rectangle((0,0),1,1, color='white', hatch='..', edgecolor='black', label='Game B')
 ]
@@ -267,8 +279,44 @@ plt.tight_layout()
 plt.savefig("T1a_Yoked_by_game.png")
 plt.show()
 
+# === NEW STEP: 5-Round–Binned Cooperation for T1a vs T1b vs T1a+1 by Game ===
+# 1) Subset
+subset = df[
+    df['treatment'].isin(['T1a', 'T1b', 'T1a+1']) &
+    df['group.current_game'].notna()
+].copy()
+
+# 2) Define bins of 5 rounds
+subset['round_bin'] = ((subset['subsession.round_number'] - 1) // 5 + 1) * 5
+
+# 3) Plot
+plt.figure(figsize=(10, 6))
+for (treatment, game), sub in subset.groupby(['treatment', 'group.current_game']):
+    binned = sub.groupby('round_bin')['Cooperated'].mean()
+    plt.plot(
+        binned.index,
+        binned.values,
+        label=f"{treatment} – Game {game}",
+        linestyle='--' if game == 'B' else '-',
+        marker='o'
+    )
+    # annotate each point
+    for x, y in zip(binned.index, binned.values):
+        plt.text(x, y + 0.02, f"{y:.2f}", ha='center', fontsize=9)
+
+plt.xlabel("Round Bin")
+plt.ylabel("Mean Cooperation")
+plt.title("T1a vs T1b vs T1a+1: Cooperation by Game (5-Round Bins)")
+plt.xticks(sorted(subset['round_bin'].unique()))
+plt.ylim(0, 1.05)
+plt.grid(True, linestyle='--', alpha=0.6)
+plt.legend()
+plt.tight_layout()
+plt.savefig("T1a_T1b_T1a+1_by_game_binned.png")
+plt.show()
+
 # === NEW STEP: Line plot for T1a and T1b by game ===
-subset_df = df[df['treatment'].isin(['T1a', 'T1b']) & df['group.current_game'].notna()]
+subset_df = df[df['treatment'].isin(['T1a', 'T1b', 'T1a+1']) & df['group.current_game'].notna()]
 plt.figure(figsize=(10, 6))
 for (treatment, game), sub in subset_df.groupby(['treatment', 'group.current_game']):
     avg = sub.groupby('subsession.round_number')['Cooperated'].mean()
@@ -276,7 +324,7 @@ for (treatment, game), sub in subset_df.groupby(['treatment', 'group.current_gam
     plt.plot(avg.index, avg.values, label=f"{treatment} - Game {game}", linestyle='--' if game == 'B' else '-', linewidth=2)
 plt.xlabel("Round Number")
 plt.ylabel("Mean Cooperation")
-plt.title("T1a vs T1b: Cooperation by Game")
+plt.title("T1a vs T1b vs T1a+1: Cooperation by Game")
 plt.xticks(range(1, 21))
 plt.ylim(0, 1.05)
 plt.grid(True, linestyle='--', alpha=0.6)
@@ -350,7 +398,7 @@ if df['Chose_Risk'].notna().any():
     plt.show()
 
     # === NEW: Bar chart of cooperation by participant/partner risk combos, by treatment ===
-    subset = df[df['treatment'].isin(['T1a', 'T1b']) & df['Chose_Risk'].notna()]
+    subset = df[df['treatment'].isin(['T1a', 'T1b', 'T1a+1']) & df['Chose_Risk'].notna()]
 
     # Identify partner's vote
     subset = subset.sort_values(['treatment', 'group.id_in_subsession', 'subsession.round_number'])
@@ -385,39 +433,57 @@ if df['Chose_Risk'].notna().any():
     )
 
     # Set up plot
-    fig, ax = plt.subplots(figsize=(10, 6))
-    width = 0.35
+    fig, ax = plt.subplots(figsize=(15, 6))
+    width = 0.2
     x = range(len(combo_means))
 
     # Mapping from condition + treatment to current_game
     game_map = {
         ('NoRisk-NoRisk', 'T1a'): 'A',
         ('NoRisk-NoRisk', 'T1b'): 'A',
+        ('NoRisk-NoRisk', 'T1a+1'): 'A',
         ('Risk-Risk', 'T1a'): 'B',
         ('Risk-Risk', 'T1b'): 'B',
+        ('Risk-Risk', 'T1a+1'): 'B',
         ('NoRisk-Risk', 'T1a'): 'A',
         ('NoRisk-Risk', 'T1b'): 'B',
+        ('NoRisk-Risk', 'T1a+1'): 'A',
         ('Risk-NoRisk', 'T1a'): 'A',
         ('Risk-NoRisk', 'T1b'): 'B',
+        ('Risk-NoRisk', 'T1a+1'): 'A',
     }
 
     # Bar plots with hatching for game B
+    # Pre-define colours so it’s easier to read / extend
+    treatment_colors = {
+        'T1a': 'skyblue',
+        'T1a+1': 'red',
+        'T1b': 'orange'
+    }
+
     for i, combo in enumerate(combo_means.index):
-        for j, treatment in enumerate(['T1a', 'T1b']):
+        for j, treatment in enumerate(['T1a', 'T1b', 'T1a+1']):
             val = combo_means.loc[combo, treatment]
             xpos = i + (j - 0.5) * width
-            is_game_b = game_map.get((combo, treatment)) == 'B'
+            is_game_b = (game_map.get((combo, treatment)) == 'B')
+
             ax.bar(
                 xpos,
                 val,
                 width,
-                label=f"{treatment}" if i == 0 else "",
+                label=treatment if i == 0 else "",
                 edgecolor='black',
-                color='skyblue' if treatment == 'T1a' else 'orange',
-                hatch='///' if is_game_b else None
+                color=treatment_colors.get(treatment, 'gray'),
+                hatch='///' if is_game_b else None,
             )
-            ax.text(xpos, val + 0.02, f"{val:.2f}", ha='center', fontsize=9)
 
+            ax.text(
+                xpos,
+                val + 0.02,
+                f"{val:.2f}",
+                ha='center',
+                fontsize=9
+            )
     # Labels and formatting
     ax.set_xticks(range(len(combo_means)))
     ax.set_xticklabels(['NoRisk-NoRisk', 'Risk-Risk', 'NoRisk-Risk', 'Risk-NoRisk'])
@@ -493,5 +559,25 @@ with pd.ExcelWriter("summary_analysis.xlsx") as writer:
     mean_risk_by_treatment.to_excel(writer, sheet_name='Mean Risk by Treatment', index=False)
     df.to_excel(writer, sheet_name='Filtered Data', index=False)
     filtered_selected_df.to_excel(writer, sheet_name='Filtered Selected', index=False)
+# === NEW STEP: Export strategy/factors/belief if they exist ===
+strategy_data = []
+
+for path, treatment in treatment_files:
+    temp = pd.read_csv(path)
+    temp.columns = temp.columns.str.strip()  # clean column names just in case
+    has_cols = all(col in temp.columns for col in ['player.strategy', 'player.factors', 'player.belief'])
+    if has_cols:
+        temp_subset = temp[['participant.code', 'player.strategy', 'player.factors', 'player.belief']].copy()
+        temp_subset['treatment'] = treatment
+        strategy_data.append(temp_subset)
+
+if strategy_data:
+    df_strategy = pd.concat(strategy_data, ignore_index=True)
+    df_strategy.to_excel("strategy_factors_belief.xlsx", index=False)
+    print("Exported strategy_factors_belief.xlsx with available columns.")
+else:
+    print("No datasets contained all of: player.strategy, player.factors, player.belief")
+
 
 print("\nAll tables and graphs saved.")
+
