@@ -11,7 +11,7 @@ class Constants(BaseConstants):
     name_in_url = 'T1b_pre'
     players_per_group = None
     num_rounds = 100    # Maximum rounds; experiment will end early once the lottery triggers.
-    min_rounds = 20     # Must play at least 20 rounds before the lottery may end the game.
+    min_rounds = 1     # Must play at least 20 rounds before the lottery may end the game.
     # Payoff matrices:
     matrix_A = {
         ('C', 'C'): (6, 6),
@@ -121,7 +121,7 @@ class Player(BasePlayer):
     )
     comprehension_q8 = models.StringField(
         choices=[
-            "I receive 7 points and my paired participant receives 7 points.",
+            "I receive 7 points and my paired participant receives 4 points.",
             "I receive 5 points and my paired participant also receives 5 points.",
             "I receive 6 points and my paired participant also receives 6 points."
         ],
