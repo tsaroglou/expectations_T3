@@ -14,7 +14,7 @@ SESSION_CONFIGS = [
         name='Voted_Risk_T1a',
         display_name="Voted Risk Treatment 1a",
         num_demo_participants=4,
-        app_sequence=['VR_C_r_part1', 'VR_C_r_part2'],
+        app_sequence=['VR_C_s_plus1_part1', 'VR_C_s_plus1_part2'],
         group_by_arrival_time=True,  # correct for PRE
     ),
 ]

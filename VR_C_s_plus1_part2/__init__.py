@@ -11,7 +11,7 @@ class Constants(BaseConstants):
     name_in_url = 'CS_p1_main'
     players_per_group = 2
     num_rounds = 100    # Maximum rounds; experiment will end early once the lottery triggers.
-    min_rounds = 20     # Must play at least 20 rounds before the lottery may end the game.
+    min_rounds =20      # Must play at least 20 rounds before the lottery may end the game.
     # Payoff matrices:
     matrix_A = {
         ('C', 'C'): (6, 6),
@@ -172,7 +172,6 @@ class BaseGamePage(Page):
 
 class WaitToBeGrouped(WaitPage):
     group_by_arrival_time = True
-    template_name = 'Voted_Risk_T1a_MAIN/WaitToBeGrouped.html'
 
 
     @staticmethod

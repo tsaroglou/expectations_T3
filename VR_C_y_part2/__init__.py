@@ -203,7 +203,6 @@ class BaseGamePage(Page):
 
 class WaitToBeGrouped(WaitPage):
     group_by_arrival_time = True
-    template_name = 'Voted_Risk_T1a_MAIN/WaitToBeGrouped.html'
 
 
     @staticmethod
