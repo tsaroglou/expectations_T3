@@ -83,9 +83,9 @@ class Player(BasePlayer):
     )
     comprehension_q3 = models.StringField(
         choices=[
-            "I receive 5 points and my paired participant also receives 5 points.",
-            "I receive 6 points and my paired participant receives 3 points.",
-            "I receive 4 points and my paired participant also receives 4 point."
+            "I receive 6 points and my paired participant also receives 6 points.",
+            "I receive 7 points and my paired participant receives 4 points.",
+            "I receive 5 points and my paired participant also receives 5 points."
         ],
         widget=widgets.RadioSelect,
         label="3. In Game 2, if you choose Option A and your paired participant also chooses Option A, what are the points?"
@@ -121,9 +121,9 @@ class Player(BasePlayer):
     )
     comprehension_q8 = models.StringField(
         choices=[
-            "I receive 6 points and my paired participant receives 3 points.",
-            "I receive 4 points and my paired participant also receives 4 points.",
-            "I receive 5 points and my paired participant also receives 5 points."
+            "I receive 7 points and my paired participant receives 7 points.",
+            "I receive 5 points and my paired participant also receives 5 points.",
+            "I receive 6 points and my paired participant also receives 6 points."
         ],
         widget=widgets.RadioSelect,
         label="8. In Game 2, if you choose Option B and your paired participant chooses Option A, what are the points?"
@@ -250,7 +250,7 @@ class ComprehensionCheck(Page):
         correct_answers = {
             'comprehension_q1': 'Game 1',
             'comprehension_q2': 'Game 2',
-            'comprehension_q3': 'I receive 5 points and my paired participant also receives 5 points.',
+            'comprehension_q3': 'I receive 6 points and my paired participant also receives 6 points.',
             'comprehension_q4': 'I receive 0 points and my paired participant receives 12 points.',
             'comprehension_q5': 'I receive 3 points and my paired participant receives 3 points.',
         }
@@ -301,8 +301,8 @@ class ComprehensionFeedback(Page):
             },
             'comprehension_q3': {
                 'label': "3. In Game 2, if you choose Option A and your paired participant also chooses Option A, what are the points?",
-                'correct': "I receive 5 points and my paired participant also receives 5 points.",
-                'explanation': "In Game 2, the A–A cell yields you 5 and them also 5."
+                'correct': "I receive 6 points and my paired participant also receives 6 points.",
+                'explanation': "In Game 2, the A–A cell yields you 6 and them also 6."
             },
             'comprehension_q4': {
                 'label': "4. In Game 1, if you choose Option A and your paired participant chooses Option B, what are the points?",
@@ -364,7 +364,7 @@ class ComprehensionCheck2(Page):
         correct_answers = {
             'comprehension_q6': 'Game 2',
             'comprehension_q7': 'Game 1',
-            'comprehension_q8': 'I receive 6 points and my paired participant receives 3 points.',
+            'comprehension_q8': 'I receive 7 points and my paired participant receives 4 points.',
             'comprehension_q9': 'I receive 3 points and my paired participant receives 3 points.',
             'comprehension_q10': 'I receive 12 points and my paired participant receives 0 points.',
         }
