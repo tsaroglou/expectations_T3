@@ -15,10 +15,10 @@ class Constants(BaseConstants):
     min_rounds = 20     # Must play at least 20 rounds before the lottery may end the game.
     # Payoff matrices:
     matrix_A = {
-        ('C', 'C'): (5, 5),
-        ('C', 'D'): (3, 6),
-        ('D', 'C'): (6, 3),
-        ('D', 'D'): (4, 4),
+        ('C', 'C'): (6, 6),
+        ('C', 'D'): (4, 7),
+        ('D', 'C'): (7, 4),
+        ('D', 'D'): (5, 5),
     }
     A1aa = matrix_A[('C', 'C')][0]
     A1ab = matrix_A[('C', 'D')][0]
@@ -77,20 +77,16 @@ class Group(BaseGroup):
 
 class Player(BasePlayer):
     strategy = models.LongStringField(
-        label='1. Did you follow a specific strategy while playing this game?',
+        label='1. What thoughts went through your mind when choosing between A and B? Did you follow a particular strategy or approach?',
         blank=True,
         max_length=1000,
     )
     factors = models.LongStringField(
-        label='2. What factors or thoughts most influenced your choices in this game?',
+        label='2. How do you think your partner perceived the situation? In what way did that belief influence your own decision or feelings?',
         blank=True,
         max_length=1000,
     )
-    belief = models.LongStringField(
-        label='3. How do you believe your partner viewed the situation? How did that belief affect you?',
-        blank=True,
-        max_length=1000,
-    )
+
     played = models.BooleanField(initial=False)
     total_money = models.CurrencyField()
 
@@ -177,8 +173,6 @@ class BaseGamePage(Page):
 
 class WaitToBeGrouped(WaitPage):
     group_by_arrival_time = True
-    template_name = 'Voted_Risk_T1a_MAIN/WaitToBeGrouped.html'
-
 
     @staticmethod
     def is_displayed(player):
@@ -363,7 +357,7 @@ class AdditionalMeasurements(Page):
 
 class OpenEnded(Page):
     form_model = 'player'
-    form_fields = ['strategy', 'factors', 'belief']
+    form_fields = ['strategy', 'factors']
 
     def is_displayed(self):
         finished_round = self.participant.vars.get("finished_round")
@@ -376,7 +370,7 @@ class PaymentAndDebrief(Page):
         finished_round = self.participant.vars.get("finished_round")
         return not self.remove and ((finished_round is not None and self.round_number == finished_round) or self.round_number == Constants.num_rounds)
     def vars_for_template(self):
-        total_payoff = sum([p.payoff for p in self.in_all_rounds()])/40
+        total_payoff = sum([p.payoff for p in self.in_all_rounds()])/50
         self.total_money=total_payoff
         return {
             'final_payment': c(total_payoff)

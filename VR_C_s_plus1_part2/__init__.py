@@ -76,20 +76,16 @@ class Group(BaseGroup):
 
 class Player(BasePlayer):
     strategy = models.LongStringField(
-        label='1. Did you follow a specific strategy while playing this game?',
+        label='1. What thoughts went through your mind when choosing between A and B? Did you follow a particular strategy or approach?',
         blank=True,
         max_length=1000,
     )
     factors = models.LongStringField(
-        label='2. What factors or thoughts most influenced your choices in this game?',
+        label='2. How do you think your partner perceived the situation? In what way did that belief influence your own decision or feelings?',
         blank=True,
         max_length=1000,
     )
-    belief = models.LongStringField(
-        label='3. How do you believe your partner viewed the situation? How did that belief affect you?',
-        blank=True,
-        max_length=1000,
-    )
+
     played = models.BooleanField(initial=False)
     total_money = models.CurrencyField()
 
@@ -361,7 +357,7 @@ class AdditionalMeasurements(Page):
 
 class OpenEnded(Page):
     form_model = 'player'
-    form_fields = ['strategy', 'factors', 'belief']
+    form_fields = ['strategy', 'factors']
 
     def is_displayed(self):
         finished_round = self.participant.vars.get("finished_round")

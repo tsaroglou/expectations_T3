@@ -15,10 +15,10 @@ class Constants(BaseConstants):
     min_rounds = 20     # Must play at least 20 rounds before the lottery may end the game.
     # Payoff matrices:
     matrix_A = {
-        ('C', 'C'): (5, 5),
-        ('C', 'D'): (3, 6),
-        ('D', 'C'): (6, 3),
-        ('D', 'D'): (4, 4),
+        ('C', 'C'): (6, 6),
+        ('C', 'D'): (4, 7),
+        ('D', 'C'): (7, 4),
+        ('D', 'D'): (5, 5),
     }
     A1aa = matrix_A[('C', 'C')][0]
     A1ab = matrix_A[('C', 'D')][0]
@@ -93,6 +93,22 @@ class Player(BasePlayer):
     matrix_sequence = models.LongStringField()
     lottery_outcome = models.CurrencyField()
     investment_total = models.CurrencyField()
+
+    strategy = models.LongStringField(
+        label='1. What thoughts went through your mind when choosing between A and B? Did you follow a particular strategy or approach?',
+        blank=True,
+        max_length=1000,
+    )
+    factors = models.LongStringField(
+        label='2. How do you think your partner perceived the situation? In what way did that belief influence your own decision or feelings?',
+        blank=True,
+        max_length=1000,
+    )
+    belief = models.LongStringField(
+        label='3. What were your thoughts when voting? Did you use a specific strategy or reasoning to guide your decision?',
+        blank=True,
+        max_length=1000,
+    )
 
 
     first_attempt_passed = models.BooleanField(initial=False)
@@ -404,7 +420,7 @@ class PaymentAndDebrief(Page):
         finished_round = self.participant.vars.get("finished_round")
         return not self.remove and ((finished_round is not None and self.round_number == finished_round) or self.round_number == Constants.num_rounds)
     def vars_for_template(self):
-        total_payoff = sum([p.payoff for p in self.in_all_rounds()])/40
+        total_payoff = sum([p.payoff for p in self.in_all_rounds()])/50
         self.total_money=total_payoff
         return {
             'final_payment': c(total_payoff)
@@ -416,6 +432,14 @@ class PaymentAndDebrief(Page):
     def app_after_this_page(self, upcoming_apps, **kwargs):
         return None
 
+
+class OpenEnded(Page):
+    form_model = 'player'
+    form_fields = ['strategy', 'factors', 'belief']
+
+    def is_displayed(self):
+        finished_round = self.participant.vars.get("finished_round")
+        return not self.remove and finished_round is not None and self.round_number == finished_round
 
 
 page_sequence = [
@@ -437,5 +461,6 @@ page_sequence = [
     LotteryWaitPage,
     Investment,
     AdditionalMeasurements,
+    OpenEnded,
     PaymentAndDebrief,
 ]

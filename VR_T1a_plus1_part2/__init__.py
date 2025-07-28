@@ -98,6 +98,22 @@ class Player(BasePlayer):
     first_attempt_passed = models.BooleanField(initial=False)
     second_attempt_passed = models.BooleanField(initial=False)
 
+    strategy = models.LongStringField(
+        label='1. What thoughts went through your mind when choosing between A and B? Did you follow a particular strategy or approach?',
+        blank=True,
+        max_length=1000,
+    )
+    factors = models.LongStringField(
+        label='2. How do you think your partner perceived the situation? In what way did that belief influence your own decision or feelings?',
+        blank=True,
+        max_length=1000,
+    )
+    belief = models.LongStringField(
+        label='3. What were your thoughts when voting? Did you use a specific strategy or reasoning to guide your decision?',
+        blank=True,
+        max_length=1000,
+    )
+
     pair = models.IntegerField()
     def find_partner(self):
         """Find the player in the same pair."""
@@ -418,6 +434,15 @@ class PaymentAndDebrief(Page):
 
 
 
+class OpenEnded(Page):
+    form_model = 'player'
+    form_fields = ['strategy', 'factors', 'belief']
+
+    def is_displayed(self):
+        finished_round = self.participant.vars.get("finished_round")
+        return not self.remove and finished_round is not None and self.round_number == finished_round
+
+
 page_sequence = [
     WaitToBeGrouped,
     Voting,
@@ -437,5 +462,6 @@ page_sequence = [
     LotteryWaitPage,
     Investment,
     AdditionalMeasurements,
+    OpenEnded,
     PaymentAndDebrief,
 ]

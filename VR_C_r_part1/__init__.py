@@ -14,10 +14,10 @@ class Constants(BaseConstants):
     min_rounds = 20     # Must play at least 20 rounds before the lottery may end the game.
     # Payoff matrices:
     matrix_A = {
-        ('C', 'C'): (5, 5),
-        ('C', 'D'): (3, 6),
-        ('D', 'C'): (6, 3),
-        ('D', 'D'): (4, 4),
+        ('C', 'C'): (6, 6),
+        ('C', 'D'): (4, 7),
+        ('D', 'C'): (7, 4),
+        ('D', 'D'): (5, 5),
     }
     A1aa = matrix_A[('C', 'C')][0]
     A1ab = matrix_A[('C', 'D')][0]
