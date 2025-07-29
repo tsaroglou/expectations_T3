@@ -8,6 +8,7 @@ treatment_files = [
     (r"C:\Users\TheodorosSaroglou\Downloads\Stochastic Vote Data\VR_C_s_plus1_part2_2025-07-28.csv", "OnlySafe"),
     (r"C:\Users\TheodorosSaroglou\Downloads\Stochastic Vote Data\VR_T1a_plus1_part2_2025-07-28.csv", "T1a"),
     (r"C:\Users\TheodorosSaroglou\Downloads\Stochastic Vote Data\VR_T1b_part2_2025-07-28.csv", "T1b"),
+    (r"C:\Users\TheodorosSaroglou\Downloads\VR_Yoked_T1a_all_apps_wide_2025-07-29.csv", "Yoked_on_T1a"),
 ]
 
 
@@ -34,6 +35,14 @@ if 'subsession.round_number' in df.columns:
         df
         .groupby('participant.code')
         .filter(lambda d: d['subsession.round_number'].max() >= 20)
+        .reset_index(drop=True)
+    )
+
+if 'player.total_money' in df.columns:
+    df = (
+        df
+        .groupby('participant.code')
+        .filter(lambda d: d['player.total_money'].notna().any())
         .reset_index(drop=True)
     )
 
