@@ -68,7 +68,7 @@ class Player(BasePlayer):
         label="Choose your action: Action C or Action D",
         initial=""
     )
-    treatment = models.StringField(initial='T1a_yoked_1-30')
+    treatment = models.StringField(initial='T1a_yoked_31-60')
     remove = models.BooleanField(initial=False)
     # Comprehension check questions:
 
