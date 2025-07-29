@@ -8,7 +8,7 @@ treatment_files = [
     (r"C:\Users\TheodorosSaroglou\Downloads\Stochastic Vote Data\VR_C_s_plus1_part2_2025-07-28.csv", "OnlySafe"),
     (r"C:\Users\TheodorosSaroglou\Downloads\Stochastic Vote Data\VR_T1a_plus1_part2_2025-07-28.csv", "T1a"),
     (r"C:\Users\TheodorosSaroglou\Downloads\Stochastic Vote Data\VR_T1b_part2_2025-07-28.csv", "T1b"),
-    (r"C:\Users\TheodorosSaroglou\Downloads\Stochastic Vote Data\VR_Yoked_T1a_all_apps_wide_2025-07-29.csv", "Yoked_on_T1a"),
+    (r"C:\Users\TheodorosSaroglou\Downloads\Stochastic Vote Data\VR_Yoked_T1a_part2_2025-07-29.csv", "Yoked_on_T1a"),
 ]
 
 

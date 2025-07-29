@@ -2,7 +2,6 @@ from otree.api import *
 from otree.api import Currency as c
 import random
 
-
 doc = """
 Cooperation under Agreed Risk Experiment
 """
@@ -16,55 +15,9 @@ class Constants(BaseConstants):
     # Payoff matrices:
 
     all_sequences = [
-        ["A", "B", "A", "A", "A", "B", "A", "A", "A", "B", "A", "A", "B", "A", "A", "A", "A", "A", "A", "A", "B", "A",
-         "A"],
-        ["A", "B", "B", "A", "A", "A", "B", "A", "A", "B", "A", "A", "A", "A", "A", "B", "A", "A", "A", "B", "A"],
-        ["B", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B",
-         "B"],
-        ["B", "A", "B", "A", "B", "B", "B", "B", "B", "A", "A", "B", "B", "A", "A", "B", "B", "A", "B", "B", "B", "A"],
-        ["B", "A", "B", "B", "A", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B",
-         "B", "B"],
-        ["B", "B", "A", "B", "A", "A", "A", "B", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A",
-         "A", "A"],
-        ["B", "B", "A", "B", "A", "A", "A", "B", "B", "B", "A", "B", "B", "A", "A", "A", "A", "B", "B", "B", "A"],
-        ["B", "B", "A", "B", "A", "B", "A", "B", "B", "A", "B", "B", "B", "A", "A", "B", "A", "B", "B", "B", "B"],
-        ["B", "B", "A", "B", "A", "B", "B", "A", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B"],
-        ["B", "B", "A", "B", "B", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A"],
-        ["B", "B", "A", "B", "B", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "B", "A", "A", "A", "A", "A",
-         "A"],
-        ["B", "B", "A", "B", "B", "B", "A", "B", "B", "B", "A", "A", "A", "A", "B", "A", "A", "A", "A", "A", "A"],
-        ["B", "B", "A", "B", "B", "B", "B", "A", "B", "B", "B", "B", "B", "B", "B", "B", "A", "A", "A", "A", "B", "B",
-         "B", "B"],
-        ["B", "B", "B", "A", "A", "A", "A", "A", "B", "B", "B", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A",
-         "A", "A", "A", "A", "B"],
-        ["B", "B", "B", "A", "A", "B", "A", "B", "A", "B", "B", "B", "A", "B", "B", "A", "A", "B", "B", "B", "B"],
-        ["B", "B", "B", "A", "B", "A", "A", "A", "A", "B", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A",
-         "A", "A", "A"],
-        ["B", "B", "B", "B", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A"],
-        ["B", "B", "B", "B", "A", "A", "B", "A", "A", "B", "B", "A", "B", "A", "A", "B", "A", "A", "B", "A", "B", "A",
-         "A"],
-        ["B", "B", "B", "B", "B", "A", "B", "A", "A", "A", "B", "B", "B", "A", "A", "A", "B", "A", "A", "A", "A", "B",
-         "A", "A", "B"],
-        ["B", "B", "B", "B", "B", "A", "B", "A", "B", "A", "B", "A", "B", "A", "B", "A", "A", "A", "A", "A", "A", "A"],
-        ["B", "B", "B", "B", "B", "A", "B", "B", "B", "A", "B", "B", "B", "B", "A", "A", "A", "B", "B", "B", "B", "B",
-         "B"],
-        ["B", "B", "B", "B", "B", "A", "B", "B", "B", "B", "B", "A", "B", "B", "B", "B", "A", "B", "A", "B", "B"],
-        ["B", "B", "B", "B", "B", "B", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A", "A",
-         "A", "A"],
-        ["B", "B", "B", "B", "B", "B", "B", "B", "A", "B", "B", "B", "B", "A", "A", "B", "A", "A", "A", "A", "B", "A",
-         "A"],
-        ["B", "B", "B", "B", "B", "B", "B", "B", "B", "A", "A", "A", "B", "B", "B", "B", "A", "A", "A", "B", "B", "A",
-         "B"],
         ["B", "B", "B", "B", "B", "B", "B", "B", "B", "A", "B", "B", "A", "B", "B", "A", "A", "B", "A", "A", "A", "A"],
-        ["B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B",
-         "B"],
         ["B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B"],
         ["B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B"],
-        ["B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B"],
-        ["B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B"],
-        ["B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B"],
-        ["B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B", "B"],
-
     ]
 
     matrix_A = {
@@ -90,7 +43,6 @@ class Constants(BaseConstants):
     A2bb = matrix_B[('D', 'D')][0]
 
 class Subsession(BaseSubsession):
-
 
     def group_by_arrival_time_method(self, waiting_players):
         eligible = [p for p in waiting_players if p.participant.vars.get('passed_comprehension') is True]
